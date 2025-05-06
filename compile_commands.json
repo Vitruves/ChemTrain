@@ -1,0 +1,92 @@
+[
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/gcc -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu11 -fPIC -o CMakeFiles/csv_utils.dir/src/csv_parser.c.o -c /home/jnatter/Developer/Projects/ChemTrain/src/csv_parser.c",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/csv_parser.c",
+  "output": "CMakeFiles/csv_utils.dir/src/csv_parser.c.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/gcc -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu11 -fPIC -o CMakeFiles/csv_utils.dir/src/csv_writer.c.o -c /home/jnatter/Developer/Projects/ChemTrain/src/csv_writer.c",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/csv_writer.c",
+  "output": "CMakeFiles/csv_utils.dir/src/csv_writer.c.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/common.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/common.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/common.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/common.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/registry.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/registry.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/registry.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/registry.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/regexcounts.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexcounts.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexcounts.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/regexcounts.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/regexfractions.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexfractions.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexfractions.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/regexfractions.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/weightfractions.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/weightfractions.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/weightfractions.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/weightfractions.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/regexelectronegativity.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexelectronegativity.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/regexelectronegativity.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/regexelectronegativity.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/bitsoperations.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bitsoperations.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bitsoperations.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/bitsoperations.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/bordwellscale.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bordwellscale.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bordwellscale.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/bordwellscale.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/bonds.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bonds.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/bonds.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/bonds.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/radius.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/radius.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/radius.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/radius.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/brotomoreau.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/brotomoreau.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/brotomoreau.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/brotomoreau.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/descriptors/graphoperations.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/descriptors/graphoperations.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/descriptors/graphoperations.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/descriptors/graphoperations.cpp.o"
+},
+{
+  "directory": "/home/jnatter/Developer/Projects/ChemTrain/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_LOG_DYN_LINK -DBOOST_LOG_NO_LIB -DBOOST_LOG_SETUP_DYN_LINK -DBOOST_LOG_SETUP_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DCHEMTRAIN_VERSION=\\\"1.0\\\" -DVERSION=\\\"1.0\\\" -DWITH_ARROW_PARQUET -DWITH_FAST_CSV_PARSER -DWITH_RDKIT_MANUAL -I/usr/include/rdkit -I/home/jnatter/Developer/Projects/ChemTrain/src -I/home/jnatter/Developer/Projects/ChemTrain/build/src -O3 -DNDEBUG -std=gnu++17 -fopenmp -o CMakeFiles/chemtrain.dir/src/main.cpp.o -c /home/jnatter/Developer/Projects/ChemTrain/src/main.cpp",
+  "file": "/home/jnatter/Developer/Projects/ChemTrain/src/main.cpp",
+  "output": "CMakeFiles/chemtrain.dir/src/main.cpp.o"
+}
+]

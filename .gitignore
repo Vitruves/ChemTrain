@@ -1,2 +1,7 @@
 .cache/
 build/
+.venv/
+scripts/__pycache__/
+backup/
+tests/_pytestcache/
+

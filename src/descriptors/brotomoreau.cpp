@@ -2,6 +2,7 @@
 #include <GraphMol/ROMol.h>
 #include <GraphMol/Atom.h>
 #include <GraphMol/MolOps.h> // For distance matrix
+#include <GraphMol/AtomIterators.h>
 #include <vector>
 #include <cmath>
 
@@ -361,6 +362,282 @@ void register_BrotoMoreauDescriptors() {
     // register_ATSdIonizationDescriptors(); // Zero Variance
     register_ATSdDegreeDescriptors();
     register_ATSdValenceDescriptors();
+}
+
+// ATS (Autocorrelation of Topological Structure) Descriptor base class
+class ATSDescriptor : public Descriptor {
+public:
+    using Descriptor::Descriptor;
+    std::string getCategory() const override { return "AutocorrelationDescriptors"; }
+};
+
+// Implementations for each ATS identity descriptor
+DECLARE_DESCRIPTOR(ATSdi1, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 1")
+DESCRIPTOR_DEPENDENCIES(ATSdi1) { return {}; }
+DescriptorResult ATSdi1Descriptor::calculate(Context& context) const {
+    const RDKit::ROMol* mol = context.getMolecule();
+    if (!mol) return 0.0;
+    
+    unsigned int nAtoms = mol->getNumAtoms();
+    auto distMatrix = mol::calculateDistanceMatrix(mol);
+    
+    double sum = 0.0;
+    unsigned int pairCount = 0;
+    
+    for (unsigned int i = 0; i < nAtoms; ++i) {
+        for (unsigned int j = i; j < nAtoms; ++j) {
+            if (distMatrix[i][j] == 1) { // Lag 1
+                sum += 1.0; // Identity function (always 1)
+                pairCount++;
+            }
+        }
+    }
+    
+    return pairCount > 0 ? sum / pairCount : 0.0;
+}
+
+DECLARE_DESCRIPTOR(ATSdi2, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 2")
+DESCRIPTOR_DEPENDENCIES(ATSdi2) { return {}; }
+DescriptorResult ATSdi2Descriptor::calculate(Context& context) const {
+    const RDKit::ROMol* mol = context.getMolecule();
+    if (!mol) return 0.0;
+    
+    unsigned int nAtoms = mol->getNumAtoms();
+    auto distMatrix = mol::calculateDistanceMatrix(mol);
+    
+    double sum = 0.0;
+    unsigned int pairCount = 0;
+    
+    for (unsigned int i = 0; i < nAtoms; ++i) {
+        for (unsigned int j = i; j < nAtoms; ++j) {
+            if (distMatrix[i][j] == 2) { // Lag 2
+                sum += 1.0;
+                pairCount++;
+            }
+        }
+    }
+    
+    return pairCount > 0 ? sum / pairCount : 0.0;
+}
+
+DECLARE_DESCRIPTOR(ATSdi3, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 3")
+DESCRIPTOR_DEPENDENCIES(ATSdi3) { return {}; }
+DescriptorResult ATSdi3Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdi4, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 4")
+DESCRIPTOR_DEPENDENCIES(ATSdi4) { return {}; }
+DescriptorResult ATSdi4Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdi5, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 5")
+DESCRIPTOR_DEPENDENCIES(ATSdi5) { return {}; }
+DescriptorResult ATSdi5Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdi6, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 6")
+DESCRIPTOR_DEPENDENCIES(ATSdi6) { return {}; }
+DescriptorResult ATSdi6Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdi7, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 7")
+DESCRIPTOR_DEPENDENCIES(ATSdi7) { return {}; }
+DescriptorResult ATSdi7Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdi8, ATSDescriptor, "ATS identity autocorrelation descriptor of lag 8")
+DESCRIPTOR_DEPENDENCIES(ATSdi8) { return {}; }
+DescriptorResult ATSdi8Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+// Implementations for each ATS mass descriptor
+DECLARE_DESCRIPTOR(ATSdm1, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 1")
+DESCRIPTOR_DEPENDENCIES(ATSdm1) { return {}; }
+DescriptorResult ATSdm1Descriptor::calculate(Context& context) const {
+    const RDKit::ROMol* mol = context.getMolecule();
+    if (!mol) return 0.0;
+    
+    unsigned int nAtoms = mol->getNumAtoms();
+    auto distMatrix = mol::calculateDistanceMatrix(mol);
+    
+    // Calculate atomic masses
+    std::vector<double> masses(nAtoms);
+    for (unsigned int i = 0; i < nAtoms; ++i) {
+        const RDKit::Atom* atom = mol->getAtomWithIdx(i);
+        masses[i] = element::getAtomicMass(atom->getAtomicNum());
+    }
+    
+    // Calculate mean of masses
+    double mean = 0.0;
+    for (double mass : masses) {
+        mean += mass;
+    }
+    mean /= nAtoms;
+    
+    // Center the masses
+    std::vector<double> centeredMasses(nAtoms);
+    for (unsigned int i = 0; i < nAtoms; ++i) {
+        centeredMasses[i] = masses[i] - mean;
+    }
+    
+    double sum = 0.0;
+    unsigned int pairCount = 0;
+    
+    for (unsigned int i = 0; i < nAtoms; ++i) {
+        for (unsigned int j = i; j < nAtoms; ++j) {
+            if (distMatrix[i][j] == 1) { // Lag 1
+                sum += centeredMasses[i] * centeredMasses[j];
+                pairCount++;
+            }
+        }
+    }
+    
+    return pairCount > 0 ? sum / pairCount : 0.0;
+}
+
+DECLARE_DESCRIPTOR(ATSdm2, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 2")
+DESCRIPTOR_DEPENDENCIES(ATSdm2) { return {}; }
+DescriptorResult ATSdm2Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm3, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 3")
+DESCRIPTOR_DEPENDENCIES(ATSdm3) { return {}; }
+DescriptorResult ATSdm3Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm4, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 4")
+DESCRIPTOR_DEPENDENCIES(ATSdm4) { return {}; }
+DescriptorResult ATSdm4Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm5, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 5")
+DESCRIPTOR_DEPENDENCIES(ATSdm5) { return {}; }
+DescriptorResult ATSdm5Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm6, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 6")
+DESCRIPTOR_DEPENDENCIES(ATSdm6) { return {}; }
+DescriptorResult ATSdm6Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm7, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 7")
+DESCRIPTOR_DEPENDENCIES(ATSdm7) { return {}; }
+DescriptorResult ATSdm7Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+DECLARE_DESCRIPTOR(ATSdm8, ATSDescriptor, "ATS mass autocorrelation descriptor of lag 8")
+DESCRIPTOR_DEPENDENCIES(ATSdm8) { return {}; }
+DescriptorResult ATSdm8Descriptor::calculate(Context& context) const {
+    return 0.0; // Placeholder
+}
+
+// Registration functions
+void register_ATSdi1Descriptor() {
+    auto descriptor = std::make_shared<ATSdi1Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi2Descriptor() {
+    auto descriptor = std::make_shared<ATSdi2Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi3Descriptor() {
+    auto descriptor = std::make_shared<ATSdi3Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi4Descriptor() {
+    auto descriptor = std::make_shared<ATSdi4Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi5Descriptor() {
+    auto descriptor = std::make_shared<ATSdi5Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi6Descriptor() {
+    auto descriptor = std::make_shared<ATSdi6Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi7Descriptor() {
+    auto descriptor = std::make_shared<ATSdi7Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdi8Descriptor() {
+    auto descriptor = std::make_shared<ATSdi8Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm1Descriptor() {
+    auto descriptor = std::make_shared<ATSdm1Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm2Descriptor() {
+    auto descriptor = std::make_shared<ATSdm2Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm3Descriptor() {
+    auto descriptor = std::make_shared<ATSdm3Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm4Descriptor() {
+    auto descriptor = std::make_shared<ATSdm4Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm5Descriptor() {
+    auto descriptor = std::make_shared<ATSdm5Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm6Descriptor() {
+    auto descriptor = std::make_shared<ATSdm6Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm7Descriptor() {
+    auto descriptor = std::make_shared<ATSdm7Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_ATSdm8Descriptor() {
+    auto descriptor = std::make_shared<ATSdm8Descriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
 }
 
 } // namespace desfact

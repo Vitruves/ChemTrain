@@ -149,6 +149,7 @@ set(SOURCES
 set(C_SOURCES
     src/csv_parser.c
     src/csv_writer.c
+    src/descriptors/topological.c
 )
 
 # Add CSV parser support

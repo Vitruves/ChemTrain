@@ -2,6 +2,27 @@
 
 Total descriptors: 607
 
+## ATSDescriptor
+
+| Name | Description | Dependencies | Source File |
+|---|---|---|---|
+| `ATSdi1Descriptor` | ATS identity autocorrelation descriptor of lag 1 | None | `brotomoreau.cpp` |
+| `ATSdi2Descriptor` | ATS identity autocorrelation descriptor of lag 2 | None | `brotomoreau.cpp` |
+| `ATSdi3Descriptor` | ATS identity autocorrelation descriptor of lag 3 | None | `brotomoreau.cpp` |
+| `ATSdi4Descriptor` | ATS identity autocorrelation descriptor of lag 4 | None | `brotomoreau.cpp` |
+| `ATSdi5Descriptor` | ATS identity autocorrelation descriptor of lag 5 | None | `brotomoreau.cpp` |
+| `ATSdi6Descriptor` | ATS identity autocorrelation descriptor of lag 6 | None | `brotomoreau.cpp` |
+| `ATSdi7Descriptor` | ATS identity autocorrelation descriptor of lag 7 | None | `brotomoreau.cpp` |
+| `ATSdi8Descriptor` | ATS identity autocorrelation descriptor of lag 8 | None | `brotomoreau.cpp` |
+| `ATSdm1Descriptor` | ATS mass autocorrelation descriptor of lag 1 | None | `brotomoreau.cpp` |
+| `ATSdm2Descriptor` | ATS mass autocorrelation descriptor of lag 2 | None | `brotomoreau.cpp` |
+| `ATSdm3Descriptor` | ATS mass autocorrelation descriptor of lag 3 | None | `brotomoreau.cpp` |
+| `ATSdm4Descriptor` | ATS mass autocorrelation descriptor of lag 4 | None | `brotomoreau.cpp` |
+| `ATSdm5Descriptor` | ATS mass autocorrelation descriptor of lag 5 | None | `brotomoreau.cpp` |
+| `ATSdm6Descriptor` | ATS mass autocorrelation descriptor of lag 6 | None | `brotomoreau.cpp` |
+| `ATSdm7Descriptor` | ATS mass autocorrelation descriptor of lag 7 | None | `brotomoreau.cpp` |
+| `ATSdm8Descriptor` | ATS mass autocorrelation descriptor of lag 8 | None | `brotomoreau.cpp` |
+
 ## BitOperationsDescriptor
 
 | Name | Description | Dependencies | Source File |
@@ -140,22 +161,6 @@ Total descriptors: 607
 | `ATSde6Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 6 | None | `brotomoreau.cpp` |
 | `ATSde7Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 7 | None | `brotomoreau.cpp` |
 | `ATSde8Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 8 | None | `brotomoreau.cpp` |
-| `ATSdi1Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 1 | None | `brotomoreau.cpp` |
-| `ATSdi2Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 2 | None | `brotomoreau.cpp` |
-| `ATSdi3Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 3 | None | `brotomoreau.cpp` |
-| `ATSdi4Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 4 | None | `brotomoreau.cpp` |
-| `ATSdi5Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 5 | None | `brotomoreau.cpp` |
-| `ATSdi6Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 6 | None | `brotomoreau.cpp` |
-| `ATSdi7Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 7 | None | `brotomoreau.cpp` |
-| `ATSdi8Descriptor` | Broto-Moreau Autocorrelation - ATSdIonization - Lag 8 | None | `brotomoreau.cpp` |
-| `ATSdm1Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 1 | None | `brotomoreau.cpp` |
-| `ATSdm2Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 2 | None | `brotomoreau.cpp` |
-| `ATSdm3Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 3 | None | `brotomoreau.cpp` |
-| `ATSdm4Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 4 | None | `brotomoreau.cpp` |
-| `ATSdm5Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 5 | None | `brotomoreau.cpp` |
-| `ATSdm6Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 6 | None | `brotomoreau.cpp` |
-| `ATSdm7Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 7 | None | `brotomoreau.cpp` |
-| `ATSdm8Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 8 | None | `brotomoreau.cpp` |
 | `ATSdp1Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 1 | None | `brotomoreau.cpp` |
 | `ATSdp2Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 2 | None | `brotomoreau.cpp` |
 | `ATSdp3Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 3 | None | `brotomoreau.cpp` |

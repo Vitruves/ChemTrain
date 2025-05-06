@@ -37,9 +37,16 @@ clean:
 ensure_build_dir:
 	@mkdir -p $(BUILD_DIR)
 
+# Add a new target for generating the C registry header if it doesn't exist already
+ensure_cregistry:
+	@if [ ! -f src/cregistry.h ]; then \
+		echo "Creating C registry header..."; \
+		touch src/cregistry.h; \
+	fi
+
 # Configure CMake (internal helper)
 # This target is not meant to be called directly, but used by build types
-configure: ensure_build_dir
+configure: ensure_build_dir ensure_cregistry
 	@echo "Configuring CMake ($(BUILD_TYPE))..."
 	@cd $(BUILD_DIR) && $(CMAKE) -GNinja \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \

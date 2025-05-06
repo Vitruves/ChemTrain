@@ -2394,4 +2394,11 @@ void register_ByteGeometricMeanDescriptor() {
     registry.registerDescriptor(descriptor);
 }
 
+
+void register_NonZeroByteDensityDescriptor() {
+    auto descriptor = std::make_shared<NonZeroByteDensityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
 } // namespace desfact
