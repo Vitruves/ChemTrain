@@ -8,9 +8,6 @@
 #include <vector>
 #include <map>
 #include <limits>
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-#include <tbb/concurrent_vector.h>
 
 namespace desfact {
 
@@ -208,127 +205,93 @@ struct RadiusStatsCache {
         atomCount = mol->getNumAtoms();
         if (atomCount == 0) return;
         
-        // Pre-allocate vectors
-        atomicRadii.reserve(atomCount);
-        covalentRadii.reserve(atomCount);
-        vanDerWaalsRadii.reserve(atomCount);
-        bondingRadii.reserve(atomCount);
-        atomicNumbers.reserve(atomCount);
-        isOrganic.reserve(atomCount);
-        isHetero.reserve(atomCount);
-        isAromatic.reserve(atomCount);
-        inRing.reserve(atomCount);
+        // Pre-allocate standard vectors
+        atomicRadii.resize(atomCount);
+        covalentRadii.resize(atomCount);
+        vanDerWaalsRadii.resize(atomCount);
+        bondingRadii.resize(atomCount);
+        atomicNumbers.resize(atomCount);
+        isOrganic.resize(atomCount);
+        isHetero.resize(atomCount);
+        isAromatic.resize(atomCount);
+        inRing.resize(atomCount);
         
-        // Process all atoms in parallel
-        tbb::concurrent_vector<std::tuple<double, double, double, double, int, bool, bool, bool, bool>> atomData(atomCount);
-        
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, atomCount),
-            [&](const tbb::blocked_range<size_t>& range) {
-                for (size_t i = range.begin(); i < range.end(); ++i) {
-                    const RDKit::Atom* atom = mol->getAtomWithIdx(i);
-                    int atomicNum = atom->getAtomicNum();
-                    
-                    // Get all radii in one pass - more efficient
-                    double atomicRad = element::getAtomicMass(atomicNum) / 10.0; // Approximate atomic radius from mass
-                    double covalentRad = element::getCovalentRadius(atomicNum);
-                    double vdwRad = element::getCovalentRadius(atomicNum) * 1.4; // Approximate vdW radius
-                    double bondingRad = covalentRad * 0.85; // Simplified bonding radius model
-                    
-                    bool organic = (atomicNum == 6 || atomicNum == 7 || atomicNum == 8 || 
-                                    atomicNum == 9 || atomicNum == 15 || atomicNum == 16 ||
-                                    atomicNum == 17 || atomicNum == 35 || atomicNum == 53);
-                    bool hetero = (atomicNum != 6 && atomicNum != 1); // Heteroatoms are atoms that are not C or H
-                    bool aromatic = atom->getIsAromatic();
-                    bool ring = mol->getRingInfo()->numAtomRings(i) > 0;
-                    
-                    atomData[i] = std::make_tuple(atomicRad, covalentRad, vdwRad, bondingRad, 
-                                                 atomicNum, organic, hetero, aromatic, ring);
-                }
-            });
-        
-        // Process collected data sequentially
-        for (const auto& data : atomData) {
-            double atomicRad, covalentRad, vdwRad, bondingRad;
-            int atomicNum;
-            bool organic, hetero, aromatic, ring;
+        // Process all atoms sequentially
+        for (size_t i = 0; i < atomCount; ++i) {
+            const RDKit::Atom* atom = mol->getAtomWithIdx(i);
+            int atomicNum = atom->getAtomicNum();
+            atomicNumbers[i] = atomicNum;
             
-            std::tie(atomicRad, covalentRad, vdwRad, bondingRad, atomicNum, 
-                     organic, hetero, aromatic, ring) = data;
+            // Get radii
+            atomicRadii[i] = element::getAtomicMass(atomicNum) / 10.0; // Approx
+            covalentRadii[i] = element::getCovalentRadius(atomicNum);
+            vanDerWaalsRadii[i] = element::getCovalentRadius(atomicNum) * 1.4; // Approx
+            bondingRadii[i] = covalentRadii[i] * 0.85; // Simplified
             
-            // Store values
-            atomicRadii.push_back(atomicRad);
-            covalentRadii.push_back(covalentRad);
-            vanDerWaalsRadii.push_back(vdwRad);
-            bondingRadii.push_back(bondingRad);
-            atomicNumbers.push_back(atomicNum);
-            isOrganic.push_back(organic);
-            isHetero.push_back(hetero);
-            isAromatic.push_back(aromatic);
-            inRing.push_back(ring);
+            // Get properties
+            isOrganic[i] = (atomicNum == 6 || atomicNum == 7 || atomicNum == 8 ||
+                            atomicNum == 9 || atomicNum == 15 || atomicNum == 16 ||
+                            atomicNum == 17 || atomicNum == 35 || atomicNum == 53);
+            isHetero[i] = (atomicNum != 6 && atomicNum != 1);
+            isAromatic[i] = atom->getIsAromatic();
+            inRing[i] = mol->getRingInfo()->numAtomRings(i) > 0;
             
             // Update sums
-            sumAtomicRadii += atomicRad;
-            sumCovalentRadii += covalentRad;
-            sumVdwRadii += vdwRad;
-            sumBondingRadii += bondingRad;
+            sumAtomicRadii += atomicRadii[i];
+            sumCovalentRadii += covalentRadii[i];
+            sumVdwRadii += vanDerWaalsRadii[i];
+            sumBondingRadii += bondingRadii[i];
             
             // Update min/max
-            minAtomicRadius = std::min(minAtomicRadius, atomicRad);
-            maxAtomicRadius = std::max(maxAtomicRadius, atomicRad);
+            minAtomicRadius = std::min(minAtomicRadius, atomicRadii[i]);
+            maxAtomicRadius = std::max(maxAtomicRadius, atomicRadii[i]);
+            minCovalentRadius = std::min(minCovalentRadius, covalentRadii[i]);
+            maxCovalentRadius = std::max(maxCovalentRadius, covalentRadii[i]);
+            minVdwRadius = std::min(minVdwRadius, vanDerWaalsRadii[i]);
+            maxVdwRadius = std::max(maxVdwRadius, vanDerWaalsRadii[i]);
+            minBondingRadius = std::min(minBondingRadius, bondingRadii[i]);
+            maxBondingRadius = std::max(maxBondingRadius, bondingRadii[i]);
             
-            minCovalentRadius = std::min(minCovalentRadius, covalentRad);
-            maxCovalentRadius = std::max(maxCovalentRadius, covalentRad);
-            
-            minVdwRadius = std::min(minVdwRadius, vdwRad);
-            maxVdwRadius = std::max(maxVdwRadius, vdwRad);
-            
-            minBondingRadius = std::min(minBondingRadius, bondingRad);
-            maxBondingRadius = std::max(maxBondingRadius, bondingRad);
-            
-            // Update distribution bins (rounded to nearest 0.1Å)
-            atomicRadiusBins[static_cast<int>(std::round(atomicRad * 10.0))]++;
-            covalentRadiusBins[static_cast<int>(std::round(covalentRad * 10.0))]++;
-            vdwRadiusBins[static_cast<int>(std::round(vdwRad * 10.0))]++;
+            // Update distribution bins
+            atomicRadiusBins[static_cast<int>(std::round(atomicRadii[i] * 10.0))]++;
+            covalentRadiusBins[static_cast<int>(std::round(covalentRadii[i] * 10.0))]++;
+            vdwRadiusBins[static_cast<int>(std::round(vanDerWaalsRadii[i] * 10.0))]++;
             
             // Update counters and specialized sums
             if (atomicNum > 1) {
                 heavyAtomCount++;
-                sumHeavyAtomicRadii += atomicRad;
-                sumHeavyCovalentRadii += covalentRad;
-                sumHeavyVdwRadii += vdwRad;
-                sumHeavyBondingRadii += bondingRad;
+                sumHeavyAtomicRadii += atomicRadii[i];
+                sumHeavyCovalentRadii += covalentRadii[i];
+                sumHeavyVdwRadii += vanDerWaalsRadii[i];
+                sumHeavyBondingRadii += bondingRadii[i];
             }
-            
-            if (organic) {
+            if (isOrganic[i]) {
                 organicAtomCount++;
-                sumOrganicAtomicRadii += atomicRad;
-                sumOrganicCovalentRadii += covalentRad;
-                sumOrganicVdwRadii += vdwRad;
-                sumOrganicBondingRadii += bondingRad;
+                sumOrganicAtomicRadii += atomicRadii[i];
+                sumOrganicCovalentRadii += covalentRadii[i];
+                sumOrganicVdwRadii += vanDerWaalsRadii[i];
+                sumOrganicBondingRadii += bondingRadii[i];
             }
-            
-            if (hetero) {
+            if (isHetero[i]) {
                 heteroAtomCount++;
-                sumHeteroAtomicRadii += atomicRad;
-                sumHeteroCovalentRadii += covalentRad;
-                sumHeteroVdwRadii += vdwRad;
-                sumHeteroBondingRadii += bondingRad;
+                sumHeteroAtomicRadii += atomicRadii[i];
+                sumHeteroCovalentRadii += covalentRadii[i];
+                sumHeteroVdwRadii += vanDerWaalsRadii[i];
+                sumHeteroBondingRadii += bondingRadii[i];
             }
-            
-            if (aromatic) {
+            if (isAromatic[i]) {
                 aromaticAtomCount++;
-                sumAromaticAtomicRadii += atomicRad;
-                sumAromaticCovalentRadii += covalentRad;
-                sumAromaticVdwRadii += vdwRad;
-                sumAromaticBondingRadii += bondingRad;
+                sumAromaticAtomicRadii += atomicRadii[i];
+                sumAromaticCovalentRadii += covalentRadii[i];
+                sumAromaticVdwRadii += vanDerWaalsRadii[i];
+                sumAromaticBondingRadii += bondingRadii[i];
             }
-            
-            if (ring) {
+            if (inRing[i]) {
                 ringAtomCount++;
-                sumRingAtomicRadii += atomicRad;
-                sumRingCovalentRadii += covalentRad;
-                sumRingVdwRadii += vdwRad;
-                sumRingBondingRadii += bondingRad;
+                sumRingAtomicRadii += atomicRadii[i];
+                sumRingCovalentRadii += covalentRadii[i];
+                sumRingVdwRadii += vanDerWaalsRadii[i];
+                sumRingBondingRadii += bondingRadii[i];
             }
         }
         
@@ -520,9 +483,9 @@ DescriptorResult BondingToAtomicRadiusRatioDescriptor::calculate(Context& contex
 // 50. Mean heavy to mean all atom vdW ratio
 
 void register_SumHeteroCovalentRadiiDescriptor() {
-    auto descriptor = std::make_shared<SumHeteroCovalentRadiiDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SumHeteroCovalentRadiiDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_FractionHeteroVdwRadiiDescriptor() {

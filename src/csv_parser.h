@@ -22,6 +22,9 @@ typedef enum {
     CSV_ERROR_TOO_MANY_FIELDS
 } CSVErrorCode;
 
+// Progress callback function type
+typedef void (*CSVProgressCallback)(size_t current_line, double progress_percent, void* context);
+
 // Error handler function type
 typedef void (*CSVErrorHandler)(CSVErrorCode error, size_t line_number, 
                               const char* message, void* context);
@@ -44,10 +47,13 @@ typedef struct {
  * @param has_header Whether the file has a header row
  * @param error_handler Function to call on error (can be NULL)
  * @param error_context User-defined context for error handler
+ * @param progress_callback Function to call for progress updates (can be NULL)
+ * @param progress_context User-defined context for progress callback
  * @return A new CSVParser or NULL on error
  */
 CSVParser* csv_parser_init(const char* filename, char delimiter, bool has_header,
-                         CSVErrorHandler error_handler, void* error_context);
+                          CSVErrorHandler error_handler, void* error_context,
+                          CSVProgressCallback progress_callback, void* progress_context);
 
 /**
  * Free CSV parser resources
@@ -116,23 +122,7 @@ size_t csv_parser_get_header_count(CSVParser* parser);
  */
 const char* csv_parser_get_header_name(CSVParser* parser, size_t index);
 
-/**
- * Get a batch of CSV lines for multiprocessing
- * 
- * @param parser The CSV parser
- * @param batch_size Maximum number of lines to read
- * @param lines Pointer to array of CSVLine pointers to fill
- * @return Number of lines read, 0 on EOF or error
- */
-size_t csv_parser_next_batch(CSVParser* parser, size_t batch_size, CSVLine** lines);
-
-/**
- * Free a batch of CSV lines
- * 
- * @param lines Array of CSVLine pointers
- * @param count Number of lines in the array
- */
-void csv_lines_free_batch(CSVLine** lines, size_t count);
+long csv_parser_ftell(CSVParser* parser);
 
 #ifdef __cplusplus
 }

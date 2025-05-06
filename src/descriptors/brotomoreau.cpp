@@ -260,14 +260,14 @@ DEFINE_BROTO_MOREAU_DESCRIPTORS(ATSdValence, s, atsS);
     }
 
 // Original properties - Mass
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 1)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 2)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 3)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 4)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 5)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 6)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 7)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 8)
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 1) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 2) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 3) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 4) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 5) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 6) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 7) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdMass, m, 8) // Zero Variance
 
 // Original properties - Volume
 REGISTER_SINGLE_BROTO_MOREAU(ATSdVolume, v, 1)
@@ -320,14 +320,14 @@ REGISTER_SINGLE_BROTO_MOREAU(ATSdRadius, r, 7)
 REGISTER_SINGLE_BROTO_MOREAU(ATSdRadius, r, 8)
 
 // New properties - Ionization Energy
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 1)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 2)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 3)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 4)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 5)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 6)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 7)
-REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 8)
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 1) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 2) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 3) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 4) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 5) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 6) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 7) // Zero Variance
+// REGISTER_SINGLE_BROTO_MOREAU(ATSdIonization, i, 8) // Zero Variance
 
 // New properties - Atom Degree
 REGISTER_SINGLE_BROTO_MOREAU(ATSdDegree, d, 1)
@@ -351,14 +351,14 @@ REGISTER_SINGLE_BROTO_MOREAU(ATSdValence, s, 8)
 
 // --- Registration Functions ---
 void register_BrotoMoreauDescriptors() {
-    register_ATSdMassDescriptors();
+    // register_ATSdMassDescriptors(); // Zero Variance
     register_ATSdVolumeDescriptors();
     register_ATSdENDescriptors();
     register_ATSdPolarizabilityDescriptors();
     
     register_ATSdZDescriptors();
     register_ATSdRadiusDescriptors();
-    register_ATSdIonizationDescriptors();
+    // register_ATSdIonizationDescriptors(); // Zero Variance
     register_ATSdDegreeDescriptors();
     register_ATSdValenceDescriptors();
 }

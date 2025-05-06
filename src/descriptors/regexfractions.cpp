@@ -175,16 +175,6 @@ DescriptorResult SmilesAromaticSulfurFractionDescriptor::calculate(Context& cont
     return calculateFraction(count, totalLength);
 }
 
-// Aromatic phosphorus fraction
-DECLARE_DESCRIPTOR(SmilesAromaticPhosphorusFraction, RegexFractions, "Fraction of aromatic phosphorus characters 'p' in the SMILES string")
-DESCRIPTOR_DEPENDENCIES(SmilesAromaticPhosphorusFraction) { return {}; }
-DescriptorResult SmilesAromaticPhosphorusFractionDescriptor::calculate(Context& context) const {
-    const std::string& smiles = context.getSmiles();
-    double totalLength = static_cast<double>(smiles.length());
-    int count = countChar(smiles, 'p');
-    return calculateFraction(count, totalLength);
-}
-
 // Single bond fraction
 DECLARE_DESCRIPTOR(SmilesSingleBondFraction, RegexFractions, "Fraction of single bond characters '-' in the SMILES string")
 DESCRIPTOR_DEPENDENCIES(SmilesSingleBondFraction) { return {}; }
@@ -1030,12 +1020,6 @@ void register_SmilesAromaticOxygenFractionDescriptor() {
 
 void register_SmilesAromaticSulfurFractionDescriptor() {
     auto descriptor = std::make_shared<SmilesAromaticSulfurFractionDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-void register_SmilesAromaticPhosphorusFractionDescriptor() {
-    auto descriptor = std::make_shared<SmilesAromaticPhosphorusFractionDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
     registry.registerDescriptor(descriptor);
 }

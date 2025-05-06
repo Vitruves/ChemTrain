@@ -19,14 +19,16 @@ using ErrorCallback = std::function<void(CSVErrorCode, size_t, const std::string
 // RAII wrapper for CSVLine
 class CSVLineWrapper {
 private:
-    CSVLine* line_;
+    CSVLine* line;
+    bool owns_line;
     
 public:
-    explicit CSVLineWrapper(CSVLine* line) : line_(line) {}
+    CSVLineWrapper(CSVLine* l, bool take_ownership = true) 
+        : line(l), owns_line(take_ownership) {}
     
     ~CSVLineWrapper() {
-        if (line_) {
-            csv_line_free(line_);
+        if (owns_line && line) {
+            csv_line_free(line);
         }
     }
     
@@ -35,41 +37,44 @@ public:
     CSVLineWrapper& operator=(const CSVLineWrapper&) = delete;
     
     // Allow moving
-    CSVLineWrapper(CSVLineWrapper&& other) noexcept : line_(other.line_) {
-        other.line_ = nullptr;
+    CSVLineWrapper(CSVLineWrapper&& other) noexcept 
+        : line(other.line), owns_line(other.owns_line) {
+        other.line = nullptr;
+        other.owns_line = false;
     }
     
     CSVLineWrapper& operator=(CSVLineWrapper&& other) noexcept {
         if (this != &other) {
-            if (line_) {
-                csv_line_free(line_);
+            if (owns_line && line) {
+                csv_line_free(line);
             }
-            line_ = other.line_;
-            other.line_ = nullptr;
+            line = other.line;
+            owns_line = other.owns_line;
+            other.line = nullptr;
+            other.owns_line = false;
         }
         return *this;
     }
     
     // Access the underlying CSVLine
-    CSVLine* get() const { return line_; }
+    CSVLine* get() const { return line; }
     
     // Check if line is valid
-    explicit operator bool() const { return line_ != nullptr; }
+    explicit operator bool() const { return line != nullptr; }
     
     // Get field by index
-    std::string getField(size_t index) const {
-        const char* field = csv_line_get_field(line_, index);
-        return field ? field : "";
+    const char* getField(size_t index) const {
+        return line ? csv_line_get_field(line, index) : nullptr;
     }
     
     // Get number of fields
     size_t getFieldCount() const {
-        return line_ ? line_->field_count : 0;
+        return line ? line->field_count : 0;
     }
     
     // Get line number
     size_t getLineNumber() const {
-        return line_ ? line_->line_number : 0;
+        return line ? line->line_number : 0;
     }
 };
 
@@ -87,30 +92,42 @@ extern "C" {
 // CSV Parser wrapper class
 class Parser {
 private:
-    ::CSVParser* parser_;
-    ErrorCallback error_callback_;
+    CSVParser* parser;
+    ErrorCallback error_handler;
+    std::function<void(size_t, double)> progress_handler;
     
+    static void c_error_handler(CSVErrorCode error, size_t line, const char* msg, void* context) {
+        auto* self = static_cast<Parser*>(context);
+        if (self && self->error_handler) {
+            self->error_handler(error, line, msg ? msg : "");
+        }
+    }
+
+    static void c_progress_handler(size_t line, double progress, void* context) {
+        auto* self = static_cast<Parser*>(context);
+        if (self && self->progress_handler) {
+            self->progress_handler(line, progress);
+        }
+    }
+
 public:
     Parser(const std::string& filename, char delimiter = ',', bool has_header = true,
-            ErrorCallback error_callback = nullptr)
-        : parser_(nullptr), error_callback_(error_callback) {
+           std::function<void(CSVErrorCode, size_t, const std::string&)> eh = nullptr,
+           std::function<void(size_t, double)> ph = nullptr)
+        : parser(nullptr), error_handler(eh), progress_handler(ph) {
         
-        parser_ = csv_parser_init(
-            filename.c_str(), 
-            delimiter,
-            has_header,
-            error_callback_ ? csv_error_handler_bridge : nullptr,
-            error_callback_ ? &error_callback_ : nullptr
-        );
+        parser = csv_parser_init(filename.c_str(), delimiter, has_header,
+                               c_error_handler, this,
+                               c_progress_handler, this);
         
-        if (!parser_) {
-            throw std::runtime_error("Failed to initialize CSV parser for file: " + filename);
+        if (!parser) {
+            throw std::runtime_error("Failed to initialize CSV parser");
         }
     }
     
     ~Parser() {
-        if (parser_) {
-            csv_parser_free(parser_);
+        if (parser) {
+            csv_parser_free(parser);
         }
     }
     
@@ -118,21 +135,38 @@ public:
     Parser(const Parser&) = delete;
     Parser& operator=(const Parser&) = delete;
     
+    // Allow moving
+    Parser(Parser&& other) noexcept : parser(other.parser) {
+        other.parser = nullptr;
+    }
+    
+    Parser& operator=(Parser&& other) noexcept {
+        if (this != &other) {
+            if (parser) {
+                csv_parser_free(parser);
+            }
+            parser = other.parser;
+            other.parser = nullptr;
+        }
+        return *this;
+    }
+    
     // Read the next line
     CSVLineWrapper nextLine() {
-        return CSVLineWrapper(csv_parser_next_line(parser_));
+        if (!parser) return CSVLineWrapper(nullptr);
+        return CSVLineWrapper(csv_parser_next_line(parser));
     }
     
     // Get header index by name
     int getHeaderIndex(const std::string& header_name) const {
-        return csv_parser_get_header_index(parser_, header_name.c_str());
+        return parser ? csv_parser_get_header_index(parser, header_name.c_str()) : -1;
     }
     
     // Get field by header name
     std::string getField(const CSVLineWrapper& line, const std::string& header_name) const {
         if (!line) return "";
         
-        const char* field = csv_line_get_field_by_name(line.get(), parser_, header_name.c_str());
+        const char* field = csv_line_get_field_by_name(line.get(), parser, header_name.c_str());
         return field ? field : "";
     }
     
@@ -141,7 +175,7 @@ public:
         std::vector<CSVLineWrapper> lines;
         
         while (true) {
-            CSVLineWrapper line(csv_parser_next_line(parser_));
+            CSVLineWrapper line(csv_parser_next_line(parser));
             if (!line) break;
             
             lines.push_back(std::move(line));
@@ -171,33 +205,12 @@ public:
     
     // Get header count - use accessor function instead of direct struct access
     size_t getHeaderCount() const {
-        // We'll need to add a C function to expose this
-        if (!parser_) return 0;
-        // Call the C function instead of direct access
-        return csv_parser_get_header_count(parser_);
+        return parser ? csv_parser_get_header_count(parser) : 0;
     }
     
     // Get header name by index - use accessor function instead of direct struct access
-    std::string getHeaderName(size_t index) const {
-        if (!parser_) return "";
-        // Call the C function instead of direct array access
-        const char* header = csv_parser_get_header_name(parser_, index);
-        return header ? header : "";
-    }
-    
-    // Read a batch of lines for parallel processing
-    std::vector<CSVLineWrapper> nextBatch(size_t batch_size) {
-        std::vector<CSVLineWrapper> batch;
-        batch.reserve(batch_size);
-        
-        std::vector<CSVLine*> lines(batch_size, nullptr);
-        size_t count = csv_parser_next_batch(parser_, batch_size, lines.data());
-        
-        for (size_t i = 0; i < count; i++) {
-            batch.emplace_back(CSVLineWrapper(lines[i]));
-        }
-        
-        return batch;
+    const char* getHeaderName(size_t index) const {
+        return parser ? csv_parser_get_header_name(parser, index) : nullptr;
     }
 };
 

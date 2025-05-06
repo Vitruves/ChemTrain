@@ -1,8 +1,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <sstream>
 #include <chrono>
 #include <iomanip>
 #include <map>
@@ -11,6 +9,7 @@
 #include <stdexcept>
 #include <atomic>
 #include <omp.h>
+#include <sys/stat.h>
 
 // RDKit Includes
 #include <GraphMol/GraphMol.h>
@@ -33,6 +32,7 @@
 #include <GraphMol/ChemTransforms/ChemTransforms.h>
 #include <RDGeneral/BoostStartInclude.h>
 #include <RDGeneral/BoostEndInclude.h>
+#include <RDGeneral/RDLog.h>
 
 // Local Descriptor Includes
 #include "common.hpp" // Defining desfact::DescriptorResult
@@ -45,7 +45,7 @@
 
 // CSV parser includes
 #include "csv_parser.h"
-#include "csv_wrapper.hpp"
+#include "csv_writer.h"
 
 // Terminal colors for pretty output
 namespace Color {
@@ -109,8 +109,8 @@ void drawProgressBar(long long current, long long total,
     auto now = std::chrono::steady_clock::now();
     
     // Limit refresh rate to avoid flicker but ensure smooth updates
-    // Use 100ms as update frequency (10 updates per second) 
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count() < 100) {
+    // Use 1ms as update frequency (1000 updates per second) for ultra-smooth display
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count() < 1) {
         return;
     }
     lastUpdate = now;
@@ -301,18 +301,283 @@ std::vector<std::string> parseCSVLine(const std::string& line, char delimiter = 
     return fields;
 }
 
-// Constants for parallel processing
-const size_t BATCH_SIZE = 5000;  // Larger batch size for better performance
-const size_t MIN_BATCH_SIZE = 500; // Minimum batch size 
-const int MAX_NUM_THREADS = 32;    // Allow using more threads if available
+// Remove batch processing constants
+const int MAX_NUM_THREADS = 128;    // Allow using more threads if available
+
+// Enhanced progress tracking class
+class ProgressTracker {
+private:
+    std::chrono::steady_clock::time_point startTime;
+    std::chrono::steady_clock::time_point lastUpdateTime;
+    size_t totalMolecules;
+    std::atomic<size_t> processedBytes;
+    std::atomic<size_t> processedLines;
+    std::atomic<size_t> successCount;
+    std::atomic<size_t> errorCount;
+    bool quietMode;
+    
+public:
+    ProgressTracker(const std::string& inputFile, bool quiet = false) 
+        : startTime(std::chrono::steady_clock::now())
+        , lastUpdateTime(startTime)
+        , processedBytes(0)
+        , processedLines(0)
+        , successCount(0)
+        , errorCount(0)
+        , quietMode(quiet) {
+        
+        // Extract molecule count from filename if it follows the pattern like "ChEMBL-100K-smiles.csv"
+        totalMolecules = 0;
+        std::string filename = inputFile.substr(inputFile.find_last_of("/\\") + 1);
+        
+        // Try to find a pattern like "100K" in the filename
+        size_t pos = filename.find("K-");
+        if (pos != std::string::npos) {
+            // Look for the number before "K-"
+            size_t startPos = filename.find_last_of("-", pos) + 1;
+            if (startPos != std::string::npos && startPos < pos) {
+                std::string countStr = filename.substr(startPos, pos - startPos);
+                try {
+                    totalMolecules = std::stoi(countStr) * 1000; // Convert "100K" to 100000
+                } catch (...) {
+                    totalMolecules = 0; // Failed to parse
+                }
+            }
+        }
+        
+        // If we couldn't extract from filename, fall back to file size estimation
+        if (totalMolecules == 0) {
+            struct stat st;
+            if (stat(inputFile.c_str(), &st) == 0) {
+                totalMolecules = st.st_size; // Fallback to file size as before
+            }
+        }
+    }
+    
+    void updateProgress(size_t newBytes, bool success = true) {
+        processedBytes += newBytes;
+        processedLines++;
+        if (success) {
+            successCount++;
+        } else {
+            errorCount++;
+        }
+        
+        // Always update progress for each molecule processed for ultra-smooth display
+        if (!quietMode) {
+            drawProgress();
+            lastUpdateTime = std::chrono::steady_clock::now();
+        }
+    }
+    
+    void drawProgress() const {
+        auto now = std::chrono::steady_clock::now();
+        drawProgressBar(processedLines, totalMolecules, startTime, quietMode);
+    }
+    
+    void printSummary() const {
+        auto endTime = std::chrono::steady_clock::now();
+        double totalTime = std::chrono::duration<double>(endTime - startTime).count();
+        double speed = totalTime > 0 ? processedLines / totalTime : 0;
+        
+        std::cout << "\r" << std::string(getTerminalWidth(), ' ') << "\r";
+        std::cout << Color::Bold << Color::Green << "✓ Processing complete!" << Color::Reset << " ";
+        std::cout << Color::Bold << processedLines << Color::Reset << " molecules processed ";
+        std::cout << "(" << Color::Green << successCount << Color::Reset << " successful, ";
+        if (errorCount > 0) {
+            std::cout << Color::Red << errorCount << Color::Reset << " errors) in ";
+        } else {
+            std::cout << "0 errors) in ";
+        }
+        std::cout << Color::Magenta << formatTime(totalTime) << Color::Reset;
+        std::cout << " (" << std::fixed << std::setprecision(1) << speed << " mol/s)\n";
+    }
+    
+    size_t getProcessedLines() const { return processedLines; }
+    size_t getSuccessCount() const { return successCount; }
+    size_t getErrorCount() const { return errorCount; }
+};
+
+// Main processing function
+void processCSV(const std::string& inputFile, const std::string& outputFile,
+                const std::vector<std::string>& descriptorNames,
+                int smilesColIndex, bool verboseMode, bool quietMode) {
+    
+    // Initialize progress tracking
+    ProgressTracker progress(inputFile, quietMode);
+    
+    // Initialize CSV parser and writer
+    CSVParser* parser = csv_parser_init(inputFile.c_str(), ',', true, 
+        [](CSVErrorCode error, size_t line, const char* msg, void* ctx) {
+            std::cerr << "CSV Error (line " << line << "): " << msg << std::endl;
+        }, nullptr, nullptr, nullptr);
+    
+    if (!parser) {
+        throw std::runtime_error("Failed to initialize CSV parser");
+    }
+    
+    CSVWriter* writer = csv_writer_init(outputFile.c_str(), ',',
+        [](CSVWriteErrorCode error, const char* msg, void*) {
+            std::cerr << "CSV Write Error: " << msg << std::endl;
+        }, nullptr);
+    
+    if (!writer) {
+        csv_parser_free(parser);
+        throw std::runtime_error("Failed to initialize CSV writer");
+    }
+    
+    // Write headers
+    std::vector<const char*> headers;
+    for (size_t i = 0; i < csv_parser_get_header_count(parser); i++) {
+        headers.push_back(csv_parser_get_header_name(parser, i));
+    }
+    for (const auto& desc : descriptorNames) {
+        headers.push_back(desc.c_str());
+    }
+    csv_writer_write_headers(writer, headers.data(), headers.size());
+    
+    // Initialize descriptor pipelines for each thread
+    int numThreads = std::min(omp_get_max_threads(), MAX_NUM_THREADS);
+    omp_set_num_threads(numThreads);
+    
+    if (verboseMode) {
+        std::cout << "Using " << numThreads << " threads for processing" << std::endl;
+    }
+
+    std::vector<desfact::DescriptorPipeline> threadPipelines(numThreads);
+    for (int t = 0; t < numThreads; t++) {
+        for (const auto& name : descriptorNames) {
+            threadPipelines[t].addDescriptor(name);
+        }
+    }
+    
+    // Process file line by line
+    #pragma omp parallel
+    {
+        int threadId = omp_get_thread_num();
+        auto& pipeline = threadPipelines[threadId];
+        // Store full strings first to manage lifetime
+        std::vector<std::string> outputFieldsStrings;
+        outputFieldsStrings.reserve(headers.size());
+        // Vector to hold the const char* pointers for the C API call
+        std::vector<const char*> outputFieldsPtrs;
+        outputFieldsPtrs.reserve(headers.size());
+
+        while (true) {
+            CSVLine* line = nullptr;
+            size_t lineSize = 0;
+
+            // Read next line
+            #pragma omp critical(csv_read)
+            {
+                line = csv_parser_next_line(parser);
+                if (line) {
+                    // Estimate line size based on current position for progress (less accurate but avoids full read)
+                    // Note: This is an approximation as line->line_number isn't directly bytes read
+                    lineSize = csv_parser_ftell(parser);
+                }
+            }
+
+            if (!line) break;
+
+            // Process the line
+            std::string smiles = line->field_count > smilesColIndex ? csv_line_get_field(line, smilesColIndex) : "";
+            bool success = false;
+            std::map<std::string, desfact::DescriptorResult> results; // Hold results here
+
+            outputFieldsStrings.clear(); // Clear for the new row
+
+            // Copy original fields
+            for (size_t i = 0; i < line->field_count; i++) {
+                 // Ensure field is not NULL before adding
+                 const char* field_ptr = csv_line_get_field(line, i);
+                 outputFieldsStrings.push_back(field_ptr ? field_ptr : "");
+            }
+
+            if (!smiles.empty()) {
+                try {
+                    // Use RDKit functionalities within try-catch
+                    RDKit::ROMol* molPtr = RDKit::SmilesToMol(smiles);
+                    std::unique_ptr<RDKit::ROMol> mol(molPtr); // Manage lifetime
+
+                    if (mol) {
+                        // Calculate descriptors
+                        results = pipeline.process(mol.get());
+                        success = true; // Assume success unless exception
+                    }
+                } catch (const std::exception& e) {
+                    success = false; // Mark as failed on exception
+                    if (verboseMode) {
+                        #pragma omp critical(error_log)
+                        std::cerr << "Error processing line " << line->line_number << " (SMILES: " << smiles << "): " << e.what() << std::endl;
+                    }
+                } catch (...) {
+                     success = false; // Mark as failed on unknown exception
+                    if (verboseMode) {
+                        #pragma omp critical(error_log)
+                        std::cerr << "Unknown error processing line " << line->line_number << " (SMILES: " << smiles << ")" << std::endl;
+                    }
+                }
+            }
+
+            // Add descriptor results (or placeholders if failed)
+            for (const auto& name : descriptorNames) {
+                if (success) {
+                    auto it = results.find(name);
+                    if (it != results.end()) {
+                        // Store the actual string
+                        outputFieldsStrings.push_back(safeVariantToString(it->second));
+                    } else {
+                        outputFieldsStrings.push_back("NA_Missing"); // Indicate descriptor wasn't found in results
+                    }
+                } else {
+                    // Add placeholders for failed lines
+                    outputFieldsStrings.push_back("NA_Error");
+                }
+            }
+
+            // Prepare the C-style array of pointers just before writing
+            outputFieldsPtrs.clear();
+            for (const auto& str : outputFieldsStrings) {
+                outputFieldsPtrs.push_back(str.c_str());
+            }
+
+            // Write output safely using the pointers derived from stable strings
+            #pragma omp critical(csv_write)
+            {
+                if (!csv_writer_write_row(writer, outputFieldsPtrs.data(), outputFieldsPtrs.size())) {
+                     // Optional: Log write error
+                     if(verboseMode) {
+                         std::cerr << "CSV Write Error occurred for line " << line->line_number << std::endl;
+                     }
+                }
+                // Update progress: use actual line number and success status
+                progress.updateProgress(lineSize, success); // Pass line number and success status
+            }
+
+            csv_line_free(line);
+        }
+    }
+    
+    // Cleanup
+    csv_writer_flush(writer);
+    csv_writer_free(writer);
+    csv_parser_free(parser);
+    
+    // Print final summary
+    if (!quietMode) {
+        progress.printSummary();
+    }
+}
 
 int main(int argc, char **argv) {
+    // Move these variable declarations to the top of main
     std::string inputFile, outputFile;
     std::vector<std::string> requestedDescriptorNames;
     std::string smilesColSpec = "SMILES";
     bool listDescriptors = false, verboseMode = false;
     bool quietMode = false;
-    
+
     // Check for help flag first
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -350,6 +615,7 @@ int main(int argc, char **argv) {
         else
             std::cerr << "Warning: Ignoring unknown argument: " << arg << std::endl;
     }
+
     
     // Validate required arguments
     if ((inputFile.empty() || outputFile.empty()) && !listDescriptors) {
@@ -378,7 +644,7 @@ int main(int argc, char **argv) {
         for (const auto &pair : categorized) {
             std::cout << "  [" << Color::Yellow << pair.first << Color::Reset << "]\n";
             for (const auto &desc : pair.second) {
-                std::cout << "    " << Color::Green << std::left << std::setw(25) << desc.first 
+                std::cout << "" << Color::Green << std::left << std::setw(25) << desc.first 
                           << Color::Reset << " " << desc.second << "\n";
             }
             std::cout << "\n";
@@ -406,23 +672,6 @@ int main(int argc, char **argv) {
     std::cout << Color::Bold << Color::Cyan << "Calculating " << finalDescriptorNames.size() 
                << " descriptors for input: " << inputFile << Color::Reset << std::endl;
 
-    // Initialize the CSV parser with error handling
-    csv::Parser csvParser(inputFile, ',', true, [](CSVErrorCode error, size_t line, const std::string& msg) {
-        std::cerr << "CSV Error (line " << line << "): " << msg << std::endl;
-    });
-
-    // Open output file
-    std::ofstream outputStream(outputFile);
-    if (!outputStream.is_open()) {
-        std::cerr << "Error: Cannot open output file: " << outputFile << std::endl;
-        return 1;
-    }
-
-    // Create a larger buffer for file operations to improve I/O performance
-    const size_t FILE_BUFFER_SIZE = 1048576; // 1MB buffer
-    std::vector<char> outputBuffer(FILE_BUFFER_SIZE);
-    outputStream.rdbuf()->pubsetbuf(outputBuffer.data(), FILE_BUFFER_SIZE);
-
     // Get SMILES column index
     int smilesColIndex = 0;
     if (!smilesColSpec.empty()) {
@@ -431,250 +680,48 @@ int main(int argc, char **argv) {
             smilesColIndex = std::stoi(smilesColSpec);
         } catch (const std::invalid_argument&) {
             // It's a column name, look it up in the headers
-            smilesColIndex = csvParser.getHeaderIndex(smilesColSpec);
-            if (smilesColIndex < 0) {
-                std::cerr << "Error: SMILES column name '" << smilesColSpec << "' not found in CSV header." << std::endl;
+            CSVParser* parser = csv_parser_init(inputFile.c_str(), ',', true, 
+                [](CSVErrorCode error, size_t line, const char* msg, void* ctx) {
+                    std::cerr << "CSV Error (line " << line << "): " << msg << std::endl;
+                }, nullptr, nullptr, nullptr);
+            if (parser) {
+                smilesColIndex = csv_parser_get_header_index(parser, smilesColSpec.c_str());
+                csv_parser_free(parser);
+                if (smilesColIndex < 0) {
+                    std::cerr << "Error: SMILES column name '" << smilesColSpec << "' not found in CSV header." << std::endl;
+                    return 1;
+                }
+            } else {
+                std::cerr << "Error: Failed to initialize CSV parser for column lookup." << std::endl;
                 return 1;
             }
         }
     } else {
         // Try to find a column named "SMILES"
-        smilesColIndex = csvParser.getHeaderIndex("SMILES");
-        if (smilesColIndex < 0) smilesColIndex = 0; // Default to first column
-    }
-
-    // Write original header + new descriptor columns
-    outputStream << csvParser.getHeaderLine();
-    for (const auto &name : finalDescriptorNames)
-        outputStream << "," << name;
-    outputStream << "\n";
-
-    // Set the number of threads for OpenMP
-    int numThreads = omp_get_max_threads();
-    // Allow more aggressive threading
-    if (numThreads > MAX_NUM_THREADS) {
-        numThreads = MAX_NUM_THREADS;
-    }
-    omp_set_num_threads(numThreads);
-    
-    if (verboseMode) {
-        std::cout << "Using " << numThreads << " threads for processing" << std::endl;
-    }
-
-    // Processing statistics
-    std::atomic<long long> totalProcessed(0);
-    std::atomic<long long> successCount(0);
-    std::atomic<long long> errorCount(0);
-    
-    // Estimate total lines for progress bar
-    long long totalLinesEstimate = 0;
-    if (!quietMode) {
-        // Rough estimation of total lines without reading the whole file
-        std::ifstream counterStream(inputFile);
-        if (counterStream) {
-            std::string line;
-            // Skip header
-            std::getline(counterStream, line);
-            // Count lines with a limit to avoid slow startup
-            const int MAX_COUNT_LINES = 10000;
-            int countedLines = 0;
-            while (countedLines < MAX_COUNT_LINES && std::getline(counterStream, line))
-                countedLines++;
-            
-            // If we read the whole file, use the exact count
-            if (countedLines < MAX_COUNT_LINES) {
-                totalLinesEstimate = countedLines;
-            } else {
-                // Estimate based on file size
-                size_t currentPos = counterStream.tellg();
-                counterStream.seekg(0, std::ios::end);
-                size_t fileSize = counterStream.tellg();
-                
-                // Avoid division by zero
-                if (currentPos > 0) {
-                    double bytesPerLine = static_cast<double>(currentPos) / countedLines;
-                    totalLinesEstimate = static_cast<long long>(fileSize / bytesPerLine);
-                }
-            }
-            counterStream.close();
+        CSVParser* parser = csv_parser_init(inputFile.c_str(), ',', true, 
+            [](CSVErrorCode error, size_t line, const char* msg, void* ctx) {
+                std::cerr << "CSV Error (line " << line << "): " << msg << std::endl;
+            }, nullptr, nullptr, nullptr);
+        if (parser) {
+            smilesColIndex = csv_parser_get_header_index(parser, "SMILES");
+            csv_parser_free(parser);
+            if (smilesColIndex < 0) smilesColIndex = 0; // Default to first column
+        } else {
+            std::cerr << "Error: Failed to initialize CSV parser for default SMILES column lookup." << std::endl;
+            return 1;
         }
     }
 
-    // Start timing
-    auto startTime = std::chrono::steady_clock::now();
-    auto lastProgressUpdateTime = startTime;
-    
-    // Process file in batches for better efficiency
-    std::vector<std::stringstream> threadBuffers(numThreads);
-    const size_t OUTPUT_FLUSH_THRESHOLD = 10000;
-    
-    // Create a thread-local pipeline for better cache performance
-    std::vector<desfact::DescriptorPipeline> threadPipelines(numThreads);
-    for (int t = 0; t < numThreads; t++) {
-        for (const auto &name : finalDescriptorNames) {
-            threadPipelines[t].addDescriptor(name);
-        }
+    try {
+        processCSV(inputFile, outputFile, finalDescriptorNames, 
+                  smilesColIndex, verboseMode, quietMode);
+        std::cout << Color::Bold << Color::Green 
+                  << "Program completed successfully." << Color::Reset << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << Color::Bold << Color::Red 
+                  << "Error: " << e.what() << Color::Reset << std::endl;
+        return 1;
     }
     
-    // Process the file in parallel batches
-    bool processing = true;
-    #pragma omp parallel
-    {
-        int threadId = omp_get_thread_num();
-        auto& localBuffer = threadBuffers[threadId];
-        auto& localPipeline = threadPipelines[threadId];
-        size_t localBufferLineCount = 0;
-        
-        while (processing) {
-            std::vector<csv::CSVLineWrapper> batch;
-            size_t batchSize = 0;
-            
-            // Each thread gets its own batch
-            #pragma omp critical(csv_read)
-            {
-                batch = csvParser.nextBatch(BATCH_SIZE / numThreads);
-                batchSize = batch.size();
-                if (batch.empty()) {
-                    processing = false;
-                }
-            }
-            
-            // Process this thread's batch
-            if (batchSize > 0) {
-                long long batchStartIdx = 0;
-                
-                // Replace the atomic capture with a simpler approach
-                #pragma omp critical(batch_index)
-                {
-                    batchStartIdx = totalProcessed;
-                    totalProcessed += batchSize;
-                }
-                
-                // Process all the records in this thread's batch
-                for (size_t i = 0; i < batchSize; i++) {
-                    auto& line = batch[i];
-                    
-                    // Get SMILES from the CSV line
-                    std::string smiles = line.getField(smilesColIndex);
-                    
-                    // Start building output line with original content
-                    std::string outputLine;
-                    for (size_t j = 0; j < line.getFieldCount(); j++) {
-                        if (j > 0) outputLine += ",";
-                        outputLine += line.getField(j);
-                    }
-                    
-                    if (!smiles.empty()) {
-                        try {
-                            // Parse SMILES to molecule
-                            std::unique_ptr<RDKit::ROMol> mol(RDKit::SmilesToMol(smiles));
-                            
-                            if (mol) {
-                                // Calculate descriptors
-                                auto descriptorResults = localPipeline.process(mol.get());
-                                
-                                // Output descriptor values
-                                for (const auto &name : finalDescriptorNames) {
-                                    outputLine += ",";
-                                    auto it = descriptorResults.find(name);
-                                    if (it != descriptorResults.end()) {
-                                        outputLine += safeVariantToString(it->second);
-                                    } else {
-                                        outputLine += "NA";
-                                    }
-                                }
-                                
-                                successCount++;
-                            } else {
-                                // Failed to parse SMILES
-                                for (size_t j = 0; j < finalDescriptorNames.size(); j++) {
-                                    outputLine += ",NA_ParseError";
-                                }
-                                errorCount++;
-                            }
-                        } catch (const std::exception& e) {
-                            // Error during processing
-                            for (size_t j = 0; j < finalDescriptorNames.size(); j++) {
-                                outputLine += ",NA_Error";
-                            }
-                            errorCount++;
-                            if (verboseMode) {
-                                #pragma omp critical(error_log)
-                                std::cerr << "Error processing line " << (batchStartIdx + i) << ": " << e.what() << std::endl;
-                            }
-                        }
-                    } else {
-                        // Empty SMILES
-                        for (size_t j = 0; j < finalDescriptorNames.size(); j++) {
-                            outputLine += ",NA_EmptySmiles";
-                        }
-                        errorCount++;
-                    }
-                    
-                    outputLine += "\n";
-                    localBuffer << outputLine;
-                    localBufferLineCount++;
-                }
-                
-                // Periodically flush the thread-local buffer to the output file
-                if (localBufferLineCount >= OUTPUT_FLUSH_THRESHOLD) {
-                    #pragma omp critical(file_write)
-                    {
-                        outputStream << localBuffer.str();
-                    }
-                    localBuffer.str("");
-                    localBuffer.clear();
-                    localBufferLineCount = 0;
-                }
-                
-                // Update progress bar periodically - using time-based updates
-                auto now = std::chrono::steady_clock::now();
-                if (!quietMode && 
-                    std::chrono::duration_cast<std::chrono::milliseconds>(now - lastProgressUpdateTime).count() >= 100) {
-                    #pragma omp critical(progress_update)
-                    {
-                        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastProgressUpdateTime).count() >= 100) {
-                            drawProgressBar(totalProcessed, totalLinesEstimate, startTime, quietMode);
-                            lastProgressUpdateTime = now;
-                        }
-                    }
-                }
-            }
-        }
-        
-        // Flush any remaining output from this thread
-        if (localBufferLineCount > 0) {
-            #pragma omp critical(file_write)
-            {
-                outputStream << localBuffer.str();
-            }
-        }
-    }
-    
-    // Final progress bar update
-    if (!quietMode) {
-        drawProgressBar(totalProcessed, totalLinesEstimate, startTime, quietMode);
-        std::cout << std::endl;
-    }
-    
-    // Calculate performance metrics
-    auto endTime = std::chrono::steady_clock::now();
-    double totalTime = std::chrono::duration<double>(endTime - startTime).count();
-    double speed = (totalTime > 0 && successCount > 0) ? successCount / totalTime : 0;
-
-    // Print summary
-    std::cout << "\r" << std::string(getTerminalWidth(), ' ') << "\r"; // Clear line
-    std::cout << Color::Bold << Color::Green << "✓ Processing complete!" << Color::Reset << " ";
-    std::cout << Color::Bold << totalProcessed << Color::Reset << " molecules processed ";
-    std::cout << "(" << Color::Green << successCount << Color::Reset << " successful, ";
-    if (errorCount > 0) {
-        std::cout << Color::Red << errorCount << Color::Reset << " errors) in ";
-    } else {
-        std::cout << "0 errors) in ";
-    }
-    std::cout << Color::Magenta << formatTime(totalTime) << Color::Reset;
-    std::cout << " (" << std::fixed << std::setprecision(1) << speed << " mol/s)\n";
-    std::cout << Color::Bold << Color::Green << "Program completed successfully." << Color::Reset << std::endl;
-
     return 0;
 }

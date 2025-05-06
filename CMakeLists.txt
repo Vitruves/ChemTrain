@@ -21,24 +21,6 @@ add_compile_definitions(
     CHEMTRAIN_VERSION="${CMAKE_PROJECT_VERSION}"
 )
 
-# TBB support for additional concurrency features
-find_package(TBB QUIET)
-if(TBB_FOUND)
-    add_compile_definitions(WITH_TBB)
-    message(STATUS "Found TBB via find_package: ${TBB_VERSION}")
-else()
-    find_library(TBB_LIBRARY NAMES tbb)
-    find_path(TBB_INCLUDE_DIR NAMES tbb/tbb.h)
-    if(TBB_LIBRARY AND TBB_INCLUDE_DIR)
-        set(TBB_FOUND TRUE)
-        add_compile_definitions(WITH_TBB)
-        message(STATUS "Found TBB library manually: ${TBB_LIBRARY}")
-        include_directories(${TBB_INCLUDE_DIR})
-    else()
-        message(STATUS "TBB not found, will use std::async for parallelization")
-    endif()
-endif()
-
 # If find_package fails OR we skip it, locate libraries manually
 message(STATUS "Forcing manual RDKit library search...")
 
@@ -161,7 +143,12 @@ set(SOURCES
     src/descriptors/radius.cpp
     src/descriptors/brotomoreau.cpp
     src/descriptors/graphoperations.cpp
+)
+
+# C source files
+set(C_SOURCES
     src/csv_parser.c
+    src/csv_writer.c
 )
 
 # Add CSV parser support
@@ -174,8 +161,20 @@ add_custom_target(update_registry
     COMMENT "Updating descriptor registry"
 )
 
+# Set C standard for C files
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Create object library for C files
+add_library(csv_utils OBJECT ${C_SOURCES})
+set_target_properties(csv_utils PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    C_STANDARD 11
+    C_STANDARD_REQUIRED ON
+)
+
 # Executable
-add_executable(chemtrain ${SOURCES} src/main.cpp)
+add_executable(chemtrain ${SOURCES} $<TARGET_OBJECTS:csv_utils> src/main.cpp)
 
 # Make the main target depend on the registry update
 add_dependencies(chemtrain update_registry)
@@ -201,7 +200,7 @@ target_link_libraries(chemtrain PRIVATE
     Threads::Threads
     ${ARROW_LIBRARIES}
     ${PARQUET_LIBRARIES}
-    $<$<BOOL:${TBB_FOUND}>:TBB::tbb>
+    OpenMP::OpenMP_CXX
 )
 
 # Set output name
@@ -222,10 +221,6 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/src/config.hpp
 #define CHEMTRAIN_VERSION \"${CMAKE_PROJECT_VERSION}\"
 
 // Feature flags - automatically defined based on find results
-#ifdef WITH_TBB
-// TBB is available
-#endif
-
 #ifdef WITH_FAST_CSV_PARSER
 // Fast CSV parser is available
 #endif
@@ -311,7 +306,7 @@ target_link_libraries(chemtrain PRIVATE
     Threads::Threads
     ${ARROW_LIBRARIES}
     ${PARQUET_LIBRARIES}
-    $<$<BOOL:${TBB_FOUND}>:TBB::tbb>
+    OpenMP::OpenMP_CXX
 )
 
 # Add OpenMP support

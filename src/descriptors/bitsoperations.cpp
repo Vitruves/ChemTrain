@@ -1858,7 +1858,6 @@ void register_BitOperationsDescriptors() {
     registry.registerDescriptor(std::make_shared<ByteAndReductionDescriptor>());
     registry.registerDescriptor(std::make_shared<ByteOrReductionDescriptor>());
     registry.registerDescriptor(std::make_shared<ByteXorReductionDescriptor>());
-    registry.registerDescriptor(std::make_shared<NonZeroByteDensityDescriptor>());
     registry.registerDescriptor(std::make_shared<AsciiProductMod256Descriptor>());
     registry.registerDescriptor(std::make_shared<BitAlternationFreqDescriptor>());
     registry.registerDescriptor(std::make_shared<CharDistributionVarianceDescriptor>());
@@ -2126,13 +2125,6 @@ void register_ByteOrReductionDescriptor() {
 
 void register_ByteXorReductionDescriptor() {
     auto descriptor = std::make_shared<ByteXorReductionDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_NonZeroByteDensityDescriptor() {
-    auto descriptor = std::make_shared<NonZeroByteDensityDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
     registry.registerDescriptor(descriptor);
 }

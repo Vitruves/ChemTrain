@@ -194,13 +194,6 @@ DescriptorResult SmilesAromaticSulfurCountDescriptor::calculate(Context& context
     return countChar(smiles, 's');
 }
 
-// Aromatic phosphorus count
-DECLARE_DESCRIPTOR(SmilesAromaticPhosphorusCount, RegexCounts, "Count of aromatic phosphorus atoms 'p' in the SMILES string")
-DESCRIPTOR_DEPENDENCIES(SmilesAromaticPhosphorusCount) { return {}; }
-DescriptorResult SmilesAromaticPhosphorusCountDescriptor::calculate(Context& context) const {
-    const std::string& smiles = context.getSmiles();
-    return countChar(smiles, 'p');
-}
 
 // Aromatic halogen count
 DECLARE_DESCRIPTOR(SmilesAromaticHalogenCount, RegexCounts, "Count of aromatic halogen atoms (f, cl, br, i) in the SMILES string")
@@ -1288,9 +1281,9 @@ void register_SmilesBoronCountDescriptor() {
 }
 
 void register_SmilesSiliconCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesSiliconCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesSiliconCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesFluorineCountDescriptor() {
@@ -1361,78 +1354,78 @@ void register_SmilesThioetherCountDescriptor() {
 
 
 void register_SmilesAmideCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAmideCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAmideCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesNitrileCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesNitrileCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesNitrileCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 
 void register_SmilesSulfonylCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesSulfonylCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesSulfonylCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 
 void register_SmilesAlkyneCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAlkyneCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAlkyneCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesAlkeneCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAlkeneCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAlkeneCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 
 void register_SmilesFiveRingCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesFiveRingCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesFiveRingCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesSixRingCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesSixRingCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesSixRingCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesSevenRingCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesSevenRingCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesSevenRingCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesEightRingCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesEightRingCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesEightRingCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesIsotopeCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesIsotopeCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesIsotopeCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesTertiaryAmineCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesTertiaryAmineCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesTertiaryAmineCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesQuaternaryAmmoniumCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesQuaternaryAmmoniumCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesQuaternaryAmmoniumCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesPrimaryAmineCountDescriptor() {
@@ -1448,15 +1441,15 @@ void register_SmilesSecondaryAmineCountDescriptor() {
 }
 
 void register_SmilesSulfonamideCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesSulfonamideCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesSulfonamideCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesPhosphonateCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesPhosphonateCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesPhosphonateCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesAlkylHalideCountDescriptor() {
@@ -1467,15 +1460,15 @@ void register_SmilesAlkylHalideCountDescriptor() {
 
 
 void register_SmilesAliphaticNitroCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAliphaticNitroCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAliphaticNitroCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesAzideCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAzideCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAzideCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesDiazoCountDescriptor() {
@@ -1485,63 +1478,63 @@ void register_SmilesDiazoCountDescriptor() {
 }
 
 void register_SmilesThiocyanateCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesThiocyanateCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesThiocyanateCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesIsothiocyanateLinearCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesIsothiocyanateLinearCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesIsothiocyanateLinearCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesGuanidineCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesGuanidineCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesGuanidineCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesUreaCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesUreaCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesUreaCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesAmidineCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAmidineCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesAmidineCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesImidazoleCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesImidazoleCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesImidazoleCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesPyridineCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesPyridineCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesPyridineCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesPyrroleCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesPyrroleCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesPyrroleCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesFuranCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesFuranCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesFuranCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 void register_SmilesThiopheneCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesThiopheneCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<SmilesThiopheneCountDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 
@@ -1756,13 +1749,6 @@ void register_SmilesAromaticOxygenCountDescriptor() {
 
 void register_SmilesAromaticSulfurCountDescriptor() {
     auto descriptor = std::make_shared<SmilesAromaticSulfurCountDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesAromaticPhosphorusCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesAromaticPhosphorusCountDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
     registry.registerDescriptor(descriptor);
 }

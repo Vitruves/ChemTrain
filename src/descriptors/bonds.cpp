@@ -7,22 +7,14 @@
 #include <cmath>
 #include <vector>
 #include <limits>  // For numeric_limits
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-#include <tbb/concurrent_vector.h>
-#include <tbb/enumerable_thread_specific.h>
-#include <tbb/concurrent_unordered_map.h>
-#include <tbb/parallel_reduce.h>
-#include <tbb/parallel_scan.h>
-#include <tbb/cache_aligned_allocator.h>
-#include <tbb/task_arena.h>
-#include <tbb/partitioner.h>
+#include <numeric> // For std::accumulate
+#include <map>     // Use std::map instead of concurrent map
 
 namespace desfact {
 
-// Cache-aligned vectors for better memory access
+// Use standard vectors
 template<typename T>
-using aligned_vector = std::vector<T, tbb::cache_aligned_allocator<T>>;
+using aligned_vector = std::vector<T>;
 
 // Helper: get bond polarity (difference in Pauling EN) - uses precomputed ENs
 inline double bondPolarityPrecomputed(int an1, int an2) {
@@ -30,71 +22,6 @@ inline double bondPolarityPrecomputed(int an1, int an2) {
     double en2 = element::getElectronegativity(an2);
     return std::abs(en1 - en2);
 }
-
-// Thread-local counter structure to reduce atomic contention
-struct alignas(64) BondCounters {  // Ensure 64-byte alignment for cache lines
-    uint32_t singleBonds = 0;
-    uint32_t doubleBonds = 0;
-    uint32_t tripleBonds = 0;
-    uint32_t aromaticBonds = 0;
-    uint32_t rotatableBonds = 0;
-    uint32_t bondsToHetero = 0;
-    uint32_t bondsBetweenHetero = 0;
-    uint32_t ccBonds = 0;
-    uint32_t bondsToHydrogen = 0;
-    uint32_t heavyAtomBonds = 0;
-    uint32_t ringBonds = 0;
-    uint32_t singleRingBonds = 0;
-    uint32_t doubleRingBonds = 0;
-    uint32_t rotatableRingBonds = 0;
-    uint32_t bondsWithAromaticAtom = 0;
-    uint32_t bondsBothAromaticAtoms = 0;
-    uint32_t bondsWithSp3 = 0;
-    uint32_t bondsBothSp3 = 0;
-    uint32_t bondsWithSp2 = 0;
-    uint32_t bondsBothSp2 = 0;
-    uint32_t bondsWithSp = 0;
-    uint32_t bondsBothSp = 0;
-    uint32_t bondsWithHalogen = 0;
-    uint32_t bondsBothHalogen = 0;
-    uint32_t bondsWithMetal = 0;
-    uint32_t bondsBothMetal = 0;
-    uint32_t bondsWithRingAtom = 0;
-    uint32_t bondsBothRingAtoms = 0;
-    uint32_t bondsRingToNonRing = 0;
-
-    void merge(const BondCounters& other) {
-        singleBonds += other.singleBonds;
-        doubleBonds += other.doubleBonds;
-        tripleBonds += other.tripleBonds;
-        aromaticBonds += other.aromaticBonds;
-        rotatableBonds += other.rotatableBonds;
-        bondsToHetero += other.bondsToHetero;
-        bondsBetweenHetero += other.bondsBetweenHetero;
-        ccBonds += other.ccBonds;
-        bondsToHydrogen += other.bondsToHydrogen;
-        heavyAtomBonds += other.heavyAtomBonds;
-        ringBonds += other.ringBonds;
-        singleRingBonds += other.singleRingBonds;
-        doubleRingBonds += other.doubleRingBonds;
-        rotatableRingBonds += other.rotatableRingBonds;
-        bondsWithAromaticAtom += other.bondsWithAromaticAtom;
-        bondsBothAromaticAtoms += other.bondsBothAromaticAtoms;
-        bondsWithSp3 += other.bondsWithSp3;
-        bondsBothSp3 += other.bondsBothSp3;
-        bondsWithSp2 += other.bondsWithSp2;
-        bondsBothSp2 += other.bondsBothSp2;
-        bondsWithSp += other.bondsWithSp;
-        bondsBothSp += other.bondsBothSp;
-        bondsWithHalogen += other.bondsWithHalogen;
-        bondsBothHalogen += other.bondsBothHalogen;
-        bondsWithMetal += other.bondsWithMetal;
-        bondsBothMetal += other.bondsBothMetal;
-        bondsWithRingAtom += other.bondsWithRingAtom;
-        bondsBothRingAtoms += other.bondsBothRingAtoms;
-        bondsRingToNonRing += other.bondsRingToNonRing;
-    }
-};
 
 // --- Thread-local cache for bond statistics ---
 struct BondStatsCache {
@@ -134,8 +61,8 @@ struct BondStatsCache {
     aligned_vector<double> bondOrders;
     aligned_vector<double> bondPolarities;
     aligned_vector<int> bondAtomicNumDiffs;
-    tbb::concurrent_unordered_map<double, int> bondOrderCounts;
-    tbb::concurrent_unordered_map<int, int> bondPolarityCounts; // Key is polarity * 10, rounded
+    std::map<double, int> bondOrderCounts;
+    std::map<int, int> bondPolarityCounts; // Key is polarity * 10, rounded
 
     // --- Calculated Stats ---
     double meanBondPolarity = 0.0;
@@ -213,410 +140,179 @@ struct BondStatsCache {
         uint32_t numAtoms = mol->getNumAtoms();
         if (numBonds == 0) return;
 
-        // Pre-allocate with proper alignment and RESIZE (not just reserve)
-        const size_t alignment = 64;  // Cache line size
-        size_t alignedAtomSize = (numAtoms + alignment - 1) & ~(alignment - 1);
-        size_t alignedBondSize = (numBonds + alignment - 1) & ~(alignment - 1);
-        
-        atomNums.resize(alignedAtomSize);
-        atomHybs.resize(alignedAtomSize);
-        atomIsHetero.resize(alignedAtomSize);
-        atomIsHeavy.resize(alignedAtomSize);
-        atomInRing.resize(alignedAtomSize);
-        atomIsAromatic.resize(alignedAtomSize);
-        atomIsHalogen.resize(alignedAtomSize);
-        atomIsMetal.resize(alignedAtomSize);
-        bondIsRotatable.resize(alignedBondSize);
+        // Resize standard vectors
+        atomNums.resize(numAtoms);
+        atomHybs.resize(numAtoms);
+        atomIsHetero.resize(numAtoms);
+        atomIsHeavy.resize(numAtoms);
+        atomInRing.resize(numAtoms);
+        atomIsAromatic.resize(numAtoms);
+        atomIsHalogen.resize(numAtoms);
+        atomIsMetal.resize(numAtoms);
+        bondIsRotatable.resize(numBonds);
 
         auto ringInfo = mol->getRingInfo();
 
-        // Process atoms in cache-friendly chunks
-        constexpr size_t ATOMS_PER_CHUNK = 4;  // Small chunk size for better load balancing
-        
-        tbb::parallel_for(
-            tbb::blocked_range<size_t>(0, numAtoms, ATOMS_PER_CHUNK),
-            [&](const tbb::blocked_range<size_t>& range) {
-                for (size_t i = range.begin(); i < range.end(); ++i) {
-                    const RDKit::Atom* atom = mol->getAtomWithIdx(i);
-                    int an = atom->getAtomicNum();
-                    
-                    // Write to aligned locations
-                    size_t aligned_idx = (i + alignment - 1) & ~(alignment - 1);
-                    if (aligned_idx < alignedAtomSize) {  // Bounds check
-                        atomNums[i] = an;  // Use original index for actual data
-                        atomHybs[i] = atom->getHybridization();
-                        atomIsHetero[i] = element::isHeteroatom(an);
-                        atomIsHeavy[i] = an > 1;
-                        atomInRing[i] = ringInfo->numAtomRings(i) > 0;
-                        atomIsAromatic[i] = atom->getIsAromatic();
-                        atomIsHalogen[i] = element::isHalogen(an);
-                        atomIsMetal[i] = element::isMetal(an);
-                    }
-                }
-            },
-            tbb::static_partitioner()
-        );
+        // Process atoms sequentially
+        for (size_t i = 0; i < numAtoms; ++i) {
+            const RDKit::Atom* atom = mol->getAtomWithIdx(i);
+            int an = atom->getAtomicNum();
+            atomNums[i] = an;
+            atomHybs[i] = atom->getHybridization();
+            atomIsHetero[i] = element::isHeteroatom(an);
+            atomIsHeavy[i] = an > 1;
+            atomInRing[i] = ringInfo->numAtomRings(i) > 0;
+            atomIsAromatic[i] = atom->getIsAromatic();
+            atomIsHalogen[i] = element::isHalogen(an);
+            atomIsMetal[i] = element::isMetal(an);
+        }
 
-        // Process bonds in cache-friendly chunks
-        constexpr size_t BONDS_PER_CHUNK = 4;
-        
-        tbb::parallel_for(
-            tbb::blocked_range<size_t>(0, numBonds, BONDS_PER_CHUNK),
-            [&](const tbb::blocked_range<size_t>& range) {
-                for (size_t i = range.begin(); i < range.end(); ++i) {
-                    const RDKit::Bond* bond = mol->getBondWithIdx(i);
-                    size_t aligned_idx = (i + alignment - 1) & ~(alignment - 1);
-                    if (aligned_idx < alignedBondSize) {  // Bounds check
-                        bondIsRotatable[i] = mol::isRotatableBond(bond);  // Use original index
-                    }
-                }
-            },
-            tbb::static_partitioner()
-        );
+        // Process bonds sequentially (for rotatable info)
+        for (size_t i = 0; i < numBonds; ++i) {
+            const RDKit::Bond* bond = mol->getBondWithIdx(i);
+            bondIsRotatable[i] = mol::isRotatableBond(bond);
+        }
 
-        // Use thread-local storage with proper alignment
-        using TLS = tbb::enumerable_thread_specific<BondCounters, tbb::cache_aligned_allocator<BondCounters>>;
-        TLS tls_counters;
+        // Use standard vectors for properties
+        std::vector<double> localBondOrders;
+        std::vector<double> localBondPolarities;
+        std::vector<int> localBondAtomicNumDiffs;
+        localBondOrders.reserve(numBonds);
+        localBondPolarities.reserve(numBonds);
+        localBondAtomicNumDiffs.reserve(numBonds);
 
-        // Bond property structure with proper alignment
-        struct alignas(64) BondProperty {
-            double order;
-            double polarity;
-            int atomicNumDiff;
-            int roundedPolarity;
-            bool isSingle;
-            bool isDouble;
-            bool isTriple;
-            bool isAromatic;
-            bool toHetero;
-            bool betweenHetero;
-            bool isCC;
-            bool toHydrogen;
-            bool betweenHeavy;
-            bool inRing;
-            bool singleInRing;
-            bool doubleInRing;
-            bool rotatableInRing;
-            bool withAromaticAtom;
-            bool bothAromaticAtoms;
-            bool withSp3;
-            bool bothSp3;
-            bool withSp2;
-            bool bothSp2;
-            bool withSp;
-            bool bothSp;
-            bool withHalogen;
-            bool bothHalogen;
-            bool withMetal;
-            bool bothMetal;
-            bool withRingAtom;
-            bool bothRingAtoms;
-            bool ringToNonRing;
-        };
+        // Process bonds sequentially
+        for (size_t i = 0; i < numBonds; ++i) {
+            const RDKit::Bond* bond = mol->getBondWithIdx(i);
+            int idx1 = bond->getBeginAtomIdx();
+            int idx2 = bond->getEndAtomIdx();
 
-        // Allocate bond properties vector with cache alignment
-        tbb::concurrent_vector<BondProperty, tbb::cache_aligned_allocator<BondProperty>> bondProps;
-        bondProps.reserve(alignedBondSize);  // Pre-allocate with alignment
+            // Bounds check (though should not be needed if idx are valid)
+            if (idx1 >= numAtoms || idx2 >= numAtoms) continue;
 
-        // Process bonds in optimized chunks
-        tbb::task_arena arena(tbb::task_arena::automatic);
-        arena.execute([&] {
-            tbb::parallel_for(
-                tbb::blocked_range<size_t>(0, numBonds, BONDS_PER_CHUNK),
-                [&](const tbb::blocked_range<size_t>& range) {
-                    auto& local_counters = tls_counters.local();
-                    
-                    for (size_t i = range.begin(); i < range.end(); ++i) {
-                        const RDKit::Bond* bond = mol->getBondWithIdx(i);
-                        int idx1 = bond->getBeginAtomIdx();
-                        int idx2 = bond->getEndAtomIdx();
-                        
-                        // Process bond properties in parallel
-                        BondProperty prop;
-                        
-                        // Use precomputed atom data with bounds checking
-                        if (idx1 < numAtoms && idx2 < numAtoms) {
-                            int an1 = atomNums[idx1];
-                            int an2 = atomNums[idx2];
-                            auto hyb1 = atomHybs[idx1];
-                            auto hyb2 = atomHybs[idx2];
-                            bool a1IsHetero = atomIsHetero[idx1];
-                            bool a2IsHetero = atomIsHetero[idx2];
-                            bool a1IsHeavy = atomIsHeavy[idx1];
-                            bool a2IsHeavy = atomIsHeavy[idx2];
-                            bool a1InRing = atomInRing[idx1];
-                            bool a2InRing = atomInRing[idx2];
-                            bool a1IsAromatic = atomIsAromatic[idx1];
-                            bool a2IsAromatic = atomIsAromatic[idx2];
-                            bool a1IsHalogen = atomIsHalogen[idx1];
-                            bool a2IsHalogen = atomIsHalogen[idx2];
-                            bool a1IsMetal = atomIsMetal[idx1];
-                            bool a2IsMetal = atomIsMetal[idx2];
+            // Use precomputed atom data
+            int an1 = atomNums[idx1];
+            int an2 = atomNums[idx2];
+            auto hyb1 = atomHybs[idx1];
+            auto hyb2 = atomHybs[idx2];
+            bool a1IsHetero = atomIsHetero[idx1];
+            bool a2IsHetero = atomIsHetero[idx2];
+            bool a1IsHeavy = atomIsHeavy[idx1];
+            bool a2IsHeavy = atomIsHeavy[idx2];
+            bool a1InRing = atomInRing[idx1];
+            bool a2InRing = atomInRing[idx2];
+            bool a1IsAromatic = atomIsAromatic[idx1];
+            bool a2IsAromatic = atomIsAromatic[idx2];
+            bool a1IsHalogen = atomIsHalogen[idx1];
+            bool a2IsHalogen = atomIsHalogen[idx2];
+            bool a1IsMetal = atomIsMetal[idx1];
+            bool a2IsMetal = atomIsMetal[idx2];
 
-                            // Use precomputed bond data
-                            bool isRotBond = bondIsRotatable[i];
-                            bool bondInRing = ringInfo->numBondRings(i) > 0;
+            bool isRotBond = bondIsRotatable[i];
+            bool bondInRing = ringInfo->numBondRings(i) > 0;
 
-                            // Calculate bond-specific values
-                            RDKit::Bond::BondType bondType = bond->getBondType();
-                            double currentOrder = bond->getBondTypeAsDouble();
-                            double currentPolarity = bondPolarityPrecomputed(an1, an2);
-                            int currentAtomicNumDiff = std::abs(an1 - an2);
-                            int roundedPolarity = static_cast<int>(currentPolarity * 10.0 + 0.5);
+            RDKit::Bond::BondType bondType = bond->getBondType();
+            double currentOrder = bond->getBondTypeAsDouble();
+            double currentPolarity = bondPolarityPrecomputed(an1, an2);
+            int currentAtomicNumDiff = std::abs(an1 - an2);
+            int roundedPolarity = static_cast<int>(currentPolarity * 10.0 + 0.5);
 
-                            // --- Accumulate Counts ---
-                            if (bondType == RDKit::Bond::SINGLE) {
-                                prop.isSingle = true;
-                                local_counters.singleBonds++;
-                                bondPolarityCounts[roundedPolarity]++;
-                            } else if (bondType == RDKit::Bond::DOUBLE) {
-                                prop.isDouble = true;
-                                local_counters.doubleBonds++;
-                                bondPolarityCounts[roundedPolarity]++;
-                            } else if (bondType == RDKit::Bond::TRIPLE) {
-                                prop.isTriple = true;
-                                local_counters.tripleBonds++;
-                                bondPolarityCounts[roundedPolarity]++;
-                            } else if (bondType == RDKit::Bond::AROMATIC) {
-                                prop.isAromatic = true;
-                                local_counters.aromaticBonds++;
-                                bondPolarityCounts[roundedPolarity]++;
-                            }
+            // --- Accumulate Counts directly ---
+            if (bondType == RDKit::Bond::SINGLE) singleBonds++;
+            else if (bondType == RDKit::Bond::DOUBLE) doubleBonds++;
+            else if (bondType == RDKit::Bond::TRIPLE) tripleBonds++;
+            else if (bondType == RDKit::Bond::AROMATIC) aromaticBonds++;
 
-                            // Store bond order count
-                            bondOrderCounts[currentOrder]++;
+            if (isRotBond) rotatableBonds++;
 
-                            // Heteroatom Counts
-                            prop.toHetero = a1IsHetero || a2IsHetero;
-                            prop.betweenHetero = a1IsHetero && a2IsHetero;
-                            if (prop.toHetero) local_counters.bondsToHetero++;
-                            if (prop.betweenHetero) local_counters.bondsBetweenHetero++;
+            // Store for stats
+            localBondOrders.push_back(currentOrder);
+            localBondPolarities.push_back(currentPolarity);
+            localBondAtomicNumDiffs.push_back(currentAtomicNumDiff);
 
-                            // C/H/Heavy Counts
-                            prop.isCC = an1 == 6 && an2 == 6;
-                            if (prop.isCC) local_counters.ccBonds++;
-                            prop.toHydrogen = an1 == 1 || an2 == 1;
-                            if (prop.toHydrogen) local_counters.bondsToHydrogen++;
-                            prop.betweenHeavy = a1IsHeavy && a2IsHeavy;
-                            if (prop.betweenHeavy) local_counters.heavyAtomBonds++;
+            // Update maps
+            bondOrderCounts[currentOrder]++;
+            bondPolarityCounts[roundedPolarity]++;
 
-                            // Ring Counts
-                            prop.inRing = bondInRing;
-                            if (prop.inRing) {
-                                local_counters.ringBonds++;
-                                prop.singleInRing = bondType == RDKit::Bond::SINGLE;
-                                prop.doubleInRing = bondType == RDKit::Bond::DOUBLE;
-                                prop.rotatableInRing = isRotBond;
-                                if (prop.singleInRing) local_counters.singleRingBonds++;
-                                if (prop.doubleInRing) local_counters.doubleRingBonds++;
-                                if (prop.rotatableInRing) local_counters.rotatableRingBonds++;
-                            }
+            // Heteroatom Counts
+            if (a1IsHetero || a2IsHetero) bondsToHetero++;
+            if (a1IsHetero && a2IsHetero) bondsBetweenHetero++;
 
-                            // Aromatic Atom Counts
-                            prop.withAromaticAtom = a1IsAromatic || a2IsAromatic;
-                            prop.bothAromaticAtoms = a1IsAromatic && a2IsAromatic;
-                            if (prop.withAromaticAtom) local_counters.bondsWithAromaticAtom++;
-                            if (prop.bothAromaticAtoms) local_counters.bondsBothAromaticAtoms++;
+            // C/H/Heavy Counts
+            if (an1 == 6 && an2 == 6) ccBonds++;
+            if (an1 == 1 || an2 == 1) bondsToHydrogen++;
+            if (a1IsHeavy && a2IsHeavy) heavyAtomBonds++;
 
-                            // Hybridization Counts
-                            prop.withSp3 = hyb1 == RDKit::Atom::SP3 || hyb2 == RDKit::Atom::SP3;
-                            prop.bothSp3 = hyb1 == RDKit::Atom::SP3 && hyb2 == RDKit::Atom::SP3;
-                            prop.withSp2 = hyb1 == RDKit::Atom::SP2 || hyb2 == RDKit::Atom::SP2;
-                            prop.bothSp2 = hyb1 == RDKit::Atom::SP2 && hyb2 == RDKit::Atom::SP2;
-                            prop.withSp = hyb1 == RDKit::Atom::SP || hyb2 == RDKit::Atom::SP;
-                            prop.bothSp = hyb1 == RDKit::Atom::SP && hyb2 == RDKit::Atom::SP;
-                            if (prop.withSp3) local_counters.bondsWithSp3++;
-                            if (prop.bothSp3) local_counters.bondsBothSp3++;
-                            if (prop.withSp2) local_counters.bondsWithSp2++;
-                            if (prop.bothSp2) local_counters.bondsBothSp2++;
-                            if (prop.withSp) local_counters.bondsWithSp++;
-                            if (prop.bothSp) local_counters.bondsBothSp++;
-
-                            // Halogen Counts
-                            prop.withHalogen = a1IsHalogen || a2IsHalogen;
-                            prop.bothHalogen = a1IsHalogen && a2IsHalogen;
-                            if (prop.withHalogen) local_counters.bondsWithHalogen++;
-                            if (prop.bothHalogen) local_counters.bondsBothHalogen++;
-
-                            // Metal Counts
-                            prop.withMetal = a1IsMetal || a2IsMetal;
-                            prop.bothMetal = a1IsMetal && a2IsMetal;
-                            if (prop.withMetal) local_counters.bondsWithMetal++;
-                            if (prop.bothMetal) local_counters.bondsBothMetal++;
-
-                            // Atom Ring Membership Counts
-                            prop.withRingAtom = a1InRing || a2InRing;
-                            prop.bothRingAtoms = a1InRing && a2InRing;
-                            if (prop.withRingAtom) local_counters.bondsWithRingAtom++;
-                            if (prop.bothRingAtoms) local_counters.bondsBothRingAtoms++;
-                            prop.ringToNonRing = (a1InRing && !a2InRing) || (!a1InRing && a2InRing);
-                            if (prop.ringToNonRing) local_counters.bondsRingToNonRing++;
-
-                            // Store for stats
-                            prop.order = currentOrder;
-                            prop.polarity = currentPolarity;
-                            prop.atomicNumDiff = currentAtomicNumDiff;
-                            prop.roundedPolarity = roundedPolarity;
-
-                            // Update Min/Max
-                            maxBondPolarity = std::max(maxBondPolarity, currentPolarity);
-                            minBondPolarity = std::min(minBondPolarity, currentPolarity);
-                            maxBondOrder = std::max(maxBondOrder, currentOrder);
-                            minBondOrder = std::min(minBondOrder, currentOrder);
-
-                            // Thread-safe updates using the local counter
-                            if (prop.isSingle) local_counters.singleBonds++;
-                            if (prop.isDouble) local_counters.doubleBonds++;
-                            if (prop.isTriple) local_counters.tripleBonds++;
-                            if (prop.isAromatic) local_counters.aromaticBonds++;
-                            if (prop.toHetero) local_counters.bondsToHetero++;
-                            if (prop.betweenHetero) local_counters.bondsBetweenHetero++;
-                            if (prop.isCC) local_counters.ccBonds++;
-                            if (prop.toHydrogen) local_counters.bondsToHydrogen++;
-                            if (prop.betweenHeavy) local_counters.heavyAtomBonds++;
-                            if (prop.inRing) local_counters.ringBonds++;
-                            if (prop.singleInRing) local_counters.singleRingBonds++;
-                            if (prop.doubleInRing) local_counters.doubleRingBonds++;
-                            if (prop.rotatableInRing) local_counters.rotatableRingBonds++;
-                            if (prop.withAromaticAtom) local_counters.bondsWithAromaticAtom++;
-                            if (prop.bothAromaticAtoms) local_counters.bondsBothAromaticAtoms++;
-                            if (prop.withSp3) local_counters.bondsWithSp3++;
-                            if (prop.bothSp3) local_counters.bondsBothSp3++;
-                            if (prop.withSp2) local_counters.bondsWithSp2++;
-                            if (prop.bothSp2) local_counters.bondsBothSp2++;
-                            if (prop.withSp) local_counters.bondsWithSp++;
-                            if (prop.bothSp) local_counters.bondsBothSp++;
-                            if (prop.withHalogen) local_counters.bondsWithHalogen++;
-                            if (prop.bothHalogen) local_counters.bondsBothHalogen++;
-                            if (prop.withMetal) local_counters.bondsWithMetal++;
-                            if (prop.bothMetal) local_counters.bondsBothMetal++;
-                            if (prop.withRingAtom) local_counters.bondsWithRingAtom++;
-                            if (prop.bothRingAtoms) local_counters.bondsBothRingAtoms++;
-                            if (prop.ringToNonRing) local_counters.bondsRingToNonRing++;
-
-                            // Store bond property
-                            bondProps.push_back(prop);
-                        }
-                    }
-                },
-                tbb::static_partitioner()
-            );
-        });
-
-        // Merge counters using parallel reduction
-        BondCounters final_counters = tbb::parallel_reduce(
-            tbb::blocked_range<TLS::iterator>(tls_counters.begin(), tls_counters.end()),
-            BondCounters(),
-            [](const tbb::blocked_range<TLS::iterator>& range, BondCounters init) {
-                for (auto it = range.begin(); it != range.end(); ++it) {
-                    init.merge(*it);
-                }
-                return init;
-            },
-            [](BondCounters a, BondCounters b) {
-                a.merge(b);
-                return a;
+            // Ring Counts
+            if (bondInRing) {
+                ringBonds++;
+                if (bondType == RDKit::Bond::SINGLE) singleRingBonds++;
+                if (bondType == RDKit::Bond::DOUBLE) doubleRingBonds++;
+                if (isRotBond) rotatableRingBonds++;
             }
-        );
 
-        // Update member variables
-        singleBonds = final_counters.singleBonds;
-        doubleBonds = final_counters.doubleBonds;
-        tripleBonds = final_counters.tripleBonds;
-        aromaticBonds = final_counters.aromaticBonds;
-        rotatableBonds = final_counters.rotatableBonds;
-        bondsToHetero = final_counters.bondsToHetero;
-        bondsBetweenHetero = final_counters.bondsBetweenHetero;
-        ccBonds = final_counters.ccBonds;
-        bondsToHydrogen = final_counters.bondsToHydrogen;
-        heavyAtomBonds = final_counters.heavyAtomBonds;
-        ringBonds = final_counters.ringBonds;
-        singleRingBonds = final_counters.singleRingBonds;
-        doubleRingBonds = final_counters.doubleRingBonds;
-        rotatableRingBonds = final_counters.rotatableRingBonds;
-        bondsWithAromaticAtom = final_counters.bondsWithAromaticAtom;
-        bondsBothAromaticAtoms = final_counters.bondsBothAromaticAtoms;
-        bondsWithSp3 = final_counters.bondsWithSp3;
-        bondsBothSp3 = final_counters.bondsBothSp3;
-        bondsWithSp2 = final_counters.bondsWithSp2;
-        bondsBothSp2 = final_counters.bondsBothSp2;
-        bondsWithSp = final_counters.bondsWithSp;
-        bondsBothSp = final_counters.bondsBothSp;
-        bondsWithHalogen = final_counters.bondsWithHalogen;
-        bondsBothHalogen = final_counters.bondsBothHalogen;
-        bondsWithMetal = final_counters.bondsWithMetal;
-        bondsBothMetal = final_counters.bondsBothMetal;
-        bondsWithRingAtom = final_counters.bondsWithRingAtom;
-        bondsBothRingAtoms = final_counters.bondsBothRingAtoms;
-        bondsRingToNonRing = final_counters.bondsRingToNonRing;
+            // Aromatic Atom Counts
+            if (a1IsAromatic || a2IsAromatic) bondsWithAromaticAtom++;
+            if (a1IsAromatic && a2IsAromatic) bondsBothAromaticAtoms++;
 
-        // Calculate statistics using cache-friendly access
-        auto stats = tbb::parallel_reduce(
-            tbb::blocked_range<size_t>(0, bondProps.size()),
-            std::make_tuple(0.0, 0.0, 0.0),
-            [&](const tbb::blocked_range<size_t>& range, auto init) -> std::tuple<double, double, double> {
-                double sum_p = std::get<0>(init);
-                double sum_o = std::get<1>(init);
-                double sum_d = std::get<2>(init);
-                
-                // Process in cache-line sized chunks
-                for (size_t i = range.begin(); i < range.end(); ++i) {
-                    const auto& prop = bondProps[i];  // Access directly without alignment
-                    sum_p += prop.polarity;
-                    sum_o += prop.order;
-                    sum_d += static_cast<double>(prop.atomicNumDiff);
-                }
-                return std::make_tuple(sum_p, sum_o, sum_d);
-            },
-            [](const std::tuple<double, double, double>& a, const std::tuple<double, double, double>& b) -> std::tuple<double, double, double> {
-                return std::make_tuple(
-                    std::get<0>(a) + std::get<0>(b),
-                    std::get<1>(a) + std::get<1>(b),
-                    std::get<2>(a) + std::get<2>(b)
-                );
-            }
-        );
+            // Hybridization Counts
+            if (hyb1 == RDKit::Atom::SP3 || hyb2 == RDKit::Atom::SP3) bondsWithSp3++;
+            if (hyb1 == RDKit::Atom::SP3 && hyb2 == RDKit::Atom::SP3) bondsBothSp3++;
+            if (hyb1 == RDKit::Atom::SP2 || hyb2 == RDKit::Atom::SP2) bondsWithSp2++;
+            if (hyb1 == RDKit::Atom::SP2 && hyb2 == RDKit::Atom::SP2) bondsBothSp2++;
+            if (hyb1 == RDKit::Atom::SP || hyb2 == RDKit::Atom::SP) bondsWithSp++;
+            if (hyb1 == RDKit::Atom::SP && hyb2 == RDKit::Atom::SP) bondsBothSp++;
 
-        // Calculate final statistics
-        auto [sum_polarity, sum_order, sum_atomic_diff] = stats;
-        if (numBonds > 0) {  // Guard against division by zero
+            // Halogen Counts
+            if (a1IsHalogen || a2IsHalogen) bondsWithHalogen++;
+            if (a1IsHalogen && a2IsHalogen) bondsBothHalogen++;
+
+            // Metal Counts
+            if (a1IsMetal || a2IsMetal) bondsWithMetal++;
+            if (a1IsMetal && a2IsMetal) bondsBothMetal++;
+
+            // Atom Ring Membership Counts
+            if (a1InRing || a2InRing) bondsWithRingAtom++;
+            if (a1InRing && a2InRing) bondsBothRingAtoms++;
+            if ((a1InRing && !a2InRing) || (!a1InRing && a2InRing)) bondsRingToNonRing++;
+
+            // Update Min/Max
+            maxBondPolarity = std::max(maxBondPolarity, currentPolarity);
+            minBondPolarity = std::min(minBondPolarity, currentPolarity);
+            maxBondOrder = std::max(maxBondOrder, currentOrder);
+            minBondOrder = std::min(minBondOrder, currentOrder);
+        }
+
+        // Calculate final statistics sequentially
+        // Use std::accumulate to sum the vector elements
+        double sum_polarity = std::accumulate(localBondPolarities.begin(), localBondPolarities.end(), 0.0);
+        double sum_order = std::accumulate(localBondOrders.begin(), localBondOrders.end(), 0.0);
+        double sum_atomic_diff = std::accumulate(localBondAtomicNumDiffs.begin(), localBondAtomicNumDiffs.end(), 0.0);
+
+        if (numBonds > 0) {
             meanBondPolarity = sum_polarity / numBonds;
             meanBondOrder = sum_order / numBonds;
             meanAtomicNumDiff = sum_atomic_diff / numBonds;
 
-            // Calculate variances in a separate parallel reduction to avoid memory issues
-            auto variances = tbb::parallel_reduce(
-                tbb::blocked_range<size_t>(0, bondProps.size()),
-                std::make_tuple(0.0, 0.0, 0.0),
-                [&](const tbb::blocked_range<size_t>& range, auto init) -> std::tuple<double, double, double> {
-                    double var_p = std::get<0>(init);
-                    double var_o = std::get<1>(init);
-                    double var_d = std::get<2>(init);
-                    
-                    for (size_t i = range.begin(); i < range.end(); ++i) {
-                        const auto& prop = bondProps[i];
-                        double dp = prop.polarity - meanBondPolarity;
-                        double do_ = prop.order - meanBondOrder;
-                        double dd = static_cast<double>(prop.atomicNumDiff) - meanAtomicNumDiff;
-                        var_p += dp * dp;
-                        var_o += do_ * do_;
-                        var_d += dd * dd;
-                    }
-                    return std::make_tuple(var_p, var_o, var_d);
-                },
-                [](const std::tuple<double, double, double>& a, const std::tuple<double, double, double>& b) -> std::tuple<double, double, double> {
-                    return std::make_tuple(
-                        std::get<0>(a) + std::get<0>(b),
-                        std::get<1>(a) + std::get<1>(b),
-                        std::get<2>(a) + std::get<2>(b)
-                    );
-                }
-            );
-
-            auto [varPolarity, varOrder, varAtomicNumDiff] = variances;
-            stddevBondPolarity = std::sqrt(varPolarity / numBonds);
-            stddevBondOrder = std::sqrt(varOrder / numBonds);
-            stddevAtomicNumDiff = std::sqrt(varAtomicNumDiff / numBonds);
+            double varPolarity = 0.0, varOrder = 0.0, varAtomicNumDiff = 0.0;
+            for (size_t i = 0; i < numBonds; ++i) {
+                double dp = localBondPolarities[i] - meanBondPolarity;
+                double do_ = localBondOrders[i] - meanBondOrder;
+                double dd = static_cast<double>(localBondAtomicNumDiffs[i]) - meanAtomicNumDiff;
+                varPolarity += dp * dp;
+                varOrder += do_ * do_;
+                varAtomicNumDiff += dd * dd;
+            }
+            // Guard against division by zero if numBonds is 1 for variance calculation
+            if (numBonds > 1) {
+                 stddevBondPolarity = std::sqrt(varPolarity / (numBonds - 1)); // Sample stddev
+                 stddevBondOrder = std::sqrt(varOrder / (numBonds - 1));      // Sample stddev
+                 stddevAtomicNumDiff = std::sqrt(varAtomicNumDiff / (numBonds - 1)); // Sample stddev
+            } else {
+                 stddevBondPolarity = 0.0;
+                 stddevBondOrder = 0.0;
+                 stddevAtomicNumDiff = 0.0;
+            }
         }
 
         // Most Common
@@ -636,7 +332,7 @@ struct BondStatsCache {
                 maxPolarityValue = pair.first;
             }
         }
-        mostCommonBondPolarity = static_cast<double>(maxPolarityValue) / 10.0; // Cast to double
+        mostCommonBondPolarity = static_cast<double>(maxPolarityValue) / 10.0;
 
         // Unique Counts
         uniqueBondOrders = bondOrderCounts.size();
@@ -1078,9 +774,9 @@ void register_MaxBondPolarityDescriptor() {
 
 
 void register_MinBondPolarityDescriptor() {
-    auto descriptor = std::make_shared<MinBondPolarityDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
+    // auto descriptor = std::make_shared<MinBondPolarityDescriptor>(); // Zero Variance
+    // auto& registry = DescriptorRegistry::getInstance();
+    // registry.registerDescriptor(descriptor);
 }
 
 
