@@ -5,6 +5,36 @@ project(ChemTrain VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Set output directory for binary
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# Sanitizer options
+option(WITH_ASAN "Build with AddressSanitizer" OFF)
+option(WITH_TSAN "Build with ThreadSanitizer" OFF)
+option(WITH_UBSAN "Build with UndefinedBehaviorSanitizer" OFF)
+
+# Configure sanitizers if enabled
+if(WITH_ASAN)
+    message(STATUS "Building with AddressSanitizer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+endif()
+
+if(WITH_TSAN)
+    message(STATUS "Building with ThreadSanitizer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -fno-omit-frame-pointer")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
+endif()
+
+if(WITH_UBSAN)
+    message(STATUS "Building with UndefinedBehaviorSanitizer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fno-omit-frame-pointer")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=undefined -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=undefined")
+endif()
+
 # RPATH configuration
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -137,7 +167,6 @@ src/common.cpp
     src/descriptors/regexfractions.cpp
     src/descriptors/weightfractions.cpp
     src/descriptors/regexelectronegativity.cpp
-    src/descriptors/bitsoperations.cpp
     src/descriptors/bordwellscale.cpp
     src/descriptors/bonds.cpp
     src/descriptors/radius.cpp
@@ -151,6 +180,7 @@ set(C_SOURCES
     src/csv_parser.c
     src/csv_writer.c
     src/descriptors/topological.c
+    src/descriptors/bitsoperations.c
 )
 
 # Add CSV parser support
@@ -186,7 +216,44 @@ target_include_directories(chemtrain PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# Final, single target_link_libraries call for chemtrain
+# Find RE2 library
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+    pkg_check_modules(RE2 IMPORTED_TARGET re2)
+endif()
+
+if(NOT RE2_FOUND)
+    find_library(RE2_LIBRARY NAMES re2)
+    find_path(RE2_INCLUDE_DIR NAMES re2/re2.h)
+    
+    if(RE2_LIBRARY AND RE2_INCLUDE_DIR)
+        set(RE2_FOUND TRUE)
+        set(RE2_LIBRARIES ${RE2_LIBRARY})
+        set(RE2_INCLUDE_DIRS ${RE2_INCLUDE_DIR})
+        message(STATUS "Found RE2 manually: ${RE2_LIBRARY}")
+    else()
+        message(FATAL_ERROR "RE2 library not found. Install libre2-dev package or equivalent")
+    endif()
+endif()
+
+# Include RE2 in the build
+include_directories(${RE2_INCLUDE_DIRS})
+
+# Replace the existing Arrow/Parquet detection
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(ARROW REQUIRED arrow>=20.0.0)
+pkg_check_modules(PARQUET REQUIRED parquet>=20.0.0)
+
+if(ARROW_FOUND AND PARQUET_FOUND)
+    add_compile_definitions(WITH_ARROW_PARQUET)
+    message(STATUS "Found Arrow and Parquet, enabling Parquet file support")
+    include_directories(${ARROW_INCLUDE_DIRS} ${PARQUET_INCLUDE_DIRS})
+endif()
+
+# Add OpenMP support
+find_package(OpenMP REQUIRED)
+
+# Final target_link_libraries call
 target_link_libraries(chemtrain PRIVATE
     ${RDKIT_LIBRARIES}
     ${Boost_LIBRARIES}
@@ -202,8 +269,11 @@ target_link_libraries(chemtrain PRIVATE
     Threads::Threads
     ${ARROW_LIBRARIES}
     ${PARQUET_LIBRARIES}
-    OpenMP::OpenMP_CXX
 )
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(chemtrain PRIVATE OpenMP::OpenMP_CXX)
+endif()
 
 # Set output name
 set_target_properties(chemtrain PROPERTIES
@@ -234,6 +304,19 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/src/config.hpp
 #ifdef WITH_ARROW_PARQUET
 // Arrow/Parquet support is available
 #endif
+
+// Sanitizer flags
+#ifdef WITH_ASAN
+// Address Sanitizer is enabled
+#endif
+
+#ifdef WITH_TSAN
+// Thread Sanitizer is enabled
+#endif
+
+#ifdef WITH_UBSAN
+// Undefined Behavior Sanitizer is enabled
+#endif
 ")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
@@ -249,70 +332,9 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/src/config.hpp
     DESTINATION include/chemtrain)
 
-# Replace the existing Arrow/Parquet detection
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(ARROW REQUIRED arrow>=20.0.0)
-pkg_check_modules(PARQUET REQUIRED parquet>=20.0.0)
-
-if(ARROW_FOUND AND PARQUET_FOUND)
-    add_compile_definitions(WITH_ARROW_PARQUET)
-    message(STATUS "Found Arrow and Parquet, enabling Parquet file support")
-    include_directories(${ARROW_INCLUDE_DIRS} ${PARQUET_INCLUDE_DIRS})
-    
-    # Add Arrow/Parquet to the target libraries
-    target_link_libraries(chemtrain PRIVATE
-        ${ARROW_LIBRARIES}
-        ${PARQUET_LIBRARIES}
-    )
-endif()
-
-# Find RE2 library
-find_package(PkgConfig QUIET)
-if(PkgConfig_FOUND)
-    pkg_check_modules(RE2 IMPORTED_TARGET re2)
-endif()
-
-if(NOT RE2_FOUND)
-    find_library(RE2_LIBRARY NAMES re2)
-    find_path(RE2_INCLUDE_DIR NAMES re2/re2.h)
-    
-    if(RE2_LIBRARY AND RE2_INCLUDE_DIR)
-        set(RE2_FOUND TRUE)
-        set(RE2_LIBRARIES ${RE2_LIBRARY})
-        set(RE2_INCLUDE_DIRS ${RE2_INCLUDE_DIR})
-        message(STATUS "Found RE2 manually: ${RE2_LIBRARY}")
-    else()
-        message(FATAL_ERROR "RE2 library not found. Install libre2-dev package or equivalent")
-    endif()
-endif()
-
-# Include RE2 in the build
-include_directories(${RE2_INCLUDE_DIRS})
-
-# Add regexcounts.cpp to sources (this was already added above, so commenting out to avoid duplication)
-# list(APPEND SOURCES src/descriptors/regexcounts.cpp)
-
-# Final target_link_libraries call
-target_link_libraries(chemtrain PRIVATE
-    ${RDKIT_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${Boost_LOG_LIBRARY}
-    ${Boost_LOG_SETUP_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_DATE_TIME_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
-    ${Boost_ATOMIC_LIBRARY}
-    ${RE2_LIBRARIES}
-    Threads::Threads
-    ${ARROW_LIBRARIES}
-    ${PARQUET_LIBRARIES}
-    OpenMP::OpenMP_CXX
+# After build, copy chemtrain binary to bin/ directory
+add_custom_command(TARGET chemtrain POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/bin
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:chemtrain> ${CMAKE_SOURCE_DIR}/bin/
+    COMMENT "Copying chemtrain binary to bin/ directory"
 )
-
-# Add OpenMP support
-find_package(OpenMP REQUIRED)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(chemtrain PRIVATE OpenMP::OpenMP_CXX)
-endif()

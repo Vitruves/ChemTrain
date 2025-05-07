@@ -1,6 +1,6 @@
 # Available Descriptors
 
-Total descriptors: 616
+Total descriptors: 544
 
 ## ATSDescriptor
 
@@ -22,83 +22,6 @@ Total descriptors: 616
 | `ATSdm6Descriptor` | ATS mass autocorrelation descriptor of lag 6 | None | `brotomoreau.cpp` |
 | `ATSdm7Descriptor` | ATS mass autocorrelation descriptor of lag 7 | None | `brotomoreau.cpp` |
 | `ATSdm8Descriptor` | ATS mass autocorrelation descriptor of lag 8 | None | `brotomoreau.cpp` |
-
-## BitOperationsDescriptor
-
-| Name | Description | Dependencies | Source File |
-|---|---|---|---|
-| `AsciiProductMod256Descriptor` | Product of all ASCII values, modulo 256 | None | `bitsoperations.cpp` |
-| `AsciiRangeCoverageDescriptor` | Ratio of ASCII range covered by the string | None | `bitsoperations.cpp` |
-| `AsciiSumDescriptor` | Sum of ASCII values of all characters | None | `bitsoperations.cpp` |
-| `AvalanchePatternSensitivityDescriptor` | Measure of bit pattern change propagation | None | `bitsoperations.cpp` |
-| `AvgBitPopulationCountDescriptor` | Average number of set bits per byte | None | `bitsoperations.cpp` |
-| `AvgLeadingZeroCountDescriptor` | Average number of leading zeros per byte | None | `bitsoperations.cpp` |
-| `AvgTrailingZeroCountDescriptor` | Average number of trailing zeros per byte | None | `bitsoperations.cpp` |
-| `BinaryCompressionRatioDescriptor` | Estimate of compressibility based on bit patterns | None | `bitsoperations.cpp` |
-| `BitAlternationFreqDescriptor` | Frequency of bit flips (transitions) per bit | None | `bitsoperations.cpp` |
-| `BitAutocorrelationDescriptor` | Autocorrelation of bit sequence with lag 1 | None | `bitsoperations.cpp` |
-| `BitCorrelationCoefDescriptor` | Correlation coefficient between even and odd bits | None | `bitsoperations.cpp` |
-| `BitCountDescriptor` | Total count of binary 1 bits in the SMILES string | None | `bitsoperations.cpp` |
-| `BitDensityDescriptor` | Density of 1 bits per byte | None | `bitsoperations.cpp` |
-| `BitDifferenceSumDescriptor` | Sum of bit differences between consecutive bytes | None | `bitsoperations.cpp` |
-| `BitDispersionIndexDescriptor` | Measure of how evenly distributed the bits are | None | `bitsoperations.cpp` |
-| `BitReversalDistanceDescriptor` | Hamming distance between bit pattern and its reversal | None | `bitsoperations.cpp` |
-| `BitRunLengthSizeDescriptor` | Estimate of bit-level run length encoding efficiency | None | `bitsoperations.cpp` |
-| `BitTransitionCountDescriptor` | Count of bit transitions (0→1, 1→0) | None | `bitsoperations.cpp` |
-| `BitwiseMajorityFunctionDescriptor` | Majority vote from adjacent bits | None | `bitsoperations.cpp` |
-| `ByteAndReductionDescriptor` | Result of ANDing all bytes together | None | `bitsoperations.cpp` |
-| `ByteDeltaEncodingSizeDescriptor` | Estimate of delta encoding efficiency | None | `bitsoperations.cpp` |
-| `ByteEntropyDescriptor` | Shannon entropy of byte distribution | None | `bitsoperations.cpp` |
-| `ByteGeometricMeanDescriptor` | Geometric mean of byte values | None | `bitsoperations.cpp` |
-| `ByteMarkovPropertyDescriptor` | Measure of how well bytes predict subsequent bytes | None | `bitsoperations.cpp` |
-| `ByteMirroringDistanceDescriptor` | Hamming distance of bytes from their bit-reversed versions | None | `bitsoperations.cpp` |
-| `ByteOrReductionDescriptor` | Result of ORing all bytes together | None | `bitsoperations.cpp` |
-| `BytePairTransitionsDescriptor` | Shannon entropy of byte pair transitions | None | `bitsoperations.cpp` |
-| `ByteReversalDistanceDescriptor` | Hamming distance between byte sequence and its reversal | None | `bitsoperations.cpp` |
-| `ByteRunEntropyDescriptor` | Entropy of run lengths of bytes | None | `bitsoperations.cpp` |
-| `ByteWiseMaximumDescriptor` | Maximum byte value in the string | None | `bitsoperations.cpp` |
-| `ByteWiseMedianDescriptor` | Median byte value in the string | None | `bitsoperations.cpp` |
-| `ByteWiseMinimumDescriptor` | Minimum byte value in the string | None | `bitsoperations.cpp` |
-| `ByteXorChecksumDescriptor` | XOR of all bytes in the string | None | `bitsoperations.cpp` |
-| `ByteXorReductionDescriptor` | Result of XORing all bytes together | None | `bitsoperations.cpp` |
-| `CharDistributionVarianceDescriptor` | Variance of character frequencies | None | `bitsoperations.cpp` |
-| `CharFrequencyEntropyDescriptor` | Shannon entropy of character frequencies | None | `bitsoperations.cpp` |
-| `CharPalindromeCheckDescriptor` | Boolean indicating if string is a character palindrome | None | `bitsoperations.cpp` |
-| `CharPosWeightedSumDescriptor` | Sum of byte values weighted by their position | None | `bitsoperations.cpp` |
-| `CharRunLengthDescriptor` | Average length of runs of identical characters | None | `bitsoperations.cpp` |
-| `CharSequenceComplexityDescriptor` | Ratio of unique characters to total length | None | `bitsoperations.cpp` |
-| `Crc8ChecksumDescriptor` | CRC8 checksum of the string | None | `bitsoperations.cpp` |
-| `DiagonalBitAccumulationDescriptor` | Sum of bits where index equals value | None | `bitsoperations.cpp` |
-| `EvenIndexedBitCountDescriptor` | Count of 1 bits at even-indexed positions | None | `bitsoperations.cpp` |
-| `FastBitHistogramDescriptor` | Histogram uniformity of bit patterns | None | `bitsoperations.cpp` |
-| `FastHashDescriptor` | FNV-1a hash value of the string | None | `bitsoperations.cpp` |
-| `FirstByteValueDescriptor` | Value of the first byte in the string | None | `bitsoperations.cpp` |
-| `FirstLastByteXorDescriptor` | XOR of first and last bytes | None | `bitsoperations.cpp` |
-| `HalfByteRotationHashDescriptor` | Hash value based on rotating half-bytes | None | `bitsoperations.cpp` |
-| `HammingWeightVarianceDescriptor` | Variance of population counts across bytes | None | `bitsoperations.cpp` |
-| `HighLowBitRatioDescriptor` | Ratio of high bits (values 1) to low bits (values 0) | None | `bitsoperations.cpp` |
-| `LastByteValueDescriptor` | Value of the last byte in the string | None | `bitsoperations.cpp` |
-| `LeastFrequentByteDescriptor` | Value of the least frequently occurring byte (that appears at least once) | None | `bitsoperations.cpp` |
-| `LeftRightBitBalanceDescriptor` | Difference between bit counts in left and right halves | None | `bitsoperations.cpp` |
-| `LongestBitRunDescriptor` | Length of longest consecutive bit run (0s or 1s) | None | `bitsoperations.cpp` |
-| `LowHighNibbleRatioDescriptor` | Ratio of frequency of low nibbles (0-7) to high nibbles (8-15) | None | `bitsoperations.cpp` |
-| `LzcntPatternDescriptor` | Pattern of leading zero counts | None | `bitsoperations.cpp` |
-| `MostFrequentByteDescriptor` | Value of the most frequently occurring byte | None | `bitsoperations.cpp` |
-| `MurmurHash3Descriptor` | MurmurHash3 hash value of the string | None | `bitsoperations.cpp` |
-| `NibbleEntropyDescriptor` | Shannon entropy of the nibble (4-bit) distribution | None | `bitsoperations.cpp` |
-| `NibbleHistogramBalanceDescriptor` | Balance of nibble frequencies (higher = more uniform) | None | `bitsoperations.cpp` |
-| `NonZeroByteDensityDescriptor` | Fraction of bytes that are non-zero | None | `bitsoperations.cpp` |
-| `OddEvenBitRatioDescriptor` | Ratio of 1 bits at odd positions to even positions | None | `bitsoperations.cpp` |
-| `OddIndexedBitCountDescriptor` | Count of 1 bits at odd-indexed positions | None | `bitsoperations.cpp` |
-| `PopcountVarianceDescriptor` | Variance of the bit count across bytes | None | `bitsoperations.cpp` |
-| `RollingByteChecksumDescriptor` | Adler-32 type rolling checksum | None | `bitsoperations.cpp` |
-| `SequentialXorDiffDescriptor` | Sum of sequential XOR differences between bytes | None | `bitsoperations.cpp` |
-| `SingleBitPatternMatchDescriptor` | Frequency of single bit patterns ('1' followed by '0') | None | `bitsoperations.cpp` |
-| `StringLengthDescriptor` | Raw length of the SMILES string | None | `bitsoperations.cpp` |
-| `SwarPopcountDescriptor` | SIMD-within-a-register population count | None | `bitsoperations.cpp` |
-| `TzcntPatternDescriptor` | Pattern of trailing zero counts | None | `bitsoperations.cpp` |
-| `UniqueByteCountDescriptor` | Count of unique byte values in the string | None | `bitsoperations.cpp` |
-| `ZeroBitRatioDescriptor` | Ratio of 0 bits to total bits | None | `bitsoperations.cpp` |
 
 ## BondStatsDescriptor
 

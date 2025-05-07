@@ -19,14 +19,14 @@ JOBS ?= $(shell nproc)
 # Executable name
 EXECUTABLE := chemtrain
 
-.PHONY: all clean configure build release debug relwithdebinfo deps test format lint install uninstall compiledb help
+.PHONY: all clean configure build release debug relwithdebinfo deps test format lint install uninstall compiledb help movebin
 
 # Default target
 all: release
 
 variance_analyzer: scripts/variance_analyzer.c
 	@echo "Building variance analyzer..."
-	@cd scripts && gcc -o variance_analyzer variance_analyzer.c -O3 -fopenmp -lm
+	@gcc -o bin/variance_analyzer scripts/variance_analyzer.c -lm -fopenmp -O3
 	
 # Clean build directory
 clean:
@@ -63,6 +63,7 @@ build: configure
 # --- User-facing Build Targets ---
 release:
 	@$(MAKE) build BUILD_TYPE=Release JOBS=$(JOBS)
+	@$(MAKE) movebin
 
 debug:
 	@$(MAKE) build BUILD_TYPE=Debug JOBS=$(JOBS)
@@ -125,6 +126,11 @@ compiledb: ensure_build_dir
 		..
 	@ln -sf $(BUILD_DIR)/compile_commands.json .
 
+# Move chemtrain binary to bin/ after build
+movebin:
+	@mkdir -p bin
+	@if [ -f $(BUILD_DIR)/chemtrain ]; then mv -f $(BUILD_DIR)/chemtrain bin/; fi
+
 # Help target
 help:
 	@echo "ChemTrain Build System"
@@ -144,6 +150,7 @@ help:
 	@echo "  install        - Install built binaries for the current BUILD_TYPE"
 	@echo "  uninstall      - Remove installed files (best effort)"
 	@echo "  compiledb      - Generate compile_commands.json for IDE support"
+	@echo "  movebin        - Move chemtrain binary to bin/ after build"
 	@echo "  help           - Display this help message"
 	@echo
 	@echo "Build options (can be set on the command line):"

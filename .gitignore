@@ -3,5 +3,5 @@ build/
 .venv/
 scripts/__pycache__/
 backup/
-tests/_pytestcache/
-
+_pytestcache/
+tests/__pycache__/

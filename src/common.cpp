@@ -988,7 +988,7 @@ std::vector<std::vector<int>> calculateDistanceMatrix(const RDKit::ROMol* mol) {
     // Define MAX_DIST_VAL locally as a workaround if RDKit::MAX_DIST_VAL is not found.
     // The typical RDKit value is 1.0e8.
     const double LOCAL_MAX_DIST_VAL = 1.0e8;
-
+    
     for (unsigned int i = 0; i < nAtoms; ++i) {
         for (unsigned int j = 0; j < nAtoms; ++j) {
             double val = dmat[i * nAtoms + j];
