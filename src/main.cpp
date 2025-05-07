@@ -98,7 +98,7 @@ size_t visibleLength(const std::string &str) {
     return len;
 }
 
-// Draw a nice progress bar
+// Modify drawProgressBar function to show rows/total and use percentage for the bar
 void drawProgressBar(long long current, long long total, 
                      const std::chrono::steady_clock::time_point &startTime, 
                      bool quietMode = false) {
@@ -304,13 +304,43 @@ std::vector<std::string> parseCSVLine(const std::string& line, char delimiter = 
 // Remove batch processing constants
 const int MAX_NUM_THREADS = 128;    // Allow using more threads if available
 
-// Enhanced progress tracking class
+// Add a function to count total lines in a CSV file
+size_t countCSVRows(const std::string& inputFile) {
+    FILE* file = fopen(inputFile.c_str(), "rb");
+    if (!file) return 0;
+    
+    size_t lineCount = 0;
+    char buffer[8192];
+    bool inQuote = false;
+    
+    while (!feof(file)) {
+        size_t bytesRead = fread(buffer, 1, sizeof(buffer), file);
+        for (size_t i = 0; i < bytesRead; i++) {
+            if (buffer[i] == '"') {
+                inQuote = !inQuote;
+            } else if (buffer[i] == '\n' && !inQuote) {
+                lineCount++;
+            }
+        }
+    }
+    
+    fclose(file);
+    
+    // If file doesn't end with newline, add one for the last line
+    if (lineCount > 0 && !feof(file)) {
+        lineCount++;
+    }
+    
+    // Subtract 1 for the header if present (assume header is always present in this app)
+    return lineCount > 0 ? lineCount - 1 : 0;
+}
+
+// Modified ProgressTracker class to track total rows
 class ProgressTracker {
 private:
     std::chrono::steady_clock::time_point startTime;
     std::chrono::steady_clock::time_point lastUpdateTime;
-    size_t totalMolecules;
-    std::atomic<size_t> processedBytes;
+    size_t totalRows;  // Total number of rows (excluding header)
     std::atomic<size_t> processedLines;
     std::atomic<size_t> successCount;
     std::atomic<size_t> errorCount;
@@ -320,42 +350,20 @@ public:
     ProgressTracker(const std::string& inputFile, bool quiet = false) 
         : startTime(std::chrono::steady_clock::now())
         , lastUpdateTime(startTime)
-        , processedBytes(0)
         , processedLines(0)
         , successCount(0)
         , errorCount(0)
         , quietMode(quiet) {
         
-        // Extract molecule count from filename if it follows the pattern like "ChEMBL-100K-smiles.csv"
-        totalMolecules = 0;
-        std::string filename = inputFile.substr(inputFile.find_last_of("/\\") + 1);
+        // Count total rows in the CSV file
+        totalRows = countCSVRows(inputFile);
         
-        // Try to find a pattern like "100K" in the filename
-        size_t pos = filename.find("K-");
-        if (pos != std::string::npos) {
-            // Look for the number before "K-"
-            size_t startPos = filename.find_last_of("-", pos) + 1;
-            if (startPos != std::string::npos && startPos < pos) {
-                std::string countStr = filename.substr(startPos, pos - startPos);
-                try {
-                    totalMolecules = std::stoi(countStr) * 1000; // Convert "100K" to 100000
-                } catch (...) {
-                    totalMolecules = 0; // Failed to parse
-                }
-            }
-        }
-        
-        // If we couldn't extract from filename, fall back to file size estimation
-        if (totalMolecules == 0) {
-            struct stat st;
-            if (stat(inputFile.c_str(), &st) == 0) {
-                totalMolecules = st.st_size; // Fallback to file size as before
-            }
+        if (!quietMode && totalRows > 0) {
+            std::cout << "Found " << totalRows << " rows to process." << std::endl;
         }
     }
     
-    void updateProgress(size_t newBytes, bool success = true) {
-        processedBytes += newBytes;
+    void updateProgress(bool success = true) {
         processedLines++;
         if (success) {
             successCount++;
@@ -372,7 +380,10 @@ public:
     
     void drawProgress() const {
         auto now = std::chrono::steady_clock::now();
-        drawProgressBar(processedLines, totalMolecules, startTime, quietMode);
+        // Pass processed lines and total rows directly
+        drawProgressBar(static_cast<long long>(processedLines.load()), 
+                        static_cast<long long>(totalRows), 
+                        startTime, quietMode);
     }
     
     void printSummary() const {
@@ -403,10 +414,10 @@ void processCSV(const std::string& inputFile, const std::string& outputFile,
                 const std::vector<std::string>& descriptorNames,
                 int smilesColIndex, bool verboseMode, bool quietMode) {
     
-    // Initialize progress tracking
+    // Initialize progress tracking first (this will count total rows)
     ProgressTracker progress(inputFile, quietMode);
     
-    // Initialize CSV parser and writer
+    // Initialize CSV parser
     CSVParser* parser = csv_parser_init(inputFile.c_str(), ',', true, 
         [](CSVErrorCode error, size_t line, const char* msg, void* ctx) {
             std::cerr << "CSV Error (line " << line << "): " << msg << std::endl;
@@ -552,7 +563,7 @@ void processCSV(const std::string& inputFile, const std::string& outputFile,
                      }
                 }
                 // Update progress: use actual line number and success status
-                progress.updateProgress(lineSize, success); // Pass line number and success status
+                progress.updateProgress(success); // Pass success flag, file position is tracked internally
             }
 
             csv_line_free(line);

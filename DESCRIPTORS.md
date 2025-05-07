@@ -1,6 +1,6 @@
 # Available Descriptors
 
-Total descriptors: 607
+Total descriptors: 616
 
 ## ATSDescriptor
 
@@ -201,6 +201,20 @@ Total descriptors: 607
 | `ATSdz6Descriptor` | Broto-Moreau Autocorrelation - ATSdZ - Lag 6 | None | `brotomoreau.cpp` |
 | `ATSdz7Descriptor` | Broto-Moreau Autocorrelation - ATSdZ - Lag 7 | None | `brotomoreau.cpp` |
 | `ATSdz8Descriptor` | Broto-Moreau Autocorrelation - ATSdZ - Lag 8 | None | `brotomoreau.cpp` |
+
+## C_Descriptor
+
+| Name | Description | Dependencies | Source File |
+|---|---|---|---|
+| `CycleConnectivityDescriptor` | Connectivity patterns of cyclic structures | None | `c_wrappers.cpp` |
+| `EccentricDistanceDescriptor` | Sum of eccentricity-weighted distances | None | `c_wrappers.cpp` |
+| `FragmentComplexityDescriptor` | Complexity based on unique fragments | None | `c_wrappers.cpp` |
+| `MCSIndexDescriptor` | Maximum Common Subgraph Size Index - Normalized by molecular size | None | `c_wrappers.cpp` |
+| `McFarlandComplexityDescriptor` | Topological complexity based on fragment types | None | `c_wrappers.cpp` |
+| `MolecularMeshDescriptor` | Encoding molecular topology as a meshed network | None | `c_wrappers.cpp` |
+| `MolecularScaffoldingDescriptor` | Core structure representation | None | `c_wrappers.cpp` |
+| `TopologicalPolarBSADescriptor` | Surface area inaccessible to solvent | None | `c_wrappers.cpp` |
+| `VertexEdgePathDescriptor` | Unique paths between vertices passing specific edges | None | `c_wrappers.cpp` |
 
 ## ElectronegativityDescriptor
 

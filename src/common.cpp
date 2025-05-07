@@ -9,6 +9,8 @@
 #include <vector>
 #include <map>
 #include <memory> // For std::shared_ptr
+#include <GraphMol/MolOps.h> // Ensure MolOps is included
+#include <RDGeneral/types.h> // For RDKit::MAX_DIST_VAL
 
 namespace desfact {
 
@@ -971,15 +973,33 @@ std::vector<double> getPolarizabilityAutocorrelation(const RDKit::ROMol* mol, un
 
 // Calculate path distance matrix using RDKit's shortest path algorithm
 std::vector<std::vector<int>> calculateDistanceMatrix(const RDKit::ROMol* mol) {
+    if (!mol) return {};
     unsigned int nAtoms = mol->getNumAtoms();
     std::vector<std::vector<int>> distMatrix(nAtoms, std::vector<int>(nAtoms, 0));
-    
+
+    if (nAtoms == 0) return distMatrix;
+
+    // Use RDKit's optimized getDistanceMat for topological distances.
+    // useBO=false, useAtomWts=false results in topological distances.
+    // The returned pointer is to a 1D array (row-major order, nAtoms x nAtoms).
+    // RDKit manages the memory for dmat; do not delete it.
+    double *dmat = RDKit::MolOps::getDistanceMat(*mol, false, false, true);
+
+    // Define MAX_DIST_VAL locally as a workaround if RDKit::MAX_DIST_VAL is not found.
+    // The typical RDKit value is 1.0e8.
+    const double LOCAL_MAX_DIST_VAL = 1.0e8;
+
     for (unsigned int i = 0; i < nAtoms; ++i) {
-        for (unsigned int j = i+1; j < nAtoms; ++j) {
-            auto path = RDKit::MolOps::getShortestPath(*mol, i, j);
-            int dist = path.empty() ? -1 : static_cast<int>(path.size() - 1);
-            distMatrix[i][j] = dist;
-            distMatrix[j][i] = dist; // Matrix is symmetric
+        for (unsigned int j = 0; j < nAtoms; ++j) {
+            double val = dmat[i * nAtoms + j];
+            // RDKit::MAX_DIST_VAL (approx 1.0e8) is used for disconnected pairs.
+            // For consistency with previous -1 for no path:
+            if (val >= LOCAL_MAX_DIST_VAL) {
+                distMatrix[i][j] = -1;
+            } else {
+                // Round to nearest int for topological distances, handles potential float inaccuracies.
+                distMatrix[i][j] = static_cast<int>(std::round(val));
+            }
         }
     }
     

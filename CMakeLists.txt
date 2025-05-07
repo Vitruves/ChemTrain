@@ -131,7 +131,7 @@ include_directories(
 
 # Source files
 set(SOURCES
-    src/common.cpp
+src/common.cpp
     src/registry.cpp
     src/descriptors/regexcounts.cpp
     src/descriptors/regexfractions.cpp
@@ -143,6 +143,7 @@ set(SOURCES
     src/descriptors/radius.cpp
     src/descriptors/brotomoreau.cpp
     src/descriptors/graphoperations.cpp
+    src/descriptors/c_wrappers.cpp
 )
 
 # C source files

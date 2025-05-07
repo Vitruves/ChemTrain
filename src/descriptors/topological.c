@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <math.h>
 #include <ctype.h>
+#include <limits.h> // For INT_MAX
+#include "../cregistry.h"
 
 // Forward declaration for the Context interface to match C++ code
-typedef struct Context Context;
-typedef char* (*GetSmilesFunc)(const Context*);
 
 // Atom types commonly found in SMILES
 typedef enum {
@@ -277,42 +276,72 @@ void free_molecular_graph(MolecularGraph* graph) {
     free(graph);
 }
 
-// Floyd-Warshall algorithm to compute all-pairs shortest paths
-int** compute_distance_matrix(MolecularGraph* graph) {
+// Helper for BFS to compute distances from a source_atom_idx
+void bfs_from_source(MolecularGraph* graph, int source_atom_idx, int* dist_row) {
     int n = graph->atom_count;
-    int** dist = (int**)malloc(n * sizeof(int*));
-    
-    for (int i = 0; i < n; i++) {
-        dist[i] = (int*)malloc(n * sizeof(int));
-        for (int j = 0; j < n; j++) {
-            dist[i][j] = (i == j) ? 0 : 9999; // Initialize with infinity (use 9999 as a large value)
-        }
+    for (int i = 0; i < n; ++i) {
+        dist_row[i] = INT_MAX; // Use INT_MAX for "infinity"
     }
-    
-    // Initialize distances for direct connections
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < graph->atoms[i].bonds_count; j++) {
-            int neighbor = graph->atoms[i].bonded_atoms[j];
-            dist[i][neighbor] = 1;
-        }
+    dist_row[source_atom_idx] = 0;
+
+    // Simple array-based queue
+    int* queue = (int*)malloc(n * sizeof(int));
+    if (!queue) { // Allocation check
+        perror("Failed to allocate queue for BFS");
+        return; // Or handle error appropriately
     }
-    
-    // Floyd-Warshall algorithm
-    for (int k = 0; k < n; k++) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (dist[i][k] + dist[k][j] < dist[i][j]) {
-                    dist[i][j] = dist[i][k] + dist[k][j];
+    int head = 0, tail = 0;
+    queue[tail++] = source_atom_idx;
+
+    while (head < tail) {
+        int u = queue[head++];
+        Atom* atom_u = &graph->atoms[u];
+        for (int i = 0; i < atom_u->bonds_count; ++i) {
+            int v = atom_u->bonded_atoms[i];
+            if (dist_row[v] == INT_MAX) { // If not visited
+                dist_row[v] = dist_row[u] + 1;
+                if (tail < n) { // Basic bounds check for queue
+                    queue[tail++] = v;
+                } else {
+                    // This case should ideally not happen if n is graph->atom_count
+                    // and graph is connected. Handle error or resize if necessary.
                 }
             }
         }
     }
-    
-    // Find maximum path length
+    free(queue);
+}
+
+// Compute all-pairs shortest paths using N BFS runs
+int** compute_distance_matrix(MolecularGraph* graph) { // Renamed BFS version to be the default
+    int n = graph->atom_count;
+    if (n == 0) return NULL;
+
+    int** dist = (int**)malloc(n * sizeof(int*));
+    if (!dist) {
+        perror("Failed to allocate distance matrix rows");
+        return NULL;
+    }
+
+    for (int i = 0; i < n; i++) {
+        dist[i] = (int*)malloc(n * sizeof(int));
+        if (!dist[i]) {
+            perror("Failed to allocate distance matrix columns");
+            // Free previously allocated rows
+            for (int k = 0; k < i; ++k) free(dist[k]);
+            free(dist);
+            return NULL;
+        }
+        bfs_from_source(graph, i, dist[i]);
+    }
+
+    // Update graph->max_path_length and handle "infinity" (INT_MAX)
     int max_path = 0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            if (dist[i][j] != 9999 && dist[i][j] > max_path) {
+            if (dist[i][j] == INT_MAX) {
+                dist[i][j] = -1; // Consistent "no path" representation
+            } else if (dist[i][j] > max_path) {
                 max_path = dist[i][j];
             }
         }
@@ -922,92 +951,91 @@ double calculate_molecular_scaffolding(MolecularGraph* graph) {
     return scaffolding_index;
 }
 
-// C interface functions that can be called from C++
 
-// Extended Topological Atom Pairs (ETAP)
-extern double calculateETAP(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
-    MolecularGraph* graph = parse_smiles(smiles);
-    double result = calculate_etap(graph);
-    free_molecular_graph(graph);
-    return result;
-}
-
-// Molecular Mesh Descriptors
-extern double calculateMolecularMesh(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateMolecularMesh(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_molecular_mesh(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Maximum Common Subgraph Size Index
-extern double calculateMCSIndex(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateMCSIndex(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_mcs_index(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Vertex-Edge Path Descriptors
-extern double calculateVertexEdgePath(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateVertexEdgePath(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_vertex_edge_path(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// McFarland Complexity Index
-extern double calculateMcFarlandComplexity(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateMcFarlandComplexity(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_mcfarland_complexity(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Cycle Connectivity Index
-extern double calculateCycleConnectivity(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateCycleConnectivity(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_cycle_connectivity(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Fragment Complexity Score
-extern double calculateFragmentComplexity(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateFragmentComplexity(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_fragment_complexity(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Topological Polar Buried Surface Area
-extern double calculateTopologicalPolarBSA(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateTopologicalPolarBSA(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_topological_polar_bsa(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Eccentric Distance Index
-extern double calculateEccentricDistance(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateEccentricDistance(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_eccentric_distance(graph);
     free_molecular_graph(graph);
     return result;
 }
 
-// Molecular Scaffolding Index
-extern double calculateMolecularScaffolding(const Context* context, GetSmilesFunc getSmilesFunc) {
-    const char* smiles = getSmilesFunc(context);
+double calculateMolecularScaffolding(const void* context, GetSmilesFunc getSmilesFunc) {
+    const char* smiles = getSmilesFunc((const Context*)context);
+    if (!smiles) return 0.0;
+    
     MolecularGraph* graph = parse_smiles(smiles);
     double result = calculate_molecular_scaffolding(graph);
     free_molecular_graph(graph);

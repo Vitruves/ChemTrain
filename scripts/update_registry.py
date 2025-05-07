@@ -449,12 +449,18 @@ def generate_c_wrapper_file(c_descriptors):
         "#include \"../cregistry.h\"",
         "#include <string>",
         "",
-        "namespace desfact {",
-        "",
-        "// Helper function to get SMILES from Context for C code",
-        "const char* getSmilesCFunc(const Context* ctx) {",
-        "    return ctx->getSmiles().c_str();",
+        "// C linkage for our helper function",
+        "extern \"C\" {",
+        "// Helper function that maintains string lifetime",
+        "static thread_local std::string tls_smiles_buffer;",
+        "const char* getSmilesCFunc(const struct Context* ctx) {", 
+        "    auto cpp_ctx = reinterpret_cast<const desfact::Context*>(ctx);",
+        "    tls_smiles_buffer = cpp_ctx->getSmiles();",
+        "    return tls_smiles_buffer.c_str();",
         "}",
+        "}",
+        "",
+        "namespace desfact {",
         ""
     ]
     
@@ -463,10 +469,13 @@ def generate_c_wrapper_file(c_descriptors):
         name = desc['name']
         wrapper_content.extend([
             f"// --- {name} Wrapper ---",
-            f"DECLARE_DESCRIPTOR({name}, Descriptor, \"{desc['description']}\")",
+            f"DECLARE_DESCRIPTOR({name}, C_Descriptor, \"{desc['description']}\")",
             f"DESCRIPTOR_DEPENDENCIES({name}) {{ return {{}}; }}",
             f"DescriptorResult {name}Descriptor::calculate(Context& context) const {{",
-            f"    return calculate{name}(&context, getSmilesCFunc);",
+            f"    // Double cast to bypass type system - first to void*, then to the C type",
+            f"    void* v_ptr = &context;",
+            f"    const struct Context* c_ctx = static_cast<const struct Context*>(v_ptr);",
+            f"    return calculate{name}(c_ctx, getSmilesCFunc);",
             f"}}",
             ""
         ])
@@ -533,9 +542,18 @@ def update_c_registry_header(c_descriptors):
         "extern \"C\" {",
         "#endif",
         "",
-        "// Forward declaration for the Context interface to match C++ code",
+        "// Forward declaration for the Context interface",
+        "struct Context;",
         "typedef struct Context Context;",
+        "",
+        "// Function pointer type for getting SMILES string",
         "typedef const char* (*GetSmilesFunc)(const Context*);",
+        "",
+        "// Helper function that will be provided by the C++ implementation",
+        "const char* getSmilesCFunc(const Context* ctx);",
+        "",
+        "// Common interface for all C descriptors",
+        "// Each descriptor must implement this function to be integrated with the C++ framework",
         ""
     ]
     
@@ -560,6 +578,97 @@ def update_c_registry_header(c_descriptors):
     
     print("Updated src/cregistry.h header file")
 
+def validate_c_descriptor_files(c_descriptors):
+    """Validate that C descriptor files correctly implement the interface."""
+    for desc in c_descriptors:
+        file_path = os.path.join("src/descriptors", desc['source_file'])
+        
+        with open(file_path, 'r') as f:
+            content = f.read()
+        
+        # Check if the file includes cregistry.h
+        if "#include \"../cregistry.h\"" not in content and "#include <cregistry.h>" not in content:
+            print(f"WARNING: {file_path} does not include cregistry.h")
+            
+        # Check if file has its own typedef for GetSmilesFunc that might conflict
+        if "typedef" in content and "GetSmilesFunc" in content:
+            print(f"WARNING: {file_path} contains its own GetSmilesFunc typedef which may conflict with cregistry.h")
+            
+        # Ensure the calculateXXX function has the right signature
+        func_name = f"calculate{desc['name']}"
+        if func_name not in content:
+            print(f"ERROR: {file_path} does not contain the expected function {func_name}")
+
+def create_c_descriptor_template():
+    """Create a template for C descriptor files."""
+    template = """// Template for C descriptor implementation
+
+#include "../cregistry.h"
+#include <string.h>
+
+// Example descriptor implementation
+double calculateExampleDescriptor(const Context* context, GetSmilesFunc getSmilesFunc) {
+    // Get SMILES string using the provided function
+    const char* smiles = getSmilesFunc(context);
+    
+    // Process SMILES and calculate descriptor value
+    double result = 0.0;
+    
+    // Simple example: return length of SMILES string
+    if (smiles) {
+        result = strlen(smiles);
+    }
+    
+    return result;
+}
+"""
+    
+    with open("src/descriptors/c_descriptor_template.c", 'w') as f:
+        f.write(template)
+    
+    print("Created C descriptor template file at src/descriptors/c_descriptor_template.c")
+
+def fix_topological_c_file():
+    """Fix the topological.c file to use the correct type signature."""
+    file_path = "src/descriptors/topological.c"
+    
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+            
+        # Remove the duplicate typedef that conflicts with cregistry.h
+        lines = content.split('\n')
+        fixed_lines = []
+        
+        for line in lines:
+            if "typedef struct Context Context;" in line:
+                # Skip this line
+                continue
+            elif "typedef char* (*GetSmilesFunc)" in line or "typedef char *(*GetSmilesFunc)" in line:
+                # Skip this line
+                continue
+            else:
+                fixed_lines.append(line)
+        
+        # Join lines back to a string
+        fixed_content = '\n'.join(fixed_lines)
+        
+        # Fix the double const in function calls (several patterns to catch all variants)
+        fixed_content = fixed_content.replace("const const char* smiles", "const char* smiles")
+        fixed_content = fixed_content.replace("const const char *smiles", "const char* smiles")
+        fixed_content = fixed_content.replace("const const char * smiles", "const char* smiles")
+        
+        # Fix function declarations to match cregistry.h
+        fixed_content = fixed_content.replace("char* smiles = getSmilesFunc(context)", 
+                                             "const char* smiles = getSmilesFunc(context)")
+        
+        with open(file_path, 'w') as f:
+            f.write(fixed_content)
+            
+        print(f"Fixed type signatures in {file_path}")
+    except Exception as e:
+        print(f"ERROR: Failed to fix {file_path}: {str(e)}")
+
 def main():
     """Main execution function."""
     print("Scanning for descriptors...")
@@ -567,6 +676,17 @@ def main():
     
     print("Scanning for C descriptors...")
     c_descriptors = extract_c_descriptors()
+    
+    if c_descriptors:
+        print("Validating C descriptor implementations...")
+        validate_c_descriptor_files(c_descriptors)
+        create_c_descriptor_template()
+        
+        # Check if topological.c needs fixing
+        topological_path = "src/descriptors/topological.c"
+        if os.path.exists(topological_path):
+            print("Checking topological.c file...")
+            fix_topological_c_file()
     
     print("Scanning for observers...")
     observers = extract_observers()
