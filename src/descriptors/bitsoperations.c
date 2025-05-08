@@ -259,3 +259,424 @@ int compare_uint8(const void* a, const void* b) {
 }
 
 // --- C Descriptor Implementations ---
+
+// Hamming weight (bit count) of a byte array
+uint32_t hamming_weight_c(const uint8_t* bytes, size_t num_bytes) {
+    return popcount_bytes_c(bytes, num_bytes);
+}
+
+// Hamming distance between two byte arrays
+uint32_t hamming_distance_c(const uint8_t* bytes1, const uint8_t* bytes2, size_t num_bytes) {
+    uint32_t distance = 0;
+    for (size_t i = 0; i < num_bytes; ++i) {
+        distance += POPCOUNT_LUT[bytes1[i] ^ bytes2[i]];
+    }
+    return distance;
+}
+
+// Jaccard similarity between two bit arrays
+double jaccard_similarity_c(const uint8_t* bytes1, const uint8_t* bytes2, size_t num_bytes) {
+    uint32_t intersection = 0;
+    uint32_t union_count = 0;
+    
+    for (size_t i = 0; i < num_bytes; ++i) {
+        uint8_t intersect_byte = bytes1[i] & bytes2[i];
+        uint8_t union_byte = bytes1[i] | bytes2[i];
+        
+        intersection += POPCOUNT_LUT[intersect_byte];
+        union_count += POPCOUNT_LUT[union_byte];
+    }
+    
+    return (union_count == 0) ? 0.0 : (double)intersection / union_count;
+}
+
+// Dice coefficient between two bit arrays
+double dice_coefficient_c(const uint8_t* bytes1, const uint8_t* bytes2, size_t num_bytes) {
+    uint32_t a = popcount_bytes_c(bytes1, num_bytes);
+    uint32_t b = popcount_bytes_c(bytes2, num_bytes);
+    
+    uint32_t intersection = 0;
+    for (size_t i = 0; i < num_bytes; ++i) {
+        intersection += POPCOUNT_LUT[bytes1[i] & bytes2[i]];
+    }
+    
+    return (a + b == 0) ? 0.0 : (2.0 * intersection) / (a + b);
+}
+
+// Tanimoto coefficient (same as Jaccard for binary data)
+double tanimoto_coefficient_c(const uint8_t* bytes1, const uint8_t* bytes2, size_t num_bytes) {
+    return jaccard_similarity_c(bytes1, bytes2, num_bytes);
+}
+
+// Count leading zeros in bit array
+uint32_t count_leading_zeros_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0;
+    
+    uint32_t count = 0;
+    for (size_t i = 0; i < num_bytes; ++i) {
+        if (bytes[i] == 0) {
+            count += 8;
+        } else {
+            count += LEADING_ZEROS_LUT[bytes[i]];
+            break;
+        }
+    }
+    return count;
+}
+
+// Count trailing zeros in bit array
+uint32_t count_trailing_zeros_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0;
+    
+    uint32_t count = 0;
+    for (size_t i = num_bytes; i > 0; --i) {
+        if (bytes[i-1] == 0) {
+            count += 8;
+        } else {
+            count += TRAILING_ZEROS_LUT[bytes[i-1]];
+            break;
+        }
+    }
+    return count;
+}
+
+// Bit clustering factor - measures how bits tend to cluster
+double bit_clustering_factor_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t transitions = bit_transition_count_c(bits, num_bits);
+    uint32_t ones = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) ones++;
+    }
+    
+    double expected_transitions = 2.0 * ones * (num_bits - ones) / num_bits;
+    return (expected_transitions == 0) ? 0.0 : (transitions / expected_transitions);
+}
+
+// Average bit run length
+double average_bit_run_length_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0.0;
+    
+    uint32_t transitions = bit_transition_count_c(bits, num_bits);
+    return (transitions == 0) ? (double)num_bits : (double)num_bits / (transitions + 1);
+}
+
+// Bit alternation ratio (ratio of transitions to maximum possible)
+double bit_alternation_ratio_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t transitions = bit_transition_count_c(bits, num_bits);
+    return (double)transitions / (num_bits - 1);
+}
+
+// Longest sequence of zeros
+uint32_t longest_zero_sequence_c(const bool* bits, size_t num_bits) {
+    uint32_t max_length = 0;
+    uint32_t current_length = 0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (!bits[i]) {
+            current_length++;
+            if (current_length > max_length) max_length = current_length;
+        } else {
+            current_length = 0;
+        }
+    }
+    
+    return max_length;
+}
+
+// Longest sequence of ones
+uint32_t longest_one_sequence_c(const bool* bits, size_t num_bits) {
+    uint32_t max_length = 0;
+    uint32_t current_length = 0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            current_length++;
+            if (current_length > max_length) max_length = current_length;
+        } else {
+            current_length = 0;
+        }
+    }
+    
+    return max_length;
+}
+
+// Bit dispersion - how evenly bits are distributed
+double bit_dispersion_c(const bool* bits, size_t num_bits) {
+    if (num_bits < 2) return 0.0;
+    
+    uint32_t ones = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) ones++;
+    }
+    
+    if (ones == 0 || ones == num_bits) return 0.0;
+    
+    size_t* positions = (size_t*)malloc(ones * sizeof(size_t));
+    if (!positions) return 0.0;
+    
+    size_t pos_idx = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) positions[pos_idx++] = i;
+    }
+    
+    double avg_distance = 0.0;
+    for (size_t i = 1; i < ones; ++i) {
+        avg_distance += (positions[i] - positions[i-1]);
+    }
+    avg_distance /= (ones - 1);
+    
+    double variance = 0.0;
+    for (size_t i = 1; i < ones; ++i) {
+        double diff = (positions[i] - positions[i-1]) - avg_distance;
+        variance += diff * diff;
+    }
+    variance /= (ones - 1);
+    
+    free(positions);
+    return variance;
+}
+
+// Cosine similarity between bit vectors
+double cosine_similarity_bits_c(const uint8_t* bytes1, const uint8_t* bytes2, size_t num_bytes) {
+    uint32_t dot_product = 0;
+    uint32_t magnitude1 = 0;
+    uint32_t magnitude2 = 0;
+    
+    for (size_t i = 0; i < num_bytes; ++i) {
+        dot_product += POPCOUNT_LUT[bytes1[i] & bytes2[i]];
+        magnitude1 += POPCOUNT_LUT[bytes1[i]];
+        magnitude2 += POPCOUNT_LUT[bytes2[i]];
+    }
+    
+    return (magnitude1 == 0 || magnitude2 == 0) ? 0.0 : 
+           (double)dot_product / (sqrt((double)magnitude1) * sqrt((double)magnitude2));
+}
+
+// Run-length encoding compression ratio
+double rle_compression_ratio_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 1.0;
+    
+    uint32_t transitions = bit_transition_count_c(bits, num_bits);
+    uint32_t runs = transitions + 1;
+    
+    double theoretical_size = runs * (log2(num_bits) + 1);
+    return theoretical_size / num_bits;
+}
+
+// Bit density - ratio of set bits to total bits
+double bit_density_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    uint32_t bit_count = popcount_bytes_c(bytes, num_bytes);
+    return (double)bit_count / (num_bytes * 8);
+}
+
+// Bit periodicity - correlation between bits at distance d
+double bit_periodicity_c(const bool* bits, size_t num_bits, size_t distance) {
+    if (num_bits <= distance) return 0.0;
+    
+    size_t valid_positions = num_bits - distance;
+    double correlation = 0.0;
+    
+    for (size_t i = 0; i < valid_positions; ++i) {
+        correlation += (bits[i] == bits[i + distance]) ? 1.0 : 0.0;
+    }
+    
+    return correlation / valid_positions;
+}
+
+// Autocorrelation - average correlation across multiple distances
+double bit_autocorrelation_c(const bool* bits, size_t num_bits, size_t max_distance) {
+    if (num_bits <= 1 || max_distance == 0) return 0.0;
+    
+    size_t actual_max = (max_distance < num_bits) ? max_distance : num_bits - 1;
+    double sum_correlation = 0.0;
+    
+    for (size_t d = 1; d <= actual_max; ++d) {
+        sum_correlation += bit_periodicity_c(bits, num_bits, d);
+    }
+    
+    return sum_correlation / actual_max;
+}
+
+// Bit balancing - ratio of 1's to 0's
+double bit_balance_ratio_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    uint32_t ones = popcount_bytes_c(bytes, num_bytes);
+    uint32_t zeros = num_bytes * 8 - ones;
+    
+    return (zeros == 0) ? INFINITY : (double)ones / zeros;
+}
+
+// Bit entropy - information content of bit distribution
+double bit_entropy_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    uint32_t ones = popcount_bytes_c(bytes, num_bytes);
+    uint32_t total_bits = num_bytes * 8;
+    uint32_t zeros = total_bits - ones;
+    
+    double p_one = (double)ones / total_bits;
+    double p_zero = (double)zeros / total_bits;
+    
+    double entropy = 0.0;
+    if (p_one > 0) entropy -= p_one * log2(p_one);
+    if (p_zero > 0) entropy -= p_zero * log2(p_zero);
+    
+    return entropy;
+}
+
+// Byte diversity - number of unique bytes / total bytes
+double byte_diversity_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    bool seen[256] = {false};
+    uint32_t unique_count = 0;
+    
+    for (size_t i = 0; i < num_bytes; ++i) {
+        if (!seen[bytes[i]]) {
+            seen[bytes[i]] = true;
+            unique_count++;
+        }
+    }
+    
+    return (double)unique_count / 256.0;
+}
+
+// Position-weighted bit sum
+uint32_t position_weighted_bit_sum_c(const bool* bits, size_t num_bits) {
+    uint32_t sum = 0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) sum += i + 1;
+    }
+    
+    return sum;
+}
+
+// Count of adjacent bit pairs (00, 01, 10, 11)
+void adjacent_bit_pairs_c(const bool* bits, size_t num_bits, uint32_t counts[4]) {
+    for (int i = 0; i < 4; i++) counts[i] = 0;
+    
+    if (num_bits < 2) return;
+    
+    for (size_t i = 0; i < num_bits - 1; ++i) {
+        uint8_t pattern = (bits[i] << 1) | bits[i+1];
+        counts[pattern]++;
+    }
+}
+
+// Run gap ratio - ratio of largest gap between runs to average gap
+double run_gap_ratio_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    size_t* run_positions = (size_t*)malloc(num_bits * sizeof(size_t));
+    if (!run_positions) return 0.0;
+    
+    size_t run_count = 0;
+    bool current_bit = bits[0];
+    run_positions[run_count++] = 0;
+    
+    for (size_t i = 1; i < num_bits; ++i) {
+        if (bits[i] != current_bit) {
+            current_bit = bits[i];
+            run_positions[run_count++] = i;
+        }
+    }
+    
+    if (run_count <= 1) {
+        free(run_positions);
+        return 0.0;
+    }
+    
+    size_t max_gap = 0;
+    double total_gap = 0.0;
+    
+    for (size_t i = 1; i < run_count; ++i) {
+        size_t gap = run_positions[i] - run_positions[i-1];
+        if (gap > max_gap) max_gap = gap;
+        total_gap += gap;
+    }
+    
+    double avg_gap = total_gap / (run_count - 1);
+    free(run_positions);
+    
+    return (avg_gap == 0) ? 0.0 : (double)max_gap / avg_gap;
+}
+
+// Morreau-Broto autocorrelation
+double morreau_broto_autocorr_c(const bool* bits, size_t num_bits, size_t lag) {
+    if (num_bits <= lag) return 0.0;
+    
+    double sum = 0.0;
+    size_t count = num_bits - lag;
+    
+    for (size_t i = 0; i < count; ++i) {
+        sum += (bits[i] ? 1.0 : -1.0) * (bits[i + lag] ? 1.0 : -1.0);
+    }
+    
+    return sum / count;
+}
+
+// Bit interleaving difference
+uint32_t bit_interleaving_diff_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes <= 1) return 0;
+    
+    uint32_t odd_popcount = 0;
+    uint32_t even_popcount = 0;
+    
+    for (size_t i = 0; i < num_bytes; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            bool bit = (bytes[i] >> (7 - j)) & 1;
+            if ((i*8 + j) % 2 == 0) {
+                even_popcount += bit ? 1 : 0;
+            } else {
+                odd_popcount += bit ? 1 : 0;
+            }
+        }
+    }
+    
+    return (even_popcount > odd_popcount) ? 
+           (even_popcount - odd_popcount) : (odd_popcount - even_popcount);
+}
+
+// First moment of bit distribution
+double bit_first_moment_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0.0;
+    
+    double sum = 0.0;
+    double total_bits = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            sum += i;
+            total_bits += 1.0;
+        }
+    }
+    
+    return (total_bits == 0) ? 0.0 : sum / total_bits;
+}
+
+// Second moment (variance) of bit distribution
+double bit_second_moment_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    double mean = bit_first_moment_c(bits, num_bits);
+    double sum_sq_diff = 0.0;
+    double total_bits = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            double diff = i - mean;
+            sum_sq_diff += diff * diff;
+            total_bits += 1.0;
+        }
+    }
+    
+    return (total_bits <= 1) ? 0.0 : sum_sq_diff / total_bits;
+}
