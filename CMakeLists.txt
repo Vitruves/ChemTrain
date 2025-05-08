@@ -163,7 +163,7 @@ include_directories(
 set(SOURCES
 src/common.cpp
     src/registry.cpp
-    src/descriptors/regexcounts.cpp
+    src/descriptors/regex_utils.cpp
     src/descriptors/regexfractions.cpp
     src/descriptors/weightfractions.cpp
     src/descriptors/regexelectronegativity.cpp
@@ -181,6 +181,7 @@ set(C_SOURCES
     src/csv_writer.c
     src/descriptors/topological.c
     src/descriptors/bitsoperations.c
+    src/descriptors/regexcounts.c
 )
 
 # Add CSV parser support

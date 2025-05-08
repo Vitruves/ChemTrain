@@ -462,11 +462,7 @@ DescriptorResult SmilesHydrazineBasicityDescriptor::calculate(Context& context) 
 
 // === REGISTRATION FUNCTIONS ===
 
-void register_SmilesCarboxylicAcidCountDescriptor() {
-    auto descriptor = std::make_shared<SmilesCarboxylicAcidAcidityDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
+
 
 
 void register_SmilesCarboxylicAcidAcidityDescriptor() {

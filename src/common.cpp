@@ -11,6 +11,7 @@
 #include <memory> // For std::shared_ptr
 #include <GraphMol/MolOps.h> // Ensure MolOps is included
 #include <RDGeneral/types.h> // For RDKit::MAX_DIST_VAL
+#include <re2/re2.h> // For RE2
 
 namespace desfact {
 

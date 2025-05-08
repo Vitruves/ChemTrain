@@ -1,26 +1,11 @@
 # Available Descriptors
 
-Total descriptors: 544
+Total descriptors: 534
 
 ## ATSDescriptor
 
 | Name | Description | Dependencies | Source File |
 |---|---|---|---|
-| `ATSdi1Descriptor` | ATS identity autocorrelation descriptor of lag 1 | None | `brotomoreau.cpp` |
-| `ATSdi2Descriptor` | ATS identity autocorrelation descriptor of lag 2 | None | `brotomoreau.cpp` |
-| `ATSdi3Descriptor` | ATS identity autocorrelation descriptor of lag 3 | None | `brotomoreau.cpp` |
-| `ATSdi4Descriptor` | ATS identity autocorrelation descriptor of lag 4 | None | `brotomoreau.cpp` |
-| `ATSdi5Descriptor` | ATS identity autocorrelation descriptor of lag 5 | None | `brotomoreau.cpp` |
-| `ATSdi6Descriptor` | ATS identity autocorrelation descriptor of lag 6 | None | `brotomoreau.cpp` |
-| `ATSdi7Descriptor` | ATS identity autocorrelation descriptor of lag 7 | None | `brotomoreau.cpp` |
-| `ATSdi8Descriptor` | ATS identity autocorrelation descriptor of lag 8 | None | `brotomoreau.cpp` |
-| `ATSdm1Descriptor` | ATS mass autocorrelation descriptor of lag 1 | None | `brotomoreau.cpp` |
-| `ATSdm2Descriptor` | ATS mass autocorrelation descriptor of lag 2 | None | `brotomoreau.cpp` |
-| `ATSdm3Descriptor` | ATS mass autocorrelation descriptor of lag 3 | None | `brotomoreau.cpp` |
-| `ATSdm4Descriptor` | ATS mass autocorrelation descriptor of lag 4 | None | `brotomoreau.cpp` |
-| `ATSdm5Descriptor` | ATS mass autocorrelation descriptor of lag 5 | None | `brotomoreau.cpp` |
-| `ATSdm6Descriptor` | ATS mass autocorrelation descriptor of lag 6 | None | `brotomoreau.cpp` |
-| `ATSdm7Descriptor` | ATS mass autocorrelation descriptor of lag 7 | None | `brotomoreau.cpp` |
 | `ATSdm8Descriptor` | ATS mass autocorrelation descriptor of lag 8 | None | `brotomoreau.cpp` |
 
 ## BondStatsDescriptor
@@ -84,6 +69,13 @@ Total descriptors: 544
 | `ATSde6Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 6 | None | `brotomoreau.cpp` |
 | `ATSde7Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 7 | None | `brotomoreau.cpp` |
 | `ATSde8Descriptor` | Broto-Moreau Autocorrelation - ATSdEN - Lag 8 | None | `brotomoreau.cpp` |
+| `ATSdm1Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 1 | None | `brotomoreau.cpp` |
+| `ATSdm2Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 2 | None | `brotomoreau.cpp` |
+| `ATSdm3Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 3 | None | `brotomoreau.cpp` |
+| `ATSdm4Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 4 | None | `brotomoreau.cpp` |
+| `ATSdm5Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 5 | None | `brotomoreau.cpp` |
+| `ATSdm6Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 6 | None | `brotomoreau.cpp` |
+| `ATSdm7Descriptor` | Broto-Moreau Autocorrelation - ATSdMass - Lag 7 | None | `brotomoreau.cpp` |
 | `ATSdp1Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 1 | None | `brotomoreau.cpp` |
 | `ATSdp2Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 2 | None | `brotomoreau.cpp` |
 | `ATSdp3Descriptor` | Broto-Moreau Autocorrelation - ATSdPolarizability - Lag 3 | None | `brotomoreau.cpp` |
@@ -125,20 +117,6 @@ Total descriptors: 544
 | `ATSdz7Descriptor` | Broto-Moreau Autocorrelation - ATSdZ - Lag 7 | None | `brotomoreau.cpp` |
 | `ATSdz8Descriptor` | Broto-Moreau Autocorrelation - ATSdZ - Lag 8 | None | `brotomoreau.cpp` |
 
-## C_Descriptor
-
-| Name | Description | Dependencies | Source File |
-|---|---|---|---|
-| `CycleConnectivityDescriptor` | Connectivity patterns of cyclic structures | None | `c_wrappers.cpp` |
-| `EccentricDistanceDescriptor` | Sum of eccentricity-weighted distances | None | `c_wrappers.cpp` |
-| `FragmentComplexityDescriptor` | Complexity based on unique fragments | None | `c_wrappers.cpp` |
-| `MCSIndexDescriptor` | Maximum Common Subgraph Size Index - Normalized by molecular size | None | `c_wrappers.cpp` |
-| `McFarlandComplexityDescriptor` | Topological complexity based on fragment types | None | `c_wrappers.cpp` |
-| `MolecularMeshDescriptor` | Encoding molecular topology as a meshed network | None | `c_wrappers.cpp` |
-| `MolecularScaffoldingDescriptor` | Core structure representation | None | `c_wrappers.cpp` |
-| `TopologicalPolarBSADescriptor` | Surface area inaccessible to solvent | None | `c_wrappers.cpp` |
-| `VertexEdgePathDescriptor` | Unique paths between vertices passing specific edges | None | `c_wrappers.cpp` |
-
 ## ElectronegativityDescriptor
 
 | Name | Description | Dependencies | Source File |
@@ -146,7 +124,6 @@ Total descriptors: 544
 | `SmilesAliphaticCarbonENSumDescriptor` | Sum of EN values for aliphatic carbons | None | `regexelectronegativity.cpp` |
 | `SmilesAliphaticENSumDescriptor` | Sum of Pauling EN for aliphatic atoms | None | `regexelectronegativity.cpp` |
 | `SmilesAllHalogenENMeanDescriptor` | Mean Pauling EN for all halogen atoms | None | `regexelectronegativity.cpp` |
-| `SmilesAllHalogenENStdDevDescriptor` | Stddev of Pauling EN for all halogen atoms | None | `regexelectronegativity.cpp` |
 | `SmilesAllHalogenENSumDescriptor` | Sum of Pauling EN for all halogen atoms | None | `regexelectronegativity.cpp` |
 | `SmilesAllredRochowENMeanDescriptor` | Mean Allred-Rochow electronegativity | None | `regexelectronegativity.cpp` |
 | `SmilesAllredRochowENSumDescriptor` | Sum of Allred-Rochow electronegativity values | None | `regexelectronegativity.cpp` |
@@ -175,8 +152,6 @@ Total descriptors: 544
 | `SmilesENMeanAlkaliDescriptor` | Mean Pauling EN for alkali metals | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanAlkalineEarthDescriptor` | Mean Pauling EN for alkaline earth metals | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanChalcogenDescriptor` | Mean Pauling EN for chalcogens | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanChromiumGroupDescriptor` | Mean Pauling EN for chromium group | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanCobaltGroupDescriptor` | Mean Pauling EN for cobalt group | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanCoinageDescriptor` | Mean Pauling EN for coinage metals | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanEvenDescriptor` | Mean Pauling EN of even-indexed atoms | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanEvenOddDiffDescriptor` | Difference between mean EN of even and odd-indexed atoms | None | `regexelectronegativity.cpp` |
@@ -185,10 +160,8 @@ Total descriptors: 544
 | `SmilesENMeanHalfDiffDescriptor` | Difference between mean EN of first and second half | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanHalogenDescriptor` | Mean Pauling EN for halogens | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanHeavyAtomsDescriptor` | Mean Pauling EN for atoms with atomic weight > 50 | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanIronGroupDescriptor` | Mean Pauling EN for iron group | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanLightAtomsDescriptor` | Mean Pauling EN for atoms with atomic weight < 20 | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanLightHeavyRatioDescriptor` | Ratio of mean EN of light to heavy atoms | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanManganeseGroupDescriptor` | Mean Pauling EN for manganese group | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanOddDescriptor` | Mean Pauling EN of odd-indexed atoms | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanOddZDescriptor` | Mean Pauling EN for atoms with odd atomic number | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanOverStdDescriptor` | Ratio of mean to stddev of Pauling EN | None | `regexelectronegativity.cpp` |
@@ -196,10 +169,7 @@ Total descriptors: 544
 | `SmilesENMeanSecondHalfDescriptor` | Mean Pauling EN of second half of atoms | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanStdProductDescriptor` | Product of mean and stddev of Pauling EN | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanTetrelDescriptor` | Mean Pauling EN for tetrels | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanTitaniumGroupDescriptor` | Mean Pauling EN for titanium group | None | `regexelectronegativity.cpp` |
 | `SmilesENMeanTrielDescriptor` | Mean Pauling EN for triels | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanVanadiumGroupDescriptor` | Mean Pauling EN for vanadium group | None | `regexelectronegativity.cpp` |
-| `SmilesENMeanZincGroupDescriptor` | Mean Pauling EN for zinc group | None | `regexelectronegativity.cpp` |
 | `SmilesENMinAbsDiffDescriptor` | Min absolute difference between consecutive Pauling EN values | None | `regexelectronegativity.cpp` |
 | `SmilesENMostLeastCommonDiffDescriptor` | Difference in EN between most and least common element | None | `regexelectronegativity.cpp` |
 | `SmilesENPolarityIndexDescriptor` | Index of molecular polarity based on EN differences | None | `regexelectronegativity.cpp` |
@@ -427,148 +397,6 @@ Total descriptors: 544
 | `FractionRingVdwRadiiDescriptor` | Fraction of vdW radius sum from ring atoms | None | `radius.cpp` |
 | `SumHeteroCovalentRadiiDescriptor` | Sum of heteroatom covalent radii | None | `radius.cpp` |
 
-## RegexCounts
-
-| Name | Description | Dependencies | Source File |
-|---|---|---|---|
-| `SmilesAcidicPhosphorusCountDescriptor` | Count of acidic phosphorus (P in PO4H2, PO3H) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAcidicSulfurCountDescriptor` | Count of acidic sulfurs (S in SO3H, SO2H) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAliphaticChainCountDescriptor` | Count of CCC sequences in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAliphaticNitroCountDescriptor` | Count of aliphatic nitro groups (C[N+](=O)[O-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAlkeneCountDescriptor` | Count of alkenes (C=C, [C]=[C], etc) in SMILES | None | `regexcounts.cpp` |
-| `SmilesAlkylHalideCountDescriptor` | Count of alkyl halides (C[ClBrIF]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAlkyneCountDescriptor` | Count of alkynes (C#C, [C]#[C], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAmideCountDescriptor` | Count of amide groups (C(=O)N, NC(=O), etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAmidineBasicCountDescriptor` | Count of amidine groups (C(=NH)NH2) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAmidineCountDescriptor` | Count of amidine groups (C(=NH)NH2) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAminoCountDescriptor` | Count of amino groups (N, [NH2], N([H])[H], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAmmoniumCountDescriptor` | Count of ammonium ions ([NH4+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticBondCountDescriptor` | Approx. count of aromatic bonds based on lowercase atoms in SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticCarbonCountDescriptor` | Count of aromatic carbon atoms 'c' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticCarbonHeteroatomCountDescriptor` | Count of c[NOS] patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticHalogenCountDescriptor` | Count of aromatic halogen atoms (f, cl, br, i) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticNitrogenCarbonCountDescriptor` | Count of nc patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticNitrogenCountDescriptor` | Count of aromatic nitrogen atoms 'n' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticOxygenCountDescriptor` | Count of aromatic oxygen atoms 'o' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticSequenceCountDescriptor` | Count of ccc sequences in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAromaticSulfurCountDescriptor` | Count of aromatic sulfur atoms 's' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesAzideCountDescriptor` | Count of azide groups (N=[N+]=[N-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBoronCountDescriptor` | Count of boron atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBracketAtomCountDescriptor` | Count of bracketed atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBranchCloseCountDescriptor` | Count of branch closings ')' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBranchOpenCountDescriptor` | Count of branch openings '(' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBranchedAmideCountDescriptor` | Count of C(=O)N(C) branched amide patterns (C(=O)N(C), [C](=O)N(C), etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBranchedAmineCountDescriptor` | Count of N(C)C amine patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBranchedEtherCountDescriptor` | Count of O(C)C ether patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesBromineCountDescriptor` | Count of bromine atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCarbamatePatternsCountDescriptor` | Count of NC(=O)O carbamate patterns (NC(=O)O, [NH2]C(=O)O, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCarbonCountDescriptor` | Count of carbon atoms (C, c) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCarbonPhosphorusBondCountDescriptor` | Count of CP patterns (CP, PC, [C]P, C[P], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCarbonylHeteroatomCountDescriptor` | Count of C(=O)[NOS] patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCarboxylateCountDescriptor` | Count of carboxylate anions (C(=O)[O-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesChiralCenterCountDescriptor` | Count of chiral centers '@' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesChlorineCountDescriptor` | Count of chlorine atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesComplexRingClosureCountDescriptor` | Count of double-digit ring closures in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesConjugatedSystemCountDescriptor` | Count of C=CC=C patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCyclobutylCountDescriptor` | Count of cyclobutyl groups (C1CCC1, [CH2]1[CH2][CH2][CH2]1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCyclohexylCountDescriptor` | Count of cyclohexyl groups (C1CCCCC1, [CH2]1[CH2][CH2][CH2][CH2][CH2]1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCyclopentylCountDescriptor` | Count of cyclopentyl groups (C1CCCC1, [CH2]1[CH2][CH2][CH2][CH2]1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesCyclopropylCountDescriptor` | Count of cyclopropyl groups (C1CC1, [CH2]1[CH2][CH2]1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesDiazoCountDescriptor` | Count of diazo groups (N=N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesDimethylCountDescriptor` | Count of CC(C)C patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesDotCountDescriptor` | Count of '.' disconnected fragments in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesDoubleBondCountDescriptor` | Count of double bonds '=' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesDoubleBondRingJunctionCountDescriptor` | Count of C=C1 patterns (C=C1, [C]=C1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesEightRingCountDescriptor` | Count of 8-membered rings in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesEsterCountDescriptor` | Count of ester groups (C(=O)OC) in SMILES | None | `regexcounts.cpp` |
-| `SmilesEtherCountDescriptor` | Count of ether groups (COC, [CH2]O[CH3], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesEthylCountDescriptor` | Count of ethyl groups (CC, [CH2][CH3], C(C)C, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesFiveRingCountDescriptor` | Count of 5-membered rings in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesFluorinatedFragmentCountDescriptor` | Count of CF patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesFluorineCountDescriptor` | Count of fluorine atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesFluoromethylCountDescriptor` | Count of fluoromethyl (CF, [CH2]F, etc) groups in SMILES | None | `regexcounts.cpp` |
-| `SmilesFuranCountDescriptor` | Count of furan rings (c1ccoc1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesGeneralAmmoniumCountDescriptor` | Count of ammonium ions ([NH4+], [N+], [N+](C)(C)C, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesGeneralNitroCountDescriptor` | Count of nitro groups (NO2, [N+](=O)[O-], N(=O)=O, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesGuanidineBasicCountDescriptor` | Count of guanidine groups (N=C(N)N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesGuanidineCountDescriptor` | Count of guanidine groups (N=C(N)N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesGuanidiniumCountDescriptor` | Count of guanidinium ions ([NH2]C(=NH2+)NH2, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesHalogenCountDescriptor` | Count of halogen atoms (F, Cl, Br, I, f, cl, br, i) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesHeteroatomSequenceCountDescriptor` | Count of CNO neighbor sequences in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesImidazoleBasicCountDescriptor` | Count of basic imidazole rings (c1nccn1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesImidazoleCountDescriptor` | Count of imidazole rings (c1nccn1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesImidazoliumCountDescriptor` | Count of imidazolium cations ([nH+] in aromatic rings) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIodineCountDescriptor` | Count of iodine atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableAmineCountDescriptor` | Count of ionizable amines ([NH2], [NH3+], [N+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableCarboxylCountDescriptor` | Count of ionizable carboxyls (C(=O)[O-], C(=O)OH) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableImidazoleCountDescriptor` | Count of ionizable imidazoles ([nH], [nH+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableNitrogenCountDescriptor` | Count of ionizable nitrogens ([N+], [NH2], [NH3+], [NH], [n+], [nH+], [N-], [NH-], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableOxygenCountDescriptor` | Count of ionizable oxygens ([O-], [OH]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizablePhenolCountDescriptor` | Count of ionizable phenols (cO, c[O-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizablePhosphonateCountDescriptor` | Count of ionizable phosphonates (P(=O)(O)[O-], P(=O)(O)OH) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizablePhosphorusCountDescriptor` | Count of ionizable phosphorus ([P-], [PH]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizablePyridineCountDescriptor` | Count of ionizable pyridines ([n+], [nH+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableSulfonamideCountDescriptor` | Count of ionizable sulfonamides (S(=O)(=O)[N-], S(=O)(=O)NH) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableSulfurCountDescriptor` | Count of ionizable sulfurs ([S-], [SH]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIonizableThiolCountDescriptor` | Count of ionizable thiols ([SH], [S-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIsocyanideCountDescriptor` | Count of isocyanide groups (NC, [NC], [N+]#C-, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIsothiocyanateLinearCountDescriptor` | Count of isothiocyanate groups (NCS) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesIsotopeCountDescriptor` | Count of isotopic atoms ([13C], [2H], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesLongCarbonChainCountDescriptor` | Count of CCCC sequences in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesMethoxyCountDescriptor` | Count of OCH3 groups in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesMethylCountDescriptor` | Count of methyl groups (C, [CH3], C(H)(H)H, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesMixedHeteroatomRingCountDescriptor` | Count of rings with multiple heteroatoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesNAlkylCountDescriptor` | Count of NC patterns (NC, [NH2]C, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesNegativeChargeCountDescriptor` | Count of negative charges '-' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesNitrileCountDescriptor` | Count of nitrile groups (C#N, [C]#[N], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesNitrogenCountDescriptor` | Count of nitrogen atoms (N, n) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesOxygenAromaticRingCountDescriptor` | Count of c1cccoc1 patterns (c1cccoc1, c1ccco1, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesOxygenCountDescriptor` | Count of oxygen atoms (O, o) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhenolCountDescriptor` | Count of phenol groups (cO) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhosphateAnionCountDescriptor` | Count of phosphate anions (P(=O)(O)[O-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhosphonateCountDescriptor` | Count of phosphonate groups (P(=O)(O)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhosphonicAcidCountDescriptor` | Count of phosphonic acid groups (PO3H2, [PO3H2], P(=O)(O)O, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhosphoniumCountDescriptor` | Count of phosphonium ions ([P+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPhosphorusCountDescriptor` | Count of phosphorus atoms (P, p) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPositiveChargeCountDescriptor` | Count of positive charges '+' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPrimaryAmineBasicCountDescriptor` | Count of primary amines (N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPrimaryAmineCountDescriptor` | Count of primary amines (N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPyridineBasicCountDescriptor` | Count of basic pyridine rings (c1ccncc1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPyridineCountDescriptor` | Count of pyridine rings (c1ccncc1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPyridiniumCountDescriptor` | Count of pyridinium cations ([n+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesPyrroleCountDescriptor` | Count of pyrrole rings (c1cc[nH]c1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesQuaternaryAmmoniumBasicCountDescriptor` | Count of quaternary ammonium ions ([N+](C)(C)(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesQuaternaryAmmoniumCountDescriptor` | Count of quaternary ammonium ions ([N+](C)(C)(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesQuaternaryCarbonCountDescriptor` | Count of quaternary carbon patterns (C(C)(C)(C)C, [C](C)(C)(C)C, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesRingClosureCountDescriptor` | Count of ring closures in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSecondaryAmineBasicCountDescriptor` | Count of secondary amines (N(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSecondaryAmineCountDescriptor` | Count of secondary amines (N(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSevenRingCountDescriptor` | Count of 7-membered rings in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSiliconCountDescriptor` | Count of silicon atoms in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSingleBondCountDescriptor` | Count of explicit single bonds '-' in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSixRingCountDescriptor` | Count of 6-membered rings in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesStereoBackwardCountDescriptor` | Count of '\\' stereochemistry in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesStereoForwardCountDescriptor` | Count of '/' stereochemistry in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfonamideCountDescriptor` | Count of sulfonamide groups (S(=O)2N) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfonateCountDescriptor` | Count of sulfonate anions (S(=O)(=O)[O-]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfonicAcidCountDescriptor` | Count of sulfonic acid groups (SO3H, [SO3H], S(=O)(=O)O, etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfoniumCountDescriptor` | Count of sulfonium ions ([S+]) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfonylCountDescriptor` | Count of sulfonyl groups (S(=O)(=O), [S](=O)(=O), etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfoxideCountDescriptor` | Count of sulfoxide groups (S(=O), [S](=O), etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesSulfurCountDescriptor` | Count of sulfur atoms (S, s) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTerminalAlkyneCountDescriptor` | Count of terminal C#C patterns in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTertiaryAmineBasicCountDescriptor` | Count of tertiary amines (N(C)(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTertiaryAmineCountDescriptor` | Count of tertiary amines (N(C)(C)C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTertiaryCarbonCountDescriptor` | Count of tertiary carbons C(C)(C)(C) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesThiocyanateCountDescriptor` | Count of thiocyanate groups (SCN) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesThioetherCountDescriptor` | Count of thioether groups (CSC, [CH2]S[CH3], etc) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesThiolCountDescriptor` | Count of thiol groups (S[H], [SH], etc) in SMILES | None | `regexcounts.cpp` |
-| `SmilesThiopheneCountDescriptor` | Count of thiophene rings (c1ccsc1) in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTrifluoromethylCountDescriptor` | Count of CF3 groups in the SMILES string | None | `regexcounts.cpp` |
-| `SmilesTripleBondCountDescriptor` | Count of triple bonds '#' in SMILES | None | `regexcounts.cpp` |
-| `SmilesUreaCountDescriptor` | Count of urea patterns (NC(=O)N) in SMILES | None | `regexcounts.cpp` |
-| `SmilesZwitterionCountDescriptor` | Count of SMILES with both positive and negative charges | None | `regexcounts.cpp` |
-
 ## RegexFractions
 
 | Name | Description | Dependencies | Source File |
@@ -595,3 +423,160 @@ Total descriptors: 544
 | `SmilesSingleBondFractionDescriptor` | Fraction of single bond characters '-' in the SMILES string | None | `regexfractions.cpp` |
 | `SmilesSulfurFractionDescriptor` | Fraction of sulfur characters 'S' in the SMILES string | None | `regexfractions.cpp` |
 | `SmilesTripleBondFractionDescriptor` | Fraction of triple bond characters '#' in the SMILES string | None | `regexfractions.cpp` |
+
+## Uncategorized
+
+| Name | Description | Dependencies | Source File |
+|---|---|---|---|
+| `SmilesAdjacentHeteroatomRatioDescriptor` | C implementation of SmilesAdjacentHeteroatomRatio | None | `regexcounts.c` |
+| `SmilesAlcoholCountDescriptor` | C implementation of SmilesAlcoholCount | None | `regexcounts.c` |
+| `SmilesAldehydeCountDescriptor` | C implementation of SmilesAldehydeCount | None | `regexcounts.c` |
+| `SmilesAliphaticChainCountDescriptor` | C implementation of SmilesAliphaticChainCount | None | `regexcounts.c` |
+| `SmilesAlkyneCountDescriptor` | C implementation of SmilesAlkyneCount | None | `regexcounts.c` |
+| `SmilesAlternatingElementPatternDescriptor` | C implementation of SmilesAlternatingElementPattern | None | `regexcounts.c` |
+| `SmilesAmideCountDescriptor` | C implementation of SmilesAmideCount | None | `regexcounts.c` |
+| `SmilesAmideFractionDescriptor` | C implementation of SmilesAmideFraction | None | `regexcounts.c` |
+| `SmilesAmideToNitrogenRatioDescriptor` | C implementation of SmilesAmideToNitrogenRatio | None | `regexcounts.c` |
+| `SmilesAnhydrideCountDescriptor` | C implementation of SmilesAnhydrideCount | None | `regexcounts.c` |
+| `SmilesAromaticBondCountDescriptor` | C implementation of SmilesAromaticBondCount | None | `regexcounts.c` |
+| `SmilesAromaticCarbonCountDescriptor` | C implementation of SmilesAromaticCarbonCount | None | `regexcounts.c` |
+| `SmilesAromaticCarbonHeteroatomCountDescriptor` | C implementation of SmilesAromaticCarbonHeteroatomCount | None | `regexcounts.c` |
+| `SmilesAromaticHalogenCountDescriptor` | C implementation of SmilesAromaticHalogenCount | None | `regexcounts.c` |
+| `SmilesAromaticNitrogenCountDescriptor` | C implementation of SmilesAromaticNitrogenCount | None | `regexcounts.c` |
+| `SmilesAromaticOxygenCountDescriptor` | C implementation of SmilesAromaticOxygenCount | None | `regexcounts.c` |
+| `SmilesAromaticRingEdgeDescriptor` | C implementation of SmilesAromaticRingEdge | None | `regexcounts.c` |
+| `SmilesAromaticSulfurCountDescriptor` | C implementation of SmilesAromaticSulfurCount | None | `regexcounts.c` |
+| `SmilesAtomicEntropyDescriptor` | C implementation of SmilesAtomicEntropy | None | `regexcounts.c` |
+| `SmilesAzideCountDescriptor` | C implementation of SmilesAzideCount | None | `regexcounts.c` |
+| `SmilesBenzimidazoleCountDescriptor` | C implementation of SmilesBenzimidazoleCount | None | `regexcounts.c` |
+| `SmilesBenzothiazoleCountDescriptor` | C implementation of SmilesBenzothiazoleCount | None | `regexcounts.c` |
+| `SmilesBenzoxazoleCountDescriptor` | C implementation of SmilesBenzoxazoleCount | None | `regexcounts.c` |
+| `SmilesBenzylCountDescriptor` | C implementation of SmilesBenzylCount | None | `regexcounts.c` |
+| `SmilesBiphenylCountDescriptor` | C implementation of SmilesBiphenylCount | None | `regexcounts.c` |
+| `SmilesBondTypeDiversityDescriptor` | C implementation of SmilesBondTypeDiversity | None | `regexcounts.c` |
+| `SmilesBoronCountDescriptor` | C implementation of SmilesBoronCount | None | `regexcounts.c` |
+| `SmilesBracketAtomCountDescriptor` | C implementation of SmilesBracketAtomCount | None | `regexcounts.c` |
+| `SmilesBranchCloseCountDescriptor` | C implementation of SmilesBranchCloseCount | None | `regexcounts.c` |
+| `SmilesBranchOpenCountDescriptor` | C implementation of SmilesBranchOpenCount | None | `regexcounts.c` |
+| `SmilesBranchedAmideCountDescriptor` | C implementation of SmilesBranchedAmideCount | None | `regexcounts.c` |
+| `SmilesBranchingIndexDescriptor` | C implementation of SmilesBranchingIndex | None | `regexcounts.c` |
+| `SmilesBromineCountDescriptor` | C implementation of SmilesBromineCount | None | `regexcounts.c` |
+| `SmilesCarbamatCountDescriptor` | C implementation of SmilesCarbamatCount | None | `regexcounts.c` |
+| `SmilesCarbohydrateLikenessDescriptor` | C implementation of SmilesCarbohydrateLikeness | None | `regexcounts.c` |
+| `SmilesCarbonAromaticityFractionDescriptor` | C implementation of SmilesCarbonAromaticityFraction | None | `regexcounts.c` |
+| `SmilesCarbonCountDescriptor` | C implementation of SmilesCarbonCount | None | `regexcounts.c` |
+| `SmilesCarbonPhosphorusBondCountDescriptor` | C implementation of SmilesCarbonPhosphorusBondCount | None | `regexcounts.c` |
+| `SmilesCarbonylDistributionDescriptor` | C implementation of SmilesCarbonylDistribution | None | `regexcounts.c` |
+| `SmilesCarbonylHeteroatomCountDescriptor` | C implementation of SmilesCarbonylHeteroatomCount | None | `regexcounts.c` |
+| `SmilesCarboxylateCountDescriptor` | C implementation of SmilesCarboxylateCount | None | `regexcounts.c` |
+| `SmilesChainLengthDistributionDescriptor` | C implementation of SmilesChainLengthDistribution | None | `regexcounts.c` |
+| `SmilesChiralCenterCountDescriptor` | C implementation of SmilesChiralCenterCount | None | `regexcounts.c` |
+| `SmilesChiralCenterDensityDescriptor` | C implementation of SmilesChiralCenterDensity | None | `regexcounts.c` |
+| `SmilesChiralityDistributionDescriptor` | C implementation of SmilesChiralityDistribution | None | `regexcounts.c` |
+| `SmilesChlorineCountDescriptor` | C implementation of SmilesChlorineCount | None | `regexcounts.c` |
+| `SmilesComplexRingClosureCountDescriptor` | C implementation of SmilesComplexRingClosureCount | None | `regexcounts.c` |
+| `SmilesConjugatedSystemCountDescriptor` | C implementation of SmilesConjugatedSystemCount | None | `regexcounts.c` |
+| `SmilesCyclobutylCountDescriptor` | C implementation of SmilesCyclobutylCount | None | `regexcounts.c` |
+| `SmilesCyclohexylCountDescriptor` | C implementation of SmilesCyclohexylCount | None | `regexcounts.c` |
+| `SmilesCyclopentylCountDescriptor` | C implementation of SmilesCyclopentylCount | None | `regexcounts.c` |
+| `SmilesCyclopropylCountDescriptor` | C implementation of SmilesCyclopropylCount | None | `regexcounts.c` |
+| `SmilesDiazoCountDescriptor` | C implementation of SmilesDiazoCount | None | `regexcounts.c` |
+| `SmilesDimethylCountDescriptor` | C implementation of SmilesDimethylCount | None | `regexcounts.c` |
+| `SmilesDisulfideCountDescriptor` | C implementation of SmilesDisulfideCount | None | `regexcounts.c` |
+| `SmilesDotCountDescriptor` | C implementation of SmilesDotCount | None | `regexcounts.c` |
+| `SmilesDoubleBondCountDescriptor` | C implementation of SmilesDoubleBondCount | None | `regexcounts.c` |
+| `SmilesDoubleBondRingJunctionCountDescriptor` | C implementation of SmilesDoubleBondRingJunctionCount | None | `regexcounts.c` |
+| `SmilesEsterCountDescriptor` | C implementation of SmilesEsterCount | None | `regexcounts.c` |
+| `SmilesEtherCountDescriptor` | C implementation of SmilesEtherCount | None | `regexcounts.c` |
+| `SmilesFluorinatedFragmentCountDescriptor` | C implementation of SmilesFluorinatedFragmentCount | None | `regexcounts.c` |
+| `SmilesFluorineCountDescriptor` | C implementation of SmilesFluorineCount | None | `regexcounts.c` |
+| `SmilesFluorineToCarbonRatioDescriptor` | C implementation of SmilesFluorineToCarbonRatio | None | `regexcounts.c` |
+| `SmilesFragmentComplexityDescriptor` | C implementation of SmilesFragmentComplexity | None | `regexcounts.c` |
+| `SmilesFuranCountDescriptor` | C implementation of SmilesFuranCount | None | `regexcounts.c` |
+| `SmilesFusedRingCountDescriptor` | C implementation of SmilesFusedRingCount | None | `regexcounts.c` |
+| `SmilesGeneralAmmoniumCountDescriptor` | C implementation of SmilesGeneralAmmoniumCount | None | `regexcounts.c` |
+| `SmilesGuanidineBasicCountDescriptor` | C implementation of SmilesGuanidineBasicCount | None | `regexcounts.c` |
+| `SmilesHalogenCountDescriptor` | C implementation of SmilesHalogenCount | None | `regexcounts.c` |
+| `SmilesHeteroatomClusteringDescriptor` | C implementation of SmilesHeteroatomClustering | None | `regexcounts.c` |
+| `SmilesHeteroatomSequenceCountDescriptor` | C implementation of SmilesHeteroatomSequenceCount | None | `regexcounts.c` |
+| `SmilesHeterocycleCountNormalizedDescriptor` | C implementation of SmilesHeterocycleCountNormalized | None | `regexcounts.c` |
+| `SmilesHydrazideCountDescriptor` | C implementation of SmilesHydrazideCount | None | `regexcounts.c` |
+| `SmilesHydrazoneCountDescriptor` | C implementation of SmilesHydrazoneCount | None | `regexcounts.c` |
+| `SmilesHydrophilicGroupDensityDescriptor` | C implementation of SmilesHydrophilicGroupDensity | None | `regexcounts.c` |
+| `SmilesImidazoleBasicCountDescriptor` | C implementation of SmilesImidazoleBasicCount | None | `regexcounts.c` |
+| `SmilesImidazoliumCountDescriptor` | C implementation of SmilesImidazoliumCount | None | `regexcounts.c` |
+| `SmilesIndoleCountDescriptor` | C implementation of SmilesIndoleCount | None | `regexcounts.c` |
+| `SmilesIodineCountDescriptor` | C implementation of SmilesIodineCount | None | `regexcounts.c` |
+| `SmilesIonizableAmineCountDescriptor` | C implementation of SmilesIonizableAmineCount | None | `regexcounts.c` |
+| `SmilesIonizableImidazoleCountDescriptor` | C implementation of SmilesIonizableImidazoleCount | None | `regexcounts.c` |
+| `SmilesIonizableNitrogenCountDescriptor` | C implementation of SmilesIonizableNitrogenCount | None | `regexcounts.c` |
+| `SmilesIonizableOxygenCountDescriptor` | C implementation of SmilesIonizableOxygenCount | None | `regexcounts.c` |
+| `SmilesIonizablePhenolCountDescriptor` | C implementation of SmilesIonizablePhenolCount | None | `regexcounts.c` |
+| `SmilesIonizablePhosphorusCountDescriptor` | C implementation of SmilesIonizablePhosphorusCount | None | `regexcounts.c` |
+| `SmilesIonizablePyridineCountDescriptor` | C implementation of SmilesIonizablePyridineCount | None | `regexcounts.c` |
+| `SmilesIonizableSulfonamideCountDescriptor` | C implementation of SmilesIonizableSulfonamideCount | None | `regexcounts.c` |
+| `SmilesIonizableSulfurCountDescriptor` | C implementation of SmilesIonizableSulfurCount | None | `regexcounts.c` |
+| `SmilesIsocyanateCountDescriptor` | C implementation of SmilesIsocyanateCount | None | `regexcounts.c` |
+| `SmilesIsocyanideCountDescriptor` | C implementation of SmilesIsocyanideCount | None | `regexcounts.c` |
+| `SmilesKetoneCountDescriptor` | C implementation of SmilesKetoneCount | None | `regexcounts.c` |
+| `SmilesMethylationDegreeDescriptor` | C implementation of SmilesMethylationDegree | None | `regexcounts.c` |
+| `SmilesMorpholineCountDescriptor` | C implementation of SmilesMorpholineCount | None | `regexcounts.c` |
+| `SmilesNAlkylCountDescriptor` | C implementation of SmilesNAlkylCount | None | `regexcounts.c` |
+| `SmilesNaphthaleneCountDescriptor` | C implementation of SmilesNaphthaleneCount | None | `regexcounts.c` |
+| `SmilesNegativeChargeCountDescriptor` | C implementation of SmilesNegativeChargeCount | None | `regexcounts.c` |
+| `SmilesNitrileCountDescriptor` | C implementation of SmilesNitrileCount | None | `regexcounts.c` |
+| `SmilesNitroCountDescriptor` | C implementation of SmilesNitroCount | None | `regexcounts.c` |
+| `SmilesNitrogenAromaticityFractionDescriptor` | C implementation of SmilesNitrogenAromaticityFraction | None | `regexcounts.c` |
+| `SmilesNitrogenCountDescriptor` | C implementation of SmilesNitrogenCount | None | `regexcounts.c` |
+| `SmilesNitrogenEnvironmentDiversityDescriptor` | C implementation of SmilesNitrogenEnvironmentDiversity | None | `regexcounts.c` |
+| `SmilesNitrogenOxidationStateDistributionDescriptor` | C implementation of SmilesNitrogenOxidationStateDistribution | None | `regexcounts.c` |
+| `SmilesNitrogenPositionVarianceDescriptor` | C implementation of SmilesNitrogenPositionVariance | None | `regexcounts.c` |
+| `SmilesNonCarbonBackboneRatioDescriptor` | C implementation of SmilesNonCarbonBackboneRatio | None | `regexcounts.c` |
+| `SmilesOximeCountDescriptor` | C implementation of SmilesOximeCount | None | `regexcounts.c` |
+| `SmilesOxygenClusteringFactorDescriptor` | C implementation of SmilesOxygenClusteringFactor | None | `regexcounts.c` |
+| `SmilesOxygenCountDescriptor` | C implementation of SmilesOxygenCount | None | `regexcounts.c` |
+| `SmilesPhenolCountDescriptor` | C implementation of SmilesPhenolCount | None | `regexcounts.c` |
+| `SmilesPhenylCountDescriptor` | C implementation of SmilesPhenylCount | None | `regexcounts.c` |
+| `SmilesPhosphateAnionCountDescriptor` | C implementation of SmilesPhosphateAnionCount | None | `regexcounts.c` |
+| `SmilesPhosphateCountDescriptor` | C implementation of SmilesPhosphateCount | None | `regexcounts.c` |
+| `SmilesPhosphorusCountDescriptor` | C implementation of SmilesPhosphorusCount | None | `regexcounts.c` |
+| `SmilesPhosphorusOxidationStateDistributionDescriptor` | C implementation of SmilesPhosphorusOxidationStateDistribution | None | `regexcounts.c` |
+| `SmilesPiperazineCountDescriptor` | C implementation of SmilesPiperazineCount | None | `regexcounts.c` |
+| `SmilesPiperidineCountDescriptor` | C implementation of SmilesPiperidineCount | None | `regexcounts.c` |
+| `SmilesPositionWeightedHeteroRatioDescriptor` | C implementation of SmilesPositionWeightedHeteroRatio | None | `regexcounts.c` |
+| `SmilesPositiveChargeCountDescriptor` | C implementation of SmilesPositiveChargeCount | None | `regexcounts.c` |
+| `SmilesPrimaryAmineCountDescriptor` | C implementation of SmilesPrimaryAmineCount | None | `regexcounts.c` |
+| `SmilesPrimaryAmineRatioDescriptor` | C implementation of SmilesPrimaryAmineRatio | None | `regexcounts.c` |
+| `SmilesPyridineCountDescriptor` | C implementation of SmilesPyridineCount | None | `regexcounts.c` |
+| `SmilesPyridiniumCountDescriptor` | C implementation of SmilesPyridiniumCount | None | `regexcounts.c` |
+| `SmilesPyrimidineCountDescriptor` | C implementation of SmilesPyrimidineCount | None | `regexcounts.c` |
+| `SmilesPyrroleCountDescriptor` | C implementation of SmilesPyrroleCount | None | `regexcounts.c` |
+| `SmilesQuaternaryAmmoniumBasicCountDescriptor` | C implementation of SmilesQuaternaryAmmoniumBasicCount | None | `regexcounts.c` |
+| `SmilesRingBridgeCountDescriptor` | C implementation of SmilesRingBridgeCount | None | `regexcounts.c` |
+| `SmilesRingClosureCountDescriptor` | C implementation of SmilesRingClosureCount | None | `regexcounts.c` |
+| `SmilesRingJunctionDensityDescriptor` | C implementation of SmilesRingJunctionDensity | None | `regexcounts.c` |
+| `SmilesSecondaryAmineCountDescriptor` | C implementation of SmilesSecondaryAmineCount | None | `regexcounts.c` |
+| `SmilesSingleBondCountDescriptor` | C implementation of SmilesSingleBondCount | None | `regexcounts.c` |
+| `SmilesSpiroCompoundCountDescriptor` | C implementation of SmilesSpiroCompoundCount | None | `regexcounts.c` |
+| `SmilesStereoBackwardCountDescriptor` | C implementation of SmilesStereoBackwardCount | None | `regexcounts.c` |
+| `SmilesStereoForwardCountDescriptor` | C implementation of SmilesStereoForwardCount | None | `regexcounts.c` |
+| `SmilesStructuralSymmetryDescriptor` | C implementation of SmilesStructuralSymmetry | None | `regexcounts.c` |
+| `SmilesSulfonamideCountDescriptor` | C implementation of SmilesSulfonamideCount | None | `regexcounts.c` |
+| `SmilesSulfonateCountDescriptor` | C implementation of SmilesSulfonateCount | None | `regexcounts.c` |
+| `SmilesSulfonicAcidCountDescriptor` | C implementation of SmilesSulfonicAcidCount | None | `regexcounts.c` |
+| `SmilesSulfurCountDescriptor` | C implementation of SmilesSulfurCount | None | `regexcounts.c` |
+| `SmilesSulfurOxidationStateDistributionDescriptor` | C implementation of SmilesSulfurOxidationStateDistribution | None | `regexcounts.c` |
+| `SmilesTerminalGroupDiversityDescriptor` | C implementation of SmilesTerminalGroupDiversity | None | `regexcounts.c` |
+| `SmilesTertiaryAmineBasicCountDescriptor` | C implementation of SmilesTertiaryAmineBasicCount | None | `regexcounts.c` |
+| `SmilesTertiaryCarbonCountDescriptor` | C implementation of SmilesTertiaryCarbonCount | None | `regexcounts.c` |
+| `SmilesThiocyanateCountDescriptor` | C implementation of SmilesThiocyanateCount | None | `regexcounts.c` |
+| `SmilesThioetherCountDescriptor` | C implementation of SmilesThioetherCount | None | `regexcounts.c` |
+| `SmilesThiolCountDescriptor` | C implementation of SmilesThiolCount | None | `regexcounts.c` |
+| `SmilesThiomorpholineCountDescriptor` | C implementation of SmilesThiomorpholineCount | None | `regexcounts.c` |
+| `SmilesThiopheneCountDescriptor` | C implementation of SmilesThiopheneCount | None | `regexcounts.c` |
+| `SmilesThioureaCountDescriptor` | C implementation of SmilesThioureaCount | None | `regexcounts.c` |
+| `SmilesTrifluoromethylCountDescriptor` | C implementation of SmilesTrifluoromethylCount | None | `regexcounts.c` |
+| `SmilesTrifunctionalCarbonRatioDescriptor` | C implementation of SmilesTrifunctionalCarbonRatio | None | `regexcounts.c` |
+| `SmilesTripleBondCountDescriptor` | C implementation of SmilesTripleBondCount | None | `regexcounts.c` |
+| `SmilesUreaCountDescriptor` | C implementation of SmilesUreaCount | None | `regexcounts.c` |
+| `SmilesZwitterionCountDescriptor` | C implementation of SmilesZwitterionCount | None | `regexcounts.c` |

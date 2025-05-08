@@ -1636,22 +1636,6 @@ DescriptorResult SmilesAllHalogenENMeanDescriptor::calculate(Context& context) c
     return count == 0.0 ? 0.0 : sum / count;
 }
 
-// 107. EN stddev of all halogens
-DECLARE_DESCRIPTOR(SmilesAllHalogenENStdDev, ElectronegativityDescriptor, "Stddev of Pauling EN for all halogen atoms")
-DESCRIPTOR_DEPENDENCIES(SmilesAllHalogenENStdDev) { return {}; }
-DescriptorResult SmilesAllHalogenENStdDevDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    std::vector<double> vals;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i)
-        if ((tlsElementCache.elements[i] == "F" || tlsElementCache.elements[i] == "Cl" ||
-             tlsElementCache.elements[i] == "Br" || tlsElementCache.elements[i] == "I") && i < tlsElementCache.paulingValues.size())
-            vals.push_back(tlsElementCache.paulingValues[i]);
-    if (vals.size() < 2) return 0.0;
-    double mean = std::accumulate(vals.begin(), vals.end(), 0.0) / vals.size();
-    double var = 0.0;
-    for (auto v : vals) var += (v - mean) * (v - mean);
-    return std::sqrt(var / vals.size());
-}
 
 // 108. EN sum of elements with EN < 1.5
 DECLARE_DESCRIPTOR(SmilesVeryLowENAtomSum, ElectronegativityDescriptor, "Sum of Pauling EN for atoms with EN < 1.5")
@@ -2439,117 +2423,6 @@ DescriptorResult SmilesENMeanCoinageDescriptor::calculate(Context& context) cons
     return count == 0 ? 0.0 : sum / count;
 }
 
-// 64. EN mean of group 11/zinc group
-DECLARE_DESCRIPTOR(SmilesENMeanZincGroup, ElectronegativityDescriptor, "Mean Pauling EN for zinc group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanZincGroup) { return {}; }
-DescriptorResult SmilesENMeanZincGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Zn" || e == "Cd" || e == "Hg") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 65. EN mean of group 4/titanium group
-DECLARE_DESCRIPTOR(SmilesENMeanTitaniumGroup, ElectronegativityDescriptor, "Mean Pauling EN for titanium group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanTitaniumGroup) { return {}; }
-DescriptorResult SmilesENMeanTitaniumGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Ti" || e == "Zr" || e == "Hf") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 66. EN mean of group 5/vanadium group
-DECLARE_DESCRIPTOR(SmilesENMeanVanadiumGroup, ElectronegativityDescriptor, "Mean Pauling EN for vanadium group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanVanadiumGroup) { return {}; }
-DescriptorResult SmilesENMeanVanadiumGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "V" || e == "Nb" || e == "Ta") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 67. EN mean of group 6/chromium group
-DECLARE_DESCRIPTOR(SmilesENMeanChromiumGroup, ElectronegativityDescriptor, "Mean Pauling EN for chromium group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanChromiumGroup) { return {}; }
-DescriptorResult SmilesENMeanChromiumGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Cr" || e == "Mo" || e == "W") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 68. EN mean of group 7/manganese group
-DECLARE_DESCRIPTOR(SmilesENMeanManganeseGroup, ElectronegativityDescriptor, "Mean Pauling EN for manganese group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanManganeseGroup) { return {}; }
-DescriptorResult SmilesENMeanManganeseGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Mn" || e == "Tc" || e == "Re") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 69. EN mean of group 8/iron group
-DECLARE_DESCRIPTOR(SmilesENMeanIronGroup, ElectronegativityDescriptor, "Mean Pauling EN for iron group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanIronGroup) { return {}; }
-DescriptorResult SmilesENMeanIronGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Fe" || e == "Ru" || e == "Os") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
-
-// 70. EN mean of group 9/cobalt group
-DECLARE_DESCRIPTOR(SmilesENMeanCobaltGroup, ElectronegativityDescriptor, "Mean Pauling EN for cobalt group")
-DESCRIPTOR_DEPENDENCIES(SmilesENMeanCobaltGroup) { return {}; }
-DescriptorResult SmilesENMeanCobaltGroupDescriptor::calculate(Context& context) const {
-    extractElementData(context.getSmiles(), tlsElementCache);
-    double sum = 0.0; int count = 0;
-    for (size_t i = 0; i < tlsElementCache.elements.size(); ++i) {
-        const auto& e = tlsElementCache.elements[i];
-        if ((e == "Co" || e == "Rh" || e == "Ir") && i < tlsElementCache.paulingValues.size()) {
-            sum += tlsElementCache.paulingValues[i];
-            count++;
-        }
-    }
-    return count == 0 ? 0.0 : sum / count;
-}
 
 void register_SmilesPaulingENSumDescriptor() {
     auto descriptor = std::make_shared<SmilesPaulingENSumDescriptor>();
@@ -3251,13 +3124,6 @@ void register_SmilesAllHalogenENMeanDescriptor() {
 }
 
 
-void register_SmilesAllHalogenENStdDevDescriptor() {
-    auto descriptor = std::make_shared<SmilesAllHalogenENStdDevDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
 void register_SmilesVeryLowENAtomSumDescriptor() {
     auto descriptor = std::make_shared<SmilesVeryLowENAtomSumDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
@@ -3648,54 +3514,4 @@ void register_SmilesENMeanCoinageDescriptor() {
     auto& registry = DescriptorRegistry::getInstance();
     registry.registerDescriptor(descriptor);
 }
-
-
-void register_SmilesENMeanZincGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanZincGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
 }
-
-
-void register_SmilesENMeanTitaniumGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanTitaniumGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesENMeanVanadiumGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanVanadiumGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesENMeanChromiumGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanChromiumGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesENMeanManganeseGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanManganeseGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesENMeanIronGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanIronGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-
-void register_SmilesENMeanCobaltGroupDescriptor() {
-    auto descriptor = std::make_shared<SmilesENMeanCobaltGroupDescriptor>();
-    auto& registry = DescriptorRegistry::getInstance();
-    registry.registerDescriptor(descriptor);
-}
-
-} // namespace desfact
