@@ -1,6 +1,6 @@
 # Available Descriptors
 
-Total descriptors: 534
+Total descriptors: 584
 
 ## ATSDescriptor
 
@@ -580,3 +580,53 @@ Total descriptors: 534
 | `SmilesTripleBondCountDescriptor` | C implementation of SmilesTripleBondCount | None | `regexcounts.c` |
 | `SmilesUreaCountDescriptor` | C implementation of SmilesUreaCount | None | `regexcounts.c` |
 | `SmilesZwitterionCountDescriptor` | C implementation of SmilesZwitterionCount | None | `regexcounts.c` |
+| `SpitActivationDensityDescriptor` | C implementation of SpitActivationDensity | None | `spit.c` |
+| `SpitAntiDiagonalAsymmetryScoreDescriptor` | C implementation of SpitAntiDiagonalAsymmetryScore | None | `spit.c` |
+| `SpitAverageDistanceWeightedActivationDescriptor` | C implementation of SpitAverageDistanceWeightedActivation | None | `spit.c` |
+| `SpitBandwidthTop10ActivationDescriptor` | C implementation of SpitBandwidthTop10Activation | None | `spit.c` |
+| `SpitBondAtomInteractionCountDescriptor` | C implementation of SpitBondAtomInteractionCount | None | `spit.c` |
+| `SpitBondPairAsymmetryDescriptor` | C implementation of SpitBondPairAsymmetry | None | `spit.c` |
+| `SpitBondVsRingSeparationScoreDescriptor` | C implementation of SpitBondVsRingSeparationScore | None | `spit.c` |
+| `SpitCenterOfMatrixActivationShiftDescriptor` | C implementation of SpitCenterOfMatrixActivationShift | None | `spit.c` |
+| `SpitCheckerboardPatternStrengthDescriptor` | C implementation of SpitCheckerboardPatternStrength | None | `spit.c` |
+| `SpitDiagonalDominanceIndexDescriptor` | C implementation of SpitDiagonalDominanceIndex | None | `spit.c` |
+| `SpitEdgeTokenInteractionBiasDescriptor` | C implementation of SpitEdgeTokenInteractionBias | None | `spit.c` |
+| `SpitFeatureCooccurrenceCorrelationDescriptor` | C implementation of SpitFeatureCooccurrenceCorrelation | None | `spit.c` |
+| `SpitFeatureImportanceIndexPCADescriptor` | C implementation of SpitFeatureImportanceIndexPCA | None | `spit.c` |
+| `SpitFeatureSpecificSparsityDescriptor` | C implementation of SpitFeatureSpecificSparsity | None | `spit.c` |
+| `SpitFeatureWiseEntropyDescriptor` | C implementation of SpitFeatureWiseEntropy | None | `spit.c` |
+| `SpitGridUniformityDescriptor` | C implementation of SpitGridUniformity | None | `spit.c` |
+| `SpitHighestInteractiveTokenDescriptor` | C implementation of SpitHighestInteractiveToken | None | `spit.c` |
+| `SpitInterClassInteractionRatioDescriptor` | C implementation of SpitInterClassInteractionRatio | None | `spit.c` |
+| `SpitIntraClassInteractionRatioDescriptor` | C implementation of SpitIntraClassInteractionRatio | None | `spit.c` |
+| `SpitKurtosisBondPairScoresDescriptor` | C implementation of SpitKurtosisBondPairScores | None | `spit.c` |
+| `SpitLPatternMotifCountDescriptor` | C implementation of SpitLPatternMotifCount | None | `spit.c` |
+| `SpitLowerTriangleActivationRatioDescriptor` | C implementation of SpitLowerTriangleActivationRatio | None | `spit.c` |
+| `SpitMatchingTokenPairCountDescriptor` | C implementation of SpitMatchingTokenPairCount | None | `spit.c` |
+| `SpitMatrixTraceScoreDescriptor` | C implementation of SpitMatrixTraceScore | None | `spit.c` |
+| `SpitMax3x3InteractionPatchScoreDescriptor` | C implementation of SpitMax3x3InteractionPatchScore | None | `spit.c` |
+| `SpitMaxDiagonalActivityDescriptor` | C implementation of SpitMaxDiagonalActivity | None | `spit.c` |
+| `SpitMeanActivationAcrossRowsDescriptor` | C implementation of SpitMeanActivationAcrossRows | None | `spit.c` |
+| `SpitMeanOfFeaturePlanesDescriptor` | C implementation of SpitMeanOfFeaturePlanes | None | `spit.c` |
+| `SpitMeanOffDiagonalSimilarityDescriptor` | C implementation of SpitMeanOffDiagonalSimilarity | None | `spit.c` |
+| `SpitMeanTokenIndexDistanceDescriptor` | C implementation of SpitMeanTokenIndexDistance | None | `spit.c` |
+| `SpitMostConnectedTokenScoreDescriptor` | C implementation of SpitMostConnectedTokenScore | None | `spit.c` |
+| `SpitMostFrequentInteractionPatternDescriptor` | C implementation of SpitMostFrequentInteractionPattern | None | `spit.c` |
+| `SpitNonZeroCellsPerFeatureDescriptor` | C implementation of SpitNonZeroCellsPerFeature | None | `spit.c` |
+| `SpitPositionallyStableTokensDescriptor` | C implementation of SpitPositionallyStableTokens | None | `spit.c` |
+| `SpitRepetitiveTokenMotifCountDescriptor` | C implementation of SpitRepetitiveTokenMotifCount | None | `spit.c` |
+| `SpitRingParticipationIndexPerTokenDescriptor` | C implementation of SpitRingParticipationIndexPerToken | None | `spit.c` |
+| `SpitRingRelatedTokenPairCountDescriptor` | C implementation of SpitRingRelatedTokenPairCount | None | `spit.c` |
+| `SpitRingSymmetryIndexDescriptor` | C implementation of SpitRingSymmetryIndex | None | `spit.c` |
+| `SpitSelfPairCountDescriptor` | C implementation of SpitSelfPairCount | None | `spit.c` |
+| `SpitSkewnessInteractionMatrixDescriptor` | C implementation of SpitSkewnessInteractionMatrix | None | `spit.c` |
+| `SpitStdDevTokenIndexDistancesDescriptor` | C implementation of SpitStdDevTokenIndexDistances | None | `spit.c` |
+| `SpitSymmetryUnder90RotationDescriptor` | C implementation of SpitSymmetryUnder90Rotation | None | `spit.c` |
+| `SpitTokenClusterEntropyDescriptor` | C implementation of SpitTokenClusterEntropy | None | `spit.c` |
+| `SpitTokenEntropyDescriptor` | C implementation of SpitTokenEntropy | None | `spit.c` |
+| `SpitTokenHighestBondInteractionsDescriptor` | C implementation of SpitTokenHighestBondInteractions | None | `spit.c` |
+| `SpitTokenRepeatSpanDescriptor` | C implementation of SpitTokenRepeatSpan | None | `spit.c` |
+| `SpitTokenSymmetryIndexDescriptor` | C implementation of SpitTokenSymmetryIndex | None | `spit.c` |
+| `SpitTokenTransitionEntropyDescriptor` | C implementation of SpitTokenTransitionEntropy | None | `spit.c` |
+| `SpitTopLeftToBottomRightImbalanceDescriptor` | C implementation of SpitTopLeftToBottomRightImbalance | None | `spit.c` |
+| `SpitVarianceOfFeaturePlanesDescriptor` | C implementation of SpitVarianceOfFeaturePlanes | None | `spit.c` |

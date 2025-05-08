@@ -182,6 +182,7 @@ set(C_SOURCES
     src/descriptors/topological.c
     src/descriptors/bitsoperations.c
     src/descriptors/regexcounts.c
+    src/descriptors/spit.c
 )
 
 # Add CSV parser support

@@ -680,3 +680,705 @@ double bit_second_moment_c(const bool* bits, size_t num_bits) {
     
     return (total_bits <= 1) ? 0.0 : sum_sq_diff / total_bits;
 }
+
+// Bit skewness - third moment of bit distribution
+double bit_skewness_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 2) return 0.0;
+    
+    double mean = bit_first_moment_c(bits, num_bits);
+    double variance = bit_second_moment_c(bits, num_bits);
+    if (variance == 0.0) return 0.0;
+    
+    double std_dev = sqrt(variance);
+    double sum_cube_diff = 0.0;
+    double total_bits = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            double diff = (i - mean) / std_dev;
+            sum_cube_diff += diff * diff * diff;
+            total_bits += 1.0;
+        }
+    }
+    
+    return (total_bits <= 2) ? 0.0 : sum_cube_diff / total_bits;
+}
+
+// Bit kurtosis - fourth moment of bit distribution
+double bit_kurtosis_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 3) return 0.0;
+    
+    double mean = bit_first_moment_c(bits, num_bits);
+    double variance = bit_second_moment_c(bits, num_bits);
+    if (variance == 0.0) return 0.0;
+    
+    double std_dev = sqrt(variance);
+    double sum_fourth_diff = 0.0;
+    double total_bits = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            double diff = (i - mean) / std_dev;
+            double diff_sq = diff * diff;
+            sum_fourth_diff += diff_sq * diff_sq;
+            total_bits += 1.0;
+        }
+    }
+    
+    return (total_bits <= 3) ? 0.0 : (sum_fourth_diff / total_bits) - 3.0; // Excess kurtosis
+}
+
+// Bit segregation index - measures bit clustering by position
+double bit_segregation_index_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t ones = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) ones++;
+    }
+    
+    if (ones == 0 || ones == num_bits) return 0.0;
+    
+    double p_one = (double)ones / num_bits;
+    double p_zero = 1.0 - p_one;
+    double expected_different = 2.0 * p_one * p_zero * (num_bits - 1);
+    
+    uint32_t different_neighbors = 0;
+    for (size_t i = 1; i < num_bits; ++i) {
+        if (bits[i] != bits[i-1]) different_neighbors++;
+    }
+    
+    return 1.0 - ((double)different_neighbors / expected_different);
+}
+
+// Fuzzy bit entropy - entropy with transition probabilities
+double fuzzy_bit_entropy_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t counts[4] = {0}; // 00, 01, 10, 11
+    for (size_t i = 0; i < num_bits - 1; ++i) {
+        uint8_t pattern = (bits[i] << 1) | bits[i+1];
+        counts[pattern]++;
+    }
+    
+    double total = num_bits - 1;
+    double entropy = 0.0;
+    
+    for (int i = 0; i < 4; ++i) {
+        if (counts[i] > 0) {
+            double p = counts[i] / total;
+            entropy -= p * log2(p);
+        }
+    }
+    
+    return entropy;
+}
+
+// Shannon equitability - normalized entropy
+double shannon_equitability_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    uint32_t histogram[256] = {0};
+    for (size_t i = 0; i < num_bytes; ++i) {
+        histogram[bytes[i]]++;
+    }
+    
+    double entropy = calculate_entropy_c(histogram, num_bytes);
+    double max_entropy = log2(256.0); // Maximum possible entropy with 256 symbols
+    
+    return entropy / max_entropy;
+}
+
+// Minimum distance between set bits
+uint32_t min_distance_between_set_bits_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return UINT32_MAX;
+    
+    uint32_t min_distance = UINT32_MAX;
+    int64_t last_set_pos = -1;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            if (last_set_pos >= 0) {
+                uint32_t distance = i - last_set_pos;
+                if (distance < min_distance) min_distance = distance;
+            }
+            last_set_pos = i;
+        }
+    }
+    
+    return (min_distance == UINT32_MAX) ? 0 : min_distance;
+}
+
+// Maximum distance between set bits
+uint32_t max_distance_between_set_bits_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0;
+    
+    uint32_t max_distance = 0;
+    int64_t last_set_pos = -1;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            if (last_set_pos >= 0) {
+                uint32_t distance = i - last_set_pos;
+                if (distance > max_distance) max_distance = distance;
+            }
+            last_set_pos = i;
+        }
+    }
+    
+    return max_distance;
+}
+
+// Median position of set bits
+double median_position_of_set_bits_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0.0;
+    
+    uint32_t ones = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) ones++;
+    }
+    
+    if (ones == 0) return 0.0;
+    
+    size_t* positions = (size_t*)malloc(ones * sizeof(size_t));
+    if (!positions) return 0.0;
+    
+    size_t pos_idx = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) positions[pos_idx++] = i;
+    }
+    
+    double median;
+    if (ones % 2 == 0) {
+        median = (positions[ones/2 - 1] + positions[ones/2]) / 2.0;
+    } else {
+        median = positions[ones/2];
+    }
+    
+    free(positions);
+    return median;
+}
+
+// Moving average of bit density
+double moving_avg_bit_density_c(const bool* bits, size_t num_bits, size_t window_size) {
+    if (num_bits == 0 || window_size == 0 || window_size > num_bits) return 0.0;
+    
+    double max_density = 0.0;
+    
+    for (size_t i = 0; i <= num_bits - window_size; ++i) {
+        uint32_t count = 0;
+        for (size_t j = 0; j < window_size; ++j) {
+            if (bits[i + j]) count++;
+        }
+        
+        double density = (double)count / window_size;
+        if (density > max_density) max_density = density;
+    }
+    
+    return max_density;
+}
+
+// Bit avalanche factor - measures bit independence
+double bit_avalanche_factor_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes <= 1) return 0.0;
+    
+    uint32_t total_flips = 0;
+    uint32_t bit_pairs = 0;
+    
+    for (size_t i = 0; i < num_bytes; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            uint8_t modified[num_bytes];
+            memcpy(modified, bytes, num_bytes);
+            
+            // Flip this bit
+            modified[i] ^= (1 << (7 - j));
+            
+            // Count how many other bits change in a simple hash
+            uint8_t orig_hash = crc8_c(bytes, num_bytes);
+            uint8_t mod_hash = crc8_c(modified, num_bytes);
+            
+            total_flips += POPCOUNT_LUT[orig_hash ^ mod_hash];
+            bit_pairs++;
+        }
+    }
+    
+    return (bit_pairs == 0) ? 0.0 : (double)total_flips / (bit_pairs * 8);
+}
+
+// Approximate entropy - predictability measure
+double approx_entropy_c(const bool* bits, size_t num_bits, size_t m) {
+    if (num_bits <= m + 1) return 0.0;
+    
+    size_t count1 = num_bits - m + 1;
+    size_t count2 = num_bits - m;
+    
+    double phi1 = 0.0;
+    double phi2 = 0.0;
+    
+    // For pattern length m
+    for (size_t i = 0; i < count1; ++i) {
+        size_t matches = 0;
+        for (size_t j = 0; j < count1; ++j) {
+            bool match = true;
+            for (size_t k = 0; k < m; ++k) {
+                if (bits[i + k] != bits[j + k]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) matches++;
+        }
+        
+        phi1 += log((double)matches / count1);
+    }
+    phi1 /= count1;
+    
+    // For pattern length m+1
+    for (size_t i = 0; i < count2; ++i) {
+        size_t matches = 0;
+        for (size_t j = 0; j < count2; ++j) {
+            bool match = true;
+            for (size_t k = 0; k < m + 1; ++k) {
+                if (bits[i + k] != bits[j + k]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) matches++;
+        }
+        
+        phi2 += log((double)matches / count2);
+    }
+    phi2 /= count2;
+    
+    return phi1 - phi2;
+}
+
+// Bit quartet distribution - patterns of 4 consecutive bits
+void bit_quartet_distribution_c(const bool* bits, size_t num_bits, uint32_t counts[16]) {
+    for (int i = 0; i < 16; i++) counts[i] = 0;
+    
+    if (num_bits < 4) return;
+    
+    for (size_t i = 0; i <= num_bits - 4; ++i) {
+        uint8_t pattern = 0;
+        for (size_t j = 0; j < 4; ++j) {
+            pattern = (pattern << 1) | (bits[i + j] ? 1 : 0);
+        }
+        counts[pattern]++;
+    }
+}
+
+// Bit run count - number of runs of consecutive similar bits
+uint32_t bit_run_count_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return num_bits;
+    
+    uint32_t runs = 1;
+    for (size_t i = 1; i < num_bits; ++i) {
+        if (bits[i] != bits[i-1]) runs++;
+    }
+    
+    return runs;
+}
+
+// Bit run entropy - entropy of run lengths distribution
+double bit_run_entropy_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t* run_lengths = (uint32_t*)malloc(num_bits * sizeof(uint32_t));
+    if (!run_lengths) return 0.0;
+    
+    uint32_t run_count = 0;
+    uint32_t current_length = 1;
+    bool current_bit = bits[0];
+    
+    for (size_t i = 1; i < num_bits; ++i) {
+        if (bits[i] == current_bit) {
+            current_length++;
+        } else {
+            run_lengths[run_count++] = current_length;
+            current_bit = bits[i];
+            current_length = 1;
+        }
+    }
+    run_lengths[run_count++] = current_length;
+    
+    // Calculate frequency of each run length
+    uint32_t max_length = 0;
+    for (size_t i = 0; i < run_count; ++i) {
+        if (run_lengths[i] > max_length) max_length = run_lengths[i];
+    }
+    
+    uint32_t* length_hist = (uint32_t*)calloc(max_length + 1, sizeof(uint32_t));
+    if (!length_hist) {
+        free(run_lengths);
+        return 0.0;
+    }
+    
+    for (size_t i = 0; i < run_count; ++i) {
+        length_hist[run_lengths[i]]++;
+    }
+    
+    double entropy = calculate_entropy_c(length_hist, run_count);
+    
+    free(run_lengths);
+    free(length_hist);
+    return entropy;
+}
+
+// Bit burst factor - ratio of longest run to average run
+double bit_burst_factor_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 1.0;
+    
+    uint32_t longest_run = longest_consecutive_bit_run_c(bits, num_bits);
+    double avg_run = average_bit_run_length_c(bits, num_bits);
+    
+    return (avg_run == 0.0) ? 0.0 : (double)longest_run / avg_run;
+}
+
+// Spectral flatness - Wiener entropy measure
+double spectral_flatness_c(const bool* bits, size_t num_bits) {
+    if (num_bits < 2) return 1.0; // By definition, a single bit has perfect flatness
+    
+    // Compute simple frequency spectrum by counting transitions at different lags
+    size_t max_lag = num_bits / 2;
+    double* spectrum = (double*)malloc(max_lag * sizeof(double));
+    if (!spectrum) return 0.0;
+    
+    for (size_t lag = 1; lag <= max_lag; ++lag) {
+        size_t matches = 0;
+        size_t comparisons = num_bits - lag;
+        
+        for (size_t i = 0; i < comparisons; ++i) {
+            if (bits[i] == bits[i + lag]) matches++;
+        }
+        
+        spectrum[lag-1] = (double)matches / comparisons;
+    }
+    
+    // Calculate geometric mean and arithmetic mean
+    double log_sum = 0.0;
+    double sum = 0.0;
+    
+    for (size_t i = 0; i < max_lag; ++i) {
+        if (spectrum[i] > 0.0) {
+            log_sum += log(spectrum[i]);
+        } else {
+            log_sum -= 10.0; // Substitute small value for log calculation
+        }
+        sum += spectrum[i];
+    }
+    
+    double geo_mean = exp(log_sum / max_lag);
+    double arith_mean = sum / max_lag;
+    
+    free(spectrum);
+    return (arith_mean == 0.0) ? 0.0 : geo_mean / arith_mean;
+}
+
+// Central position-weighted bits sum
+int32_t central_weighted_bit_sum_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0;
+    
+    int32_t sum = 0;
+    int64_t mid = num_bits / 2;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            // Weight is inverse of distance from center
+            int64_t dist = labs((int64_t)i - mid);
+            sum += (dist == 0) ? num_bits : (int32_t)((double)num_bits / (dist + 1));
+        }
+    }
+    
+    return sum;
+}
+
+// Bit asymmetry - difference between bit patterns in first/second half
+double bit_asymmetry_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    size_t mid = num_bits / 2;
+    uint32_t different_bits = 0;
+    
+    for (size_t i = 0; i < mid; ++i) {
+        if (bits[i] != bits[num_bits - 1 - i]) different_bits++;
+    }
+    
+    return (double)different_bits / mid;
+}
+
+// Bit pattern persistence - how long patterns repeat
+double bit_pattern_persistence_c(const bool* bits, size_t num_bits, size_t pattern_size) {
+    if (num_bits < 2 * pattern_size) return 0.0;
+    
+    uint32_t max_repeat = 0;
+    
+    for (size_t i = 0; i <= num_bits - pattern_size; ++i) {
+        uint32_t repeat_count = 0;
+        
+        for (size_t j = i + pattern_size; j <= num_bits - pattern_size; j += pattern_size) {
+            bool match = true;
+            for (size_t k = 0; k < pattern_size; ++k) {
+                if (bits[i + k] != bits[j + k]) {
+                    match = false;
+                    break;
+                }
+            }
+            
+            if (match) {
+                repeat_count++;
+            } else {
+                break;
+            }
+        }
+        
+        if (repeat_count > max_repeat) max_repeat = repeat_count;
+    }
+    
+    return max_repeat;
+}
+
+// Average bit positional spread
+double avg_bit_positional_spread_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    uint32_t ones = 0;
+    double sum_positions = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            ones++;
+            sum_positions += i;
+        }
+    }
+    
+    if (ones <= 1) return 0.0;
+    
+    double mean_pos = sum_positions / ones;
+    double sum_squared_dev = 0.0;
+    
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) {
+            double dev = i - mean_pos;
+            sum_squared_dev += dev * dev;
+        }
+    }
+    
+    return sqrt(sum_squared_dev / ones);
+}
+
+// Bit pattern Lempel-Ziv complexity
+uint32_t lempel_ziv_complexity_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0;
+    
+    uint32_t complexity = 1;
+    size_t i = 0, j, k, l;
+    
+    for (i = 1; i < num_bits; i++) {
+        j = 0;
+        k = i;
+        l = 1;
+        
+        while (k < num_bits && j < i) {
+            if (bits[k] == bits[j]) {
+                k++;
+                j++;
+                l++;
+            } else {
+                j = j - l + 1;
+                l = 1;
+                if (j == i) {
+                    complexity++;
+                    break;
+                }
+            }
+            
+            if (j == i) {
+                if (k == num_bits) break;
+                j = 0;
+                i = k;
+                complexity++;
+                break;
+            }
+        }
+    }
+    
+    return complexity;
+}
+
+// Kolmogorov complexity estimation (using compress-and-count)
+double kolmogorov_complexity_estimate_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return (double)num_bits;
+    
+    // Use Lempel-Ziv as a proxy for Kolmogorov complexity
+    uint32_t lz_complexity = lempel_ziv_complexity_c(bits, num_bits);
+    
+    // Normalize by theoretical maximum complexity (log base 2)
+    return (double)lz_complexity / ((double)num_bits / log2((double)num_bits));
+}
+
+// Modified Shannon entropy - uses overlapping bit sequences
+double modified_shannon_entropy_c(const bool* bits, size_t num_bits, size_t block_size) {
+    if (num_bits < block_size) return 0.0;
+    
+    size_t num_patterns = 1 << block_size;
+    uint32_t* pattern_count = (uint32_t*)calloc(num_patterns, sizeof(uint32_t));
+    if (!pattern_count) return 0.0;
+    
+    size_t window_count = num_bits - block_size + 1;
+    
+    for (size_t i = 0; i < window_count; ++i) {
+        uint32_t pattern = 0;
+        for (size_t j = 0; j < block_size; ++j) {
+            pattern = (pattern << 1) | (bits[i + j] ? 1 : 0);
+        }
+        pattern_count[pattern]++;
+    }
+    
+    double entropy = 0.0;
+    for (size_t i = 0; i < num_patterns; ++i) {
+        if (pattern_count[i] > 0) {
+            double prob = (double)pattern_count[i] / window_count;
+            entropy -= prob * log2(prob);
+        }
+    }
+    
+    free(pattern_count);
+    return entropy / block_size; // Normalize by block size
+}
+
+// Bit sequence predictability
+double bit_sequence_predictability_c(const bool* bits, size_t num_bits, size_t context_len) {
+    if (num_bits <= context_len) return 0.5; // Default to unpredictable
+    
+    // Build context-based prediction model
+    size_t num_contexts = 1 << context_len;
+    uint32_t* zeros_after = (uint32_t*)calloc(num_contexts, sizeof(uint32_t));
+    uint32_t* ones_after = (uint32_t*)calloc(num_contexts, sizeof(uint32_t));
+    
+    if (!zeros_after || !ones_after) {
+        free(zeros_after);
+        free(ones_after);
+        return 0.5;
+    }
+    
+    // Count occurrences for each context
+    for (size_t i = 0; i < num_bits - context_len; ++i) {
+        uint32_t context = 0;
+        for (size_t j = 0; j < context_len; ++j) {
+            context = (context << 1) | (bits[i + j] ? 1 : 0);
+        }
+        
+        if (bits[i + context_len]) {
+            ones_after[context]++;
+        } else {
+            zeros_after[context]++;
+        }
+    }
+    
+    // Calculate predictability as average certainty across contexts
+    double total_certainty = 0.0;
+    uint32_t active_contexts = 0;
+    
+    for (size_t i = 0; i < num_contexts; ++i) {
+        uint32_t total = zeros_after[i] + ones_after[i];
+        if (total > 0) {
+            double p_zero = (double)zeros_after[i] / total;
+            double p_one = (double)ones_after[i] / total;
+            double certainty = (p_zero > p_one) ? p_zero : p_one;
+            total_certainty += certainty;
+            active_contexts++;
+        }
+    }
+    
+    free(zeros_after);
+    free(ones_after);
+    
+    return (active_contexts == 0) ? 0.5 : total_certainty / active_contexts;
+}
+
+// Compression efficiency - ratio of compressed to original size
+double compression_efficiency_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    // Simple RLE compression
+    size_t compressed_size = 0;
+    uint8_t current = bytes[0];
+    uint8_t count = 1;
+    
+    for (size_t i = 1; i < num_bytes; ++i) {
+        if (bytes[i] == current && count < 255) {
+            count++;
+        } else {
+            compressed_size += 2; // Store (count, byte)
+            current = bytes[i];
+            count = 1;
+        }
+    }
+    compressed_size += 2; // Last run
+    
+    return (double)compressed_size / num_bytes;
+}
+
+// NIST bit frequency test statistic
+double nist_frequency_test_c(const bool* bits, size_t num_bits) {
+    if (num_bits == 0) return 0.0;
+    
+    int32_t sum = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        sum += bits[i] ? 1 : -1;
+    }
+    
+    double s_obs = (double)abs(sum) / sqrt((double)num_bits);
+    return s_obs;
+}
+
+// NIST runs test statistic
+double nist_runs_test_c(const bool* bits, size_t num_bits) {
+    if (num_bits <= 1) return 0.0;
+    
+    // Count ones and compute pi
+    uint32_t ones = 0;
+    for (size_t i = 0; i < num_bits; ++i) {
+        if (bits[i]) ones++;
+    }
+    
+    double pi = (double)ones / num_bits;
+    
+    // Skip if pi is out of reasonable range
+    if (fabs(pi - 0.5) >= (2.0 / sqrt(num_bits))) return 0.0;
+    
+    // Count runs
+    uint32_t runs = 1;
+    for (size_t i = 1; i < num_bits; ++i) {
+        if (bits[i] != bits[i-1]) runs++;
+    }
+    
+    // Calculate test statistic
+    double runs_exp = 2.0 * num_bits * pi * (1.0 - pi);
+    double std_dev = sqrt(2.0 * num_bits * pi * (1.0 - pi) * (2.0 * pi - 1.0));
+    double v_obs = fabs(runs - runs_exp) / std_dev;
+    
+    return v_obs;
+}
+
+// Hamming weight difference from expected
+double hamming_weight_deviation_c(const uint8_t* bytes, size_t num_bytes) {
+    if (num_bytes == 0) return 0.0;
+    
+    uint32_t bit_count = popcount_bytes_c(bytes, num_bytes);
+    uint32_t total_bits = num_bytes * 8;
+    uint32_t expected = total_bits / 2; // Expect half the bits to be set
+    
+    return fabs((double)(bit_count - expected)) / total_bits;
+}
+
+// Count of specific byte values (e.g., count of zero bytes)
+uint32_t specific_byte_count_c(const uint8_t* bytes, size_t num_bytes, uint8_t target) {
+    uint32_t count = 0;
+    for (size_t i = 0; i < num_bytes; ++i) {
+        if (bytes[i] == target) count++;
+    }
+    return count;
+}

@@ -1830,6 +1830,606 @@ DescriptorResult SmilesZwitterionCountDescriptor::calculate(Context& context) co
     return calculateSmilesZwitterionCount(c_ctx, get_smiles_func);
 }
 
+// --- SpitActivationDensity Wrapper ---
+DECLARE_DESCRIPTOR(SpitActivationDensity, C_Descriptor, "C implementation of SpitActivationDensity")
+DESCRIPTOR_DEPENDENCIES(SpitActivationDensity) { return {}; }
+DescriptorResult SpitActivationDensityDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitActivationDensity(c_ctx, get_smiles_func);
+}
+
+// --- SpitAntiDiagonalAsymmetryScore Wrapper ---
+DECLARE_DESCRIPTOR(SpitAntiDiagonalAsymmetryScore, C_Descriptor, "C implementation of SpitAntiDiagonalAsymmetryScore")
+DESCRIPTOR_DEPENDENCIES(SpitAntiDiagonalAsymmetryScore) { return {}; }
+DescriptorResult SpitAntiDiagonalAsymmetryScoreDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitAntiDiagonalAsymmetryScore(c_ctx, get_smiles_func);
+}
+
+// --- SpitAverageDistanceWeightedActivation Wrapper ---
+DECLARE_DESCRIPTOR(SpitAverageDistanceWeightedActivation, C_Descriptor, "C implementation of SpitAverageDistanceWeightedActivation")
+DESCRIPTOR_DEPENDENCIES(SpitAverageDistanceWeightedActivation) { return {}; }
+DescriptorResult SpitAverageDistanceWeightedActivationDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitAverageDistanceWeightedActivation(c_ctx, get_smiles_func);
+}
+
+// --- SpitBandwidthTop10Activation Wrapper ---
+DECLARE_DESCRIPTOR(SpitBandwidthTop10Activation, C_Descriptor, "C implementation of SpitBandwidthTop10Activation")
+DESCRIPTOR_DEPENDENCIES(SpitBandwidthTop10Activation) { return {}; }
+DescriptorResult SpitBandwidthTop10ActivationDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitBandwidthTop10Activation(c_ctx, get_smiles_func);
+}
+
+// --- SpitBondAtomInteractionCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitBondAtomInteractionCount, C_Descriptor, "C implementation of SpitBondAtomInteractionCount")
+DESCRIPTOR_DEPENDENCIES(SpitBondAtomInteractionCount) { return {}; }
+DescriptorResult SpitBondAtomInteractionCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitBondAtomInteractionCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitBondPairAsymmetry Wrapper ---
+DECLARE_DESCRIPTOR(SpitBondPairAsymmetry, C_Descriptor, "C implementation of SpitBondPairAsymmetry")
+DESCRIPTOR_DEPENDENCIES(SpitBondPairAsymmetry) { return {}; }
+DescriptorResult SpitBondPairAsymmetryDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitBondPairAsymmetry(c_ctx, get_smiles_func);
+}
+
+// --- SpitBondVsRingSeparationScore Wrapper ---
+DECLARE_DESCRIPTOR(SpitBondVsRingSeparationScore, C_Descriptor, "C implementation of SpitBondVsRingSeparationScore")
+DESCRIPTOR_DEPENDENCIES(SpitBondVsRingSeparationScore) { return {}; }
+DescriptorResult SpitBondVsRingSeparationScoreDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitBondVsRingSeparationScore(c_ctx, get_smiles_func);
+}
+
+// --- SpitCenterOfMatrixActivationShift Wrapper ---
+DECLARE_DESCRIPTOR(SpitCenterOfMatrixActivationShift, C_Descriptor, "C implementation of SpitCenterOfMatrixActivationShift")
+DESCRIPTOR_DEPENDENCIES(SpitCenterOfMatrixActivationShift) { return {}; }
+DescriptorResult SpitCenterOfMatrixActivationShiftDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitCenterOfMatrixActivationShift(c_ctx, get_smiles_func);
+}
+
+// --- SpitCheckerboardPatternStrength Wrapper ---
+DECLARE_DESCRIPTOR(SpitCheckerboardPatternStrength, C_Descriptor, "C implementation of SpitCheckerboardPatternStrength")
+DESCRIPTOR_DEPENDENCIES(SpitCheckerboardPatternStrength) { return {}; }
+DescriptorResult SpitCheckerboardPatternStrengthDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitCheckerboardPatternStrength(c_ctx, get_smiles_func);
+}
+
+// --- SpitDiagonalDominanceIndex Wrapper ---
+DECLARE_DESCRIPTOR(SpitDiagonalDominanceIndex, C_Descriptor, "C implementation of SpitDiagonalDominanceIndex")
+DESCRIPTOR_DEPENDENCIES(SpitDiagonalDominanceIndex) { return {}; }
+DescriptorResult SpitDiagonalDominanceIndexDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitDiagonalDominanceIndex(c_ctx, get_smiles_func);
+}
+
+// --- SpitEdgeTokenInteractionBias Wrapper ---
+DECLARE_DESCRIPTOR(SpitEdgeTokenInteractionBias, C_Descriptor, "C implementation of SpitEdgeTokenInteractionBias")
+DESCRIPTOR_DEPENDENCIES(SpitEdgeTokenInteractionBias) { return {}; }
+DescriptorResult SpitEdgeTokenInteractionBiasDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitEdgeTokenInteractionBias(c_ctx, get_smiles_func);
+}
+
+// --- SpitFeatureCooccurrenceCorrelation Wrapper ---
+DECLARE_DESCRIPTOR(SpitFeatureCooccurrenceCorrelation, C_Descriptor, "C implementation of SpitFeatureCooccurrenceCorrelation")
+DESCRIPTOR_DEPENDENCIES(SpitFeatureCooccurrenceCorrelation) { return {}; }
+DescriptorResult SpitFeatureCooccurrenceCorrelationDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitFeatureCooccurrenceCorrelation(c_ctx, get_smiles_func);
+}
+
+// --- SpitFeatureImportanceIndexPCA Wrapper ---
+DECLARE_DESCRIPTOR(SpitFeatureImportanceIndexPCA, C_Descriptor, "C implementation of SpitFeatureImportanceIndexPCA")
+DESCRIPTOR_DEPENDENCIES(SpitFeatureImportanceIndexPCA) { return {}; }
+DescriptorResult SpitFeatureImportanceIndexPCADescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitFeatureImportanceIndexPCA(c_ctx, get_smiles_func);
+}
+
+// --- SpitFeatureSpecificSparsity Wrapper ---
+DECLARE_DESCRIPTOR(SpitFeatureSpecificSparsity, C_Descriptor, "C implementation of SpitFeatureSpecificSparsity")
+DESCRIPTOR_DEPENDENCIES(SpitFeatureSpecificSparsity) { return {}; }
+DescriptorResult SpitFeatureSpecificSparsityDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitFeatureSpecificSparsity(c_ctx, get_smiles_func);
+}
+
+// --- SpitFeatureWiseEntropy Wrapper ---
+DECLARE_DESCRIPTOR(SpitFeatureWiseEntropy, C_Descriptor, "C implementation of SpitFeatureWiseEntropy")
+DESCRIPTOR_DEPENDENCIES(SpitFeatureWiseEntropy) { return {}; }
+DescriptorResult SpitFeatureWiseEntropyDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitFeatureWiseEntropy(c_ctx, get_smiles_func);
+}
+
+// --- SpitGridUniformity Wrapper ---
+DECLARE_DESCRIPTOR(SpitGridUniformity, C_Descriptor, "C implementation of SpitGridUniformity")
+DESCRIPTOR_DEPENDENCIES(SpitGridUniformity) { return {}; }
+DescriptorResult SpitGridUniformityDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitGridUniformity(c_ctx, get_smiles_func);
+}
+
+// --- SpitHighestInteractiveToken Wrapper ---
+DECLARE_DESCRIPTOR(SpitHighestInteractiveToken, C_Descriptor, "C implementation of SpitHighestInteractiveToken")
+DESCRIPTOR_DEPENDENCIES(SpitHighestInteractiveToken) { return {}; }
+DescriptorResult SpitHighestInteractiveTokenDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitHighestInteractiveToken(c_ctx, get_smiles_func);
+}
+
+// --- SpitInterClassInteractionRatio Wrapper ---
+DECLARE_DESCRIPTOR(SpitInterClassInteractionRatio, C_Descriptor, "C implementation of SpitInterClassInteractionRatio")
+DESCRIPTOR_DEPENDENCIES(SpitInterClassInteractionRatio) { return {}; }
+DescriptorResult SpitInterClassInteractionRatioDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitInterClassInteractionRatio(c_ctx, get_smiles_func);
+}
+
+// --- SpitIntraClassInteractionRatio Wrapper ---
+DECLARE_DESCRIPTOR(SpitIntraClassInteractionRatio, C_Descriptor, "C implementation of SpitIntraClassInteractionRatio")
+DESCRIPTOR_DEPENDENCIES(SpitIntraClassInteractionRatio) { return {}; }
+DescriptorResult SpitIntraClassInteractionRatioDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitIntraClassInteractionRatio(c_ctx, get_smiles_func);
+}
+
+// --- SpitKurtosisBondPairScores Wrapper ---
+DECLARE_DESCRIPTOR(SpitKurtosisBondPairScores, C_Descriptor, "C implementation of SpitKurtosisBondPairScores")
+DESCRIPTOR_DEPENDENCIES(SpitKurtosisBondPairScores) { return {}; }
+DescriptorResult SpitKurtosisBondPairScoresDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitKurtosisBondPairScores(c_ctx, get_smiles_func);
+}
+
+// --- SpitLPatternMotifCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitLPatternMotifCount, C_Descriptor, "C implementation of SpitLPatternMotifCount")
+DESCRIPTOR_DEPENDENCIES(SpitLPatternMotifCount) { return {}; }
+DescriptorResult SpitLPatternMotifCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitLPatternMotifCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitLowerTriangleActivationRatio Wrapper ---
+DECLARE_DESCRIPTOR(SpitLowerTriangleActivationRatio, C_Descriptor, "C implementation of SpitLowerTriangleActivationRatio")
+DESCRIPTOR_DEPENDENCIES(SpitLowerTriangleActivationRatio) { return {}; }
+DescriptorResult SpitLowerTriangleActivationRatioDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitLowerTriangleActivationRatio(c_ctx, get_smiles_func);
+}
+
+// --- SpitMatchingTokenPairCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitMatchingTokenPairCount, C_Descriptor, "C implementation of SpitMatchingTokenPairCount")
+DESCRIPTOR_DEPENDENCIES(SpitMatchingTokenPairCount) { return {}; }
+DescriptorResult SpitMatchingTokenPairCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMatchingTokenPairCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitMatrixTraceScore Wrapper ---
+DECLARE_DESCRIPTOR(SpitMatrixTraceScore, C_Descriptor, "C implementation of SpitMatrixTraceScore")
+DESCRIPTOR_DEPENDENCIES(SpitMatrixTraceScore) { return {}; }
+DescriptorResult SpitMatrixTraceScoreDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMatrixTraceScore(c_ctx, get_smiles_func);
+}
+
+// --- SpitMax3x3InteractionPatchScore Wrapper ---
+DECLARE_DESCRIPTOR(SpitMax3x3InteractionPatchScore, C_Descriptor, "C implementation of SpitMax3x3InteractionPatchScore")
+DESCRIPTOR_DEPENDENCIES(SpitMax3x3InteractionPatchScore) { return {}; }
+DescriptorResult SpitMax3x3InteractionPatchScoreDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMax3x3InteractionPatchScore(c_ctx, get_smiles_func);
+}
+
+// --- SpitMaxDiagonalActivity Wrapper ---
+DECLARE_DESCRIPTOR(SpitMaxDiagonalActivity, C_Descriptor, "C implementation of SpitMaxDiagonalActivity")
+DESCRIPTOR_DEPENDENCIES(SpitMaxDiagonalActivity) { return {}; }
+DescriptorResult SpitMaxDiagonalActivityDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMaxDiagonalActivity(c_ctx, get_smiles_func);
+}
+
+// --- SpitMeanActivationAcrossRows Wrapper ---
+DECLARE_DESCRIPTOR(SpitMeanActivationAcrossRows, C_Descriptor, "C implementation of SpitMeanActivationAcrossRows")
+DESCRIPTOR_DEPENDENCIES(SpitMeanActivationAcrossRows) { return {}; }
+DescriptorResult SpitMeanActivationAcrossRowsDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMeanActivationAcrossRows(c_ctx, get_smiles_func);
+}
+
+// --- SpitMeanOfFeaturePlanes Wrapper ---
+DECLARE_DESCRIPTOR(SpitMeanOfFeaturePlanes, C_Descriptor, "C implementation of SpitMeanOfFeaturePlanes")
+DESCRIPTOR_DEPENDENCIES(SpitMeanOfFeaturePlanes) { return {}; }
+DescriptorResult SpitMeanOfFeaturePlanesDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMeanOfFeaturePlanes(c_ctx, get_smiles_func);
+}
+
+// --- SpitMeanOffDiagonalSimilarity Wrapper ---
+DECLARE_DESCRIPTOR(SpitMeanOffDiagonalSimilarity, C_Descriptor, "C implementation of SpitMeanOffDiagonalSimilarity")
+DESCRIPTOR_DEPENDENCIES(SpitMeanOffDiagonalSimilarity) { return {}; }
+DescriptorResult SpitMeanOffDiagonalSimilarityDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMeanOffDiagonalSimilarity(c_ctx, get_smiles_func);
+}
+
+// --- SpitMeanTokenIndexDistance Wrapper ---
+DECLARE_DESCRIPTOR(SpitMeanTokenIndexDistance, C_Descriptor, "C implementation of SpitMeanTokenIndexDistance")
+DESCRIPTOR_DEPENDENCIES(SpitMeanTokenIndexDistance) { return {}; }
+DescriptorResult SpitMeanTokenIndexDistanceDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMeanTokenIndexDistance(c_ctx, get_smiles_func);
+}
+
+// --- SpitMostConnectedTokenScore Wrapper ---
+DECLARE_DESCRIPTOR(SpitMostConnectedTokenScore, C_Descriptor, "C implementation of SpitMostConnectedTokenScore")
+DESCRIPTOR_DEPENDENCIES(SpitMostConnectedTokenScore) { return {}; }
+DescriptorResult SpitMostConnectedTokenScoreDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMostConnectedTokenScore(c_ctx, get_smiles_func);
+}
+
+// --- SpitMostFrequentInteractionPattern Wrapper ---
+DECLARE_DESCRIPTOR(SpitMostFrequentInteractionPattern, C_Descriptor, "C implementation of SpitMostFrequentInteractionPattern")
+DESCRIPTOR_DEPENDENCIES(SpitMostFrequentInteractionPattern) { return {}; }
+DescriptorResult SpitMostFrequentInteractionPatternDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitMostFrequentInteractionPattern(c_ctx, get_smiles_func);
+}
+
+// --- SpitNonZeroCellsPerFeature Wrapper ---
+DECLARE_DESCRIPTOR(SpitNonZeroCellsPerFeature, C_Descriptor, "C implementation of SpitNonZeroCellsPerFeature")
+DESCRIPTOR_DEPENDENCIES(SpitNonZeroCellsPerFeature) { return {}; }
+DescriptorResult SpitNonZeroCellsPerFeatureDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitNonZeroCellsPerFeature(c_ctx, get_smiles_func);
+}
+
+// --- SpitPositionallyStableTokens Wrapper ---
+DECLARE_DESCRIPTOR(SpitPositionallyStableTokens, C_Descriptor, "C implementation of SpitPositionallyStableTokens")
+DESCRIPTOR_DEPENDENCIES(SpitPositionallyStableTokens) { return {}; }
+DescriptorResult SpitPositionallyStableTokensDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitPositionallyStableTokens(c_ctx, get_smiles_func);
+}
+
+// --- SpitRepetitiveTokenMotifCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitRepetitiveTokenMotifCount, C_Descriptor, "C implementation of SpitRepetitiveTokenMotifCount")
+DESCRIPTOR_DEPENDENCIES(SpitRepetitiveTokenMotifCount) { return {}; }
+DescriptorResult SpitRepetitiveTokenMotifCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitRepetitiveTokenMotifCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitRingParticipationIndexPerToken Wrapper ---
+DECLARE_DESCRIPTOR(SpitRingParticipationIndexPerToken, C_Descriptor, "C implementation of SpitRingParticipationIndexPerToken")
+DESCRIPTOR_DEPENDENCIES(SpitRingParticipationIndexPerToken) { return {}; }
+DescriptorResult SpitRingParticipationIndexPerTokenDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitRingParticipationIndexPerToken(c_ctx, get_smiles_func);
+}
+
+// --- SpitRingRelatedTokenPairCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitRingRelatedTokenPairCount, C_Descriptor, "C implementation of SpitRingRelatedTokenPairCount")
+DESCRIPTOR_DEPENDENCIES(SpitRingRelatedTokenPairCount) { return {}; }
+DescriptorResult SpitRingRelatedTokenPairCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitRingRelatedTokenPairCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitRingSymmetryIndex Wrapper ---
+DECLARE_DESCRIPTOR(SpitRingSymmetryIndex, C_Descriptor, "C implementation of SpitRingSymmetryIndex")
+DESCRIPTOR_DEPENDENCIES(SpitRingSymmetryIndex) { return {}; }
+DescriptorResult SpitRingSymmetryIndexDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitRingSymmetryIndex(c_ctx, get_smiles_func);
+}
+
+// --- SpitSelfPairCount Wrapper ---
+DECLARE_DESCRIPTOR(SpitSelfPairCount, C_Descriptor, "C implementation of SpitSelfPairCount")
+DESCRIPTOR_DEPENDENCIES(SpitSelfPairCount) { return {}; }
+DescriptorResult SpitSelfPairCountDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitSelfPairCount(c_ctx, get_smiles_func);
+}
+
+// --- SpitSkewnessInteractionMatrix Wrapper ---
+DECLARE_DESCRIPTOR(SpitSkewnessInteractionMatrix, C_Descriptor, "C implementation of SpitSkewnessInteractionMatrix")
+DESCRIPTOR_DEPENDENCIES(SpitSkewnessInteractionMatrix) { return {}; }
+DescriptorResult SpitSkewnessInteractionMatrixDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitSkewnessInteractionMatrix(c_ctx, get_smiles_func);
+}
+
+// --- SpitStdDevTokenIndexDistances Wrapper ---
+DECLARE_DESCRIPTOR(SpitStdDevTokenIndexDistances, C_Descriptor, "C implementation of SpitStdDevTokenIndexDistances")
+DESCRIPTOR_DEPENDENCIES(SpitStdDevTokenIndexDistances) { return {}; }
+DescriptorResult SpitStdDevTokenIndexDistancesDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitStdDevTokenIndexDistances(c_ctx, get_smiles_func);
+}
+
+// --- SpitSymmetryUnder90Rotation Wrapper ---
+DECLARE_DESCRIPTOR(SpitSymmetryUnder90Rotation, C_Descriptor, "C implementation of SpitSymmetryUnder90Rotation")
+DESCRIPTOR_DEPENDENCIES(SpitSymmetryUnder90Rotation) { return {}; }
+DescriptorResult SpitSymmetryUnder90RotationDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitSymmetryUnder90Rotation(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenClusterEntropy Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenClusterEntropy, C_Descriptor, "C implementation of SpitTokenClusterEntropy")
+DESCRIPTOR_DEPENDENCIES(SpitTokenClusterEntropy) { return {}; }
+DescriptorResult SpitTokenClusterEntropyDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenClusterEntropy(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenEntropy Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenEntropy, C_Descriptor, "C implementation of SpitTokenEntropy")
+DESCRIPTOR_DEPENDENCIES(SpitTokenEntropy) { return {}; }
+DescriptorResult SpitTokenEntropyDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenEntropy(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenHighestBondInteractions Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenHighestBondInteractions, C_Descriptor, "C implementation of SpitTokenHighestBondInteractions")
+DESCRIPTOR_DEPENDENCIES(SpitTokenHighestBondInteractions) { return {}; }
+DescriptorResult SpitTokenHighestBondInteractionsDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenHighestBondInteractions(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenRepeatSpan Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenRepeatSpan, C_Descriptor, "C implementation of SpitTokenRepeatSpan")
+DESCRIPTOR_DEPENDENCIES(SpitTokenRepeatSpan) { return {}; }
+DescriptorResult SpitTokenRepeatSpanDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenRepeatSpan(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenSymmetryIndex Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenSymmetryIndex, C_Descriptor, "C implementation of SpitTokenSymmetryIndex")
+DESCRIPTOR_DEPENDENCIES(SpitTokenSymmetryIndex) { return {}; }
+DescriptorResult SpitTokenSymmetryIndexDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenSymmetryIndex(c_ctx, get_smiles_func);
+}
+
+// --- SpitTokenTransitionEntropy Wrapper ---
+DECLARE_DESCRIPTOR(SpitTokenTransitionEntropy, C_Descriptor, "C implementation of SpitTokenTransitionEntropy")
+DESCRIPTOR_DEPENDENCIES(SpitTokenTransitionEntropy) { return {}; }
+DescriptorResult SpitTokenTransitionEntropyDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTokenTransitionEntropy(c_ctx, get_smiles_func);
+}
+
+// --- SpitTopLeftToBottomRightImbalance Wrapper ---
+DECLARE_DESCRIPTOR(SpitTopLeftToBottomRightImbalance, C_Descriptor, "C implementation of SpitTopLeftToBottomRightImbalance")
+DESCRIPTOR_DEPENDENCIES(SpitTopLeftToBottomRightImbalance) { return {}; }
+DescriptorResult SpitTopLeftToBottomRightImbalanceDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitTopLeftToBottomRightImbalance(c_ctx, get_smiles_func);
+}
+
+// --- SpitVarianceOfFeaturePlanes Wrapper ---
+DECLARE_DESCRIPTOR(SpitVarianceOfFeaturePlanes, C_Descriptor, "C implementation of SpitVarianceOfFeaturePlanes")
+DESCRIPTOR_DEPENDENCIES(SpitVarianceOfFeaturePlanes) { return {}; }
+DescriptorResult SpitVarianceOfFeaturePlanesDescriptor::calculate(Context& context) const {
+    // Double cast to bypass type system - first to void*, then to the C type
+    void* v_ptr = &context;
+    const void* c_ctx = static_cast<const void*>(v_ptr);
+    // Explicitly cast the function pointer to the expected type
+    GetSmilesFunc get_smiles_func = reinterpret_cast<GetSmilesFunc>(getSmilesCFunc);
+    return calculateSpitVarianceOfFeaturePlanes(c_ctx, get_smiles_func);
+}
+
 void register_SmilesAdjacentHeteroatomRatioDescriptor() {
     auto descriptor = std::make_shared<SmilesAdjacentHeteroatomRatioDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
@@ -2732,6 +3332,306 @@ void register_SmilesUreaCountDescriptor() {
 
 void register_SmilesZwitterionCountDescriptor() {
     auto descriptor = std::make_shared<SmilesZwitterionCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitActivationDensityDescriptor() {
+    auto descriptor = std::make_shared<SpitActivationDensityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitAntiDiagonalAsymmetryScoreDescriptor() {
+    auto descriptor = std::make_shared<SpitAntiDiagonalAsymmetryScoreDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitAverageDistanceWeightedActivationDescriptor() {
+    auto descriptor = std::make_shared<SpitAverageDistanceWeightedActivationDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitBandwidthTop10ActivationDescriptor() {
+    auto descriptor = std::make_shared<SpitBandwidthTop10ActivationDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitBondAtomInteractionCountDescriptor() {
+    auto descriptor = std::make_shared<SpitBondAtomInteractionCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitBondPairAsymmetryDescriptor() {
+    auto descriptor = std::make_shared<SpitBondPairAsymmetryDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitBondVsRingSeparationScoreDescriptor() {
+    auto descriptor = std::make_shared<SpitBondVsRingSeparationScoreDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitCenterOfMatrixActivationShiftDescriptor() {
+    auto descriptor = std::make_shared<SpitCenterOfMatrixActivationShiftDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitCheckerboardPatternStrengthDescriptor() {
+    auto descriptor = std::make_shared<SpitCheckerboardPatternStrengthDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitDiagonalDominanceIndexDescriptor() {
+    auto descriptor = std::make_shared<SpitDiagonalDominanceIndexDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitEdgeTokenInteractionBiasDescriptor() {
+    auto descriptor = std::make_shared<SpitEdgeTokenInteractionBiasDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitFeatureCooccurrenceCorrelationDescriptor() {
+    auto descriptor = std::make_shared<SpitFeatureCooccurrenceCorrelationDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitFeatureImportanceIndexPCADescriptor() {
+    auto descriptor = std::make_shared<SpitFeatureImportanceIndexPCADescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitFeatureSpecificSparsityDescriptor() {
+    auto descriptor = std::make_shared<SpitFeatureSpecificSparsityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitFeatureWiseEntropyDescriptor() {
+    auto descriptor = std::make_shared<SpitFeatureWiseEntropyDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitGridUniformityDescriptor() {
+    auto descriptor = std::make_shared<SpitGridUniformityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitHighestInteractiveTokenDescriptor() {
+    auto descriptor = std::make_shared<SpitHighestInteractiveTokenDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitInterClassInteractionRatioDescriptor() {
+    auto descriptor = std::make_shared<SpitInterClassInteractionRatioDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitIntraClassInteractionRatioDescriptor() {
+    auto descriptor = std::make_shared<SpitIntraClassInteractionRatioDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitKurtosisBondPairScoresDescriptor() {
+    auto descriptor = std::make_shared<SpitKurtosisBondPairScoresDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitLPatternMotifCountDescriptor() {
+    auto descriptor = std::make_shared<SpitLPatternMotifCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitLowerTriangleActivationRatioDescriptor() {
+    auto descriptor = std::make_shared<SpitLowerTriangleActivationRatioDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMatchingTokenPairCountDescriptor() {
+    auto descriptor = std::make_shared<SpitMatchingTokenPairCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMatrixTraceScoreDescriptor() {
+    auto descriptor = std::make_shared<SpitMatrixTraceScoreDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMax3x3InteractionPatchScoreDescriptor() {
+    auto descriptor = std::make_shared<SpitMax3x3InteractionPatchScoreDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMaxDiagonalActivityDescriptor() {
+    auto descriptor = std::make_shared<SpitMaxDiagonalActivityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMeanActivationAcrossRowsDescriptor() {
+    auto descriptor = std::make_shared<SpitMeanActivationAcrossRowsDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMeanOfFeaturePlanesDescriptor() {
+    auto descriptor = std::make_shared<SpitMeanOfFeaturePlanesDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMeanOffDiagonalSimilarityDescriptor() {
+    auto descriptor = std::make_shared<SpitMeanOffDiagonalSimilarityDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMeanTokenIndexDistanceDescriptor() {
+    auto descriptor = std::make_shared<SpitMeanTokenIndexDistanceDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMostConnectedTokenScoreDescriptor() {
+    auto descriptor = std::make_shared<SpitMostConnectedTokenScoreDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitMostFrequentInteractionPatternDescriptor() {
+    auto descriptor = std::make_shared<SpitMostFrequentInteractionPatternDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitNonZeroCellsPerFeatureDescriptor() {
+    auto descriptor = std::make_shared<SpitNonZeroCellsPerFeatureDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitPositionallyStableTokensDescriptor() {
+    auto descriptor = std::make_shared<SpitPositionallyStableTokensDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitRepetitiveTokenMotifCountDescriptor() {
+    auto descriptor = std::make_shared<SpitRepetitiveTokenMotifCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitRingParticipationIndexPerTokenDescriptor() {
+    auto descriptor = std::make_shared<SpitRingParticipationIndexPerTokenDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitRingRelatedTokenPairCountDescriptor() {
+    auto descriptor = std::make_shared<SpitRingRelatedTokenPairCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitRingSymmetryIndexDescriptor() {
+    auto descriptor = std::make_shared<SpitRingSymmetryIndexDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitSelfPairCountDescriptor() {
+    auto descriptor = std::make_shared<SpitSelfPairCountDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitSkewnessInteractionMatrixDescriptor() {
+    auto descriptor = std::make_shared<SpitSkewnessInteractionMatrixDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitStdDevTokenIndexDistancesDescriptor() {
+    auto descriptor = std::make_shared<SpitStdDevTokenIndexDistancesDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitSymmetryUnder90RotationDescriptor() {
+    auto descriptor = std::make_shared<SpitSymmetryUnder90RotationDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenClusterEntropyDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenClusterEntropyDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenEntropyDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenEntropyDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenHighestBondInteractionsDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenHighestBondInteractionsDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenRepeatSpanDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenRepeatSpanDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenSymmetryIndexDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenSymmetryIndexDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTokenTransitionEntropyDescriptor() {
+    auto descriptor = std::make_shared<SpitTokenTransitionEntropyDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitTopLeftToBottomRightImbalanceDescriptor() {
+    auto descriptor = std::make_shared<SpitTopLeftToBottomRightImbalanceDescriptor>();
+    auto& registry = DescriptorRegistry::getInstance();
+    registry.registerDescriptor(descriptor);
+}
+
+void register_SpitVarianceOfFeaturePlanesDescriptor() {
+    auto descriptor = std::make_shared<SpitVarianceOfFeaturePlanesDescriptor>();
     auto& registry = DescriptorRegistry::getInstance();
     registry.registerDescriptor(descriptor);
 }

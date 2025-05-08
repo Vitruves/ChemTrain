@@ -476,6 +476,156 @@ double calculateSmilesUreaCount(const void* context, GetSmilesFunc getSmilesFunc
 // C implementation of SmilesZwitterionCount
 double calculateSmilesZwitterionCount(const void* context, GetSmilesFunc getSmilesFunc);
 
+// C implementation of SpitActivationDensity
+double calculateSpitActivationDensity(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitAntiDiagonalAsymmetryScore
+double calculateSpitAntiDiagonalAsymmetryScore(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitAverageDistanceWeightedActivation
+double calculateSpitAverageDistanceWeightedActivation(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitBandwidthTop10Activation
+double calculateSpitBandwidthTop10Activation(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitBondAtomInteractionCount
+double calculateSpitBondAtomInteractionCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitBondPairAsymmetry
+double calculateSpitBondPairAsymmetry(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitBondVsRingSeparationScore
+double calculateSpitBondVsRingSeparationScore(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitCenterOfMatrixActivationShift
+double calculateSpitCenterOfMatrixActivationShift(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitCheckerboardPatternStrength
+double calculateSpitCheckerboardPatternStrength(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitDiagonalDominanceIndex
+double calculateSpitDiagonalDominanceIndex(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitEdgeTokenInteractionBias
+double calculateSpitEdgeTokenInteractionBias(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitFeatureCooccurrenceCorrelation
+double calculateSpitFeatureCooccurrenceCorrelation(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitFeatureImportanceIndexPCA
+double calculateSpitFeatureImportanceIndexPCA(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitFeatureSpecificSparsity
+double calculateSpitFeatureSpecificSparsity(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitFeatureWiseEntropy
+double calculateSpitFeatureWiseEntropy(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitGridUniformity
+double calculateSpitGridUniformity(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitHighestInteractiveToken
+double calculateSpitHighestInteractiveToken(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitInterClassInteractionRatio
+double calculateSpitInterClassInteractionRatio(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitIntraClassInteractionRatio
+double calculateSpitIntraClassInteractionRatio(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitKurtosisBondPairScores
+double calculateSpitKurtosisBondPairScores(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitLPatternMotifCount
+double calculateSpitLPatternMotifCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitLowerTriangleActivationRatio
+double calculateSpitLowerTriangleActivationRatio(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMatchingTokenPairCount
+double calculateSpitMatchingTokenPairCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMatrixTraceScore
+double calculateSpitMatrixTraceScore(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMax3x3InteractionPatchScore
+double calculateSpitMax3x3InteractionPatchScore(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMaxDiagonalActivity
+double calculateSpitMaxDiagonalActivity(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMeanActivationAcrossRows
+double calculateSpitMeanActivationAcrossRows(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMeanOfFeaturePlanes
+double calculateSpitMeanOfFeaturePlanes(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMeanOffDiagonalSimilarity
+double calculateSpitMeanOffDiagonalSimilarity(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMeanTokenIndexDistance
+double calculateSpitMeanTokenIndexDistance(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMostConnectedTokenScore
+double calculateSpitMostConnectedTokenScore(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitMostFrequentInteractionPattern
+double calculateSpitMostFrequentInteractionPattern(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitNonZeroCellsPerFeature
+double calculateSpitNonZeroCellsPerFeature(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitPositionallyStableTokens
+double calculateSpitPositionallyStableTokens(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitRepetitiveTokenMotifCount
+double calculateSpitRepetitiveTokenMotifCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitRingParticipationIndexPerToken
+double calculateSpitRingParticipationIndexPerToken(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitRingRelatedTokenPairCount
+double calculateSpitRingRelatedTokenPairCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitRingSymmetryIndex
+double calculateSpitRingSymmetryIndex(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitSelfPairCount
+double calculateSpitSelfPairCount(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitSkewnessInteractionMatrix
+double calculateSpitSkewnessInteractionMatrix(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitStdDevTokenIndexDistances
+double calculateSpitStdDevTokenIndexDistances(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitSymmetryUnder90Rotation
+double calculateSpitSymmetryUnder90Rotation(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenClusterEntropy
+double calculateSpitTokenClusterEntropy(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenEntropy
+double calculateSpitTokenEntropy(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenHighestBondInteractions
+double calculateSpitTokenHighestBondInteractions(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenRepeatSpan
+double calculateSpitTokenRepeatSpan(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenSymmetryIndex
+double calculateSpitTokenSymmetryIndex(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTokenTransitionEntropy
+double calculateSpitTokenTransitionEntropy(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitTopLeftToBottomRightImbalance
+double calculateSpitTopLeftToBottomRightImbalance(const void* context, GetSmilesFunc getSmilesFunc);
+
+// C implementation of SpitVarianceOfFeaturePlanes
+double calculateSpitVarianceOfFeaturePlanes(const void* context, GetSmilesFunc getSmilesFunc);
+
 #ifdef __cplusplus
 }
 #endif
